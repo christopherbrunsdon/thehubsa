@@ -29,4 +29,8 @@ register_activation_hook( __FILE__, 'thehubsa_install' );
 register_activation_hook( __FILE__, 'thehubsa_install_data' );
 add_action( 'plugins_loaded', 'myplugin_update_db_check' );
 
+// +++ admin page
+
+require_once('admin/admin.php');
+
 // [eof]
