@@ -1,0 +1,32 @@
+<?php
+
+defined('ABSPATH') or die("No script kiddies please!");
+
+/*
+Plugin Name: TheHubSA.org.za
+Plugin URI: http://www.thehubsa.org.za
+Description: Custom Wordpress Plugin for TheHubSA.org.za
+Version: 1.0
+Author: Christopher Brunsdon
+Author URI: http://www.brunsdon.co.za
+*/
+
+// +++ models
+
+require_once('models/membership_types.php');
+require_once('models/memberships.php');
+
+// +++ forms
+
+require_once('forms/form-join.php');
+
+// +++ database
+
+require_once('install/create_tables.php');
+require_once('install/add_data.php');
+
+register_activation_hook( __FILE__, 'thehubsa_install' );
+register_activation_hook( __FILE__, 'thehubsa_install_data' );
+add_action( 'plugins_loaded', 'myplugin_update_db_check' );
+
+// [eof]
