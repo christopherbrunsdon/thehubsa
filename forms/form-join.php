@@ -1,7 +1,7 @@
 <?php
 
 defined('ABSPATH') or die("No script kiddies please!");
-
+define('SHORTCODE_THEHUBSA_FORM_JOIN', 'thehubsa_form_join');
 /**
  * Sources:
  *==========
@@ -134,6 +134,6 @@ function form_join_shortcode()
     return ob_get_clean();
 }
 
-add_shortcode( 'thehubsa_form_join', 'form_join_shortcode' );
+add_shortcode( SHORTCODE_THEHUBSA_FORM_JOIN, 'form_join_shortcode' );
 
 // [eof]

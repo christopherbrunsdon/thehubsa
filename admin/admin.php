@@ -15,6 +15,13 @@ if(!class_exists('WP_List_Table'))
 
 class Link_List_Table extends WP_List_Table {
 
+	//@TODO: save these deaults
+
+	function getPerPage()
+	{
+		return 50;
+	}
+
    /**
     * Constructor, we override the parent to pass our own arguments
     * We usually focus on three parameters: singular and plural labels, as well as whether the class supports AJAX.
@@ -41,6 +48,8 @@ class Link_List_Table extends WP_List_Table {
 
 	   if ( $which == "bottom" ){
 	      echo "";
+	      echo "<p><small>Number of rows per page {$this->getPerPage()}</small></p>";
+	      echo "<p>To add this form to a page, use the shortcode: <b>[".SHORTCODE_THEHUBSA_FORM_JOIN."]</b></p>";
 	   }
 	}
 
@@ -50,13 +59,13 @@ class Link_List_Table extends WP_List_Table {
 
 	function get_columns() {
 	   return $columns= array(
-	      'id' =>'ID',
-	      'Name' =>'Name',
-	      'Surname' =>'Surname',
-	      'Email' =>'Email',
-	      'bActive' =>'Active',
+	      'id'             => 'ID',
+	      'Name'           => 'Name',
+	      'Surname'        => 'Surname',
+	      'Email'          => 'Email',
+	      'bActive'        => 'Active',
 	      'MembershipType' => 'Membership Type',
-	      'WhenCreated' =>'Created'
+	      'WhenCreated'    => 'Created'
 	   );
 	}
 
@@ -68,10 +77,10 @@ class Link_List_Table extends WP_List_Table {
 		return array();
 
 	   	return $sortable = array(
-	      'id' => 'id',
-	      'Name' =>' Name',
-	      'Surname' =>'Surname',
-	      'Email'  => 'Email',
+	      'id'      => 'id',
+	      'Name'    => 'Name',
+	      'Surname' => 'Surname',
+	      'Email'   => 'Email',
 	   );
 	}
 
@@ -85,15 +94,23 @@ class Link_List_Table extends WP_List_Table {
 		$screen = get_current_screen();
 
 		/* -- Preparing your query -- */
-		$query = "SELECT *, mt.MembershipType FROM ".model_thehub_memberships::get_table_name()." m "
-				." LEFT OUTER JOIN wp_thehub_membership_types mt ON (m.fkMembershipType = mt.id) "; 
+		$query = "SELECT 
+					m.*, 
+					mt.MembershipType 
+				  FROM ".model_thehub_memberships::get_table_name()." m 
+				  LEFT OUTER JOIN 
+					".model_thehub_membership_types::get_table_name()." mt 
+				  ON (m.fkMembershipType = mt.id) "; 
 
-		// error_log($query);
+		// if (debug) ... error_log($query);
 
 		/* -- Ordering parameters -- */
         //Parameters that are going to be used to order the result
-		$orderby = !empty($_GET["orderby"]) ? mysql_real_escape_string($_GET["orderby"]) : 'ASC';
-		$order = !empty($_GET["order"]) ? mysql_real_escape_string($_GET["order"]) : '';
+		// $orderby = !empty($_GET["orderby"]) ? mysql_real_escape_string($_GET["orderby"]) : 'ASC';
+		// $order = !empty($_GET["order"]) ? mysql_real_escape_string($_GET["order"]) : '';
+
+		$orderby = filter_input(INPUT_GET, 'orderby', FILTER_SANITIZE_MAGIC_QUOTES);
+		$order = filter_input(INPUT_GET, 'order', FILTER_SANITIZE_MAGIC_QUOTES)?:'ASC';
 		if(!empty($orderby) & !empty($order)){ 
 			$query.=' ORDER BY '.$orderby.' '.$order; 
 		}
@@ -102,7 +119,8 @@ class Link_List_Table extends WP_List_Table {
         //Number of elements in your table?
 		$totalitems = $wpdb->query($query); //return the total number of affected rows
 
-		$perpage = 5;
+		$perpage = $this->getPerPage(); 
+
 		$paged = !empty($_GET["paged"]) ? mysql_real_escape_string($_GET["paged"]) : '';
 		if(empty($paged) || !is_numeric($paged) || $paged<=0 ){ 
 			$paged=1; 
@@ -172,31 +190,31 @@ class Link_List_Table extends WP_List_Table {
 		         switch (strtolower($column_name))
 		         {
 		            case "id":  
-		            	echo '<td '.$attributes.'>'.stripslashes($rec->id).'</td>';   
+		            	echo "<td {$attributes}>{$rec->id}</td>";   
 		            	break;
 		            
 		            case "name": 
-		            	echo '<td '.$attributes.'>'.stripslashes($rec->Name).'5</td>'; 
+		            	echo "<td {$attributes}>".stripslashes($rec->Name).'5</td>'; 
 		            	break;
 		            
 		            case "surname": 
-		            	echo '<td '.$attributes.'>'.stripslashes($rec->Surname).'</td>'; 
+		            	echo "<td {$attributes}>".stripslashes($rec->Surname)."</td>"; 
 		            	break;
 		            
 		            case "email": 
-		            	echo '<td '.$attributes.'>'.$rec->Email.'</td>'; 
+		            	echo "<td {$attributes}>{$rec->Email}</td>"; 
 		            	break;
 		            
 		            case "bactive": 
-		            	echo '<td '.$attributes.'>'.($rec->bActive?'Yes':'No').'</td>'; 
+		            	echo "<td {$attributes}>".($rec->bActive?'Yes':'No')."</td>"; 
 		            	break;
 
 		            case "whencreated": 
-		            	echo '<td '.$attributes.'>'.$rec->WhenCreated.'</td>'; 
+		            	echo "<td {$attributes}>{$rec->WhenCreated}</td>"; 
 		            	break;
 
 		            case "membershiptype": 
-		            	echo '<td '.$attributes.'>'.$rec->MembershipType.'</td>'; 
+		            	echo "<td {$attributes}>{$rec->MembershipType}</td>"; 
 		            	break;
 
 		         }
