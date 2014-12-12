@@ -2,7 +2,7 @@
 defined('ABSPATH') or die("No script kiddies please!");
 
 // format date.version
-DEFINE('THEHUBSA_DB_VERSION', 20141207.001);
+DEFINE('THEHUBSA_DB_VERSION', 20141212.005);
 
 /**
  * Setup
@@ -32,13 +32,12 @@ function thehubsa_install()
  */
 
 function myplugin_update_db_check() {
-    if ( get_site_option( 'thehubsa_db_version' ) != THEHUBSA_DB_VERSION ) 
+    if (get_site_option( 'thehubsa_db_version' ) != THEHUBSA_DB_VERSION ) 
     {
         thehubsa_install();
         thehubsa_install_data();
     }
 }
-
 
 
 // lets install

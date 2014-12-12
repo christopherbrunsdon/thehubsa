@@ -22,8 +22,8 @@ require_once('forms/form-join.php');
 
 // +++ database
 
-require_once('install/create_tables.php');
 require_once('install/add_data.php');
+require_once('install/create_tables.php');
 
 register_activation_hook( __FILE__, 'thehubsa_install' );
 register_activation_hook( __FILE__, 'thehubsa_install_data' );

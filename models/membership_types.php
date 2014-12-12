@@ -34,10 +34,12 @@ class model_thehub_membership_types {
 		$charset_collate = $wpdb->get_charset_collate();
 		$table_name = self::get_table_name();
 
-		$sql = "CREATE TABLE IF NOT EXISTS {$table_name} (
-			id INT NOT NULL AUTO_INCREMENT  PRIMARY KEY,
-			MembershipType varchar(255) NOT NULL,
-			bActive TINYINT DEFAULT TRUE
+		$sql = "CREATE TABLE {$table_name} (
+			id INT NOT NULL AUTO_INCREMENT  ,
+			MembershipType varchar(255) NOT NULL,	
+			DisplayOrder mediumint(9) ,					
+			bActive TINYINT DEFAULT TRUE ,
+			UNIQUE KEY id (id)
 			) {$charset_collate};";
 
 		return $sql;
@@ -58,7 +60,7 @@ class model_thehub_membership_types {
 			WHERE 
 				bActive = True 
 			ORDER BY 
-				id", 
+				DisplayOrder, id", 
 			OBJECT);
 	}
 
@@ -92,7 +94,7 @@ class model_thehub_membership_types {
 			return Null;
 
 		global $wpdb;
-		return $wpdb->get_results("SELECT * FROM ".self::get_table_name()
+		return $wpdb->get_row("SELECT * FROM ".self::get_table_name()
 				." WHERE  lower(MembershipType) = '".strtolower($type)."' " 
 				. ($active?" AND bActive=True ":""), 
 				OBJECT);
