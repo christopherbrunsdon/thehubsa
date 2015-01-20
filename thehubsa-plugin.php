@@ -19,6 +19,7 @@ require_once('models/memberships.php');
 // +++ forms
 
 require_once('forms/form-join.php');
+require_once('forms/form-npo.php');
 
 // +++ database
 
