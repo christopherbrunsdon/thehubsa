@@ -61,14 +61,16 @@ class form_npo
 				<input type="text" class="form-control" id="" placeholder="Other registration numbers" />
 			</div>
 
+			<!-- address type -->
+
 			<div class="form-group">
 				<label for="">Physical address </label>
-				<input type="text" class="form-control" id="" placeholder="Physical address" />
+				<textarea rows=4 type="text" class="form-control" id="" placeholder="Physical address"></textarea>
 			</div>
 
 			<div class="form-group">
 				<label for="">Postal address </label>
-				<input type="text" class="form-control" id="" placeholder="Postal address" />
+				<textarea rows=4 type="text" class="form-control" id="" placeholder="Postal address"></textarea>
 			</div>
 
 
@@ -109,15 +111,67 @@ class form_npo
 				<input type="text" class="form-control" id="" placeholder="Facebook page " />
 			</div>
 
-			<div class="form-group"> 
+<!-- 			<div class="form-group"> 
 				<label for="">Operating hours </label>
 				<input type="text" class="form-control" id="" placeholder="Operating hours " />
 			</div>
-
+ -->
+		<?php for($i=1; $i <= 5; $i++): ?>
 			<div class="form-group"> 
-				<label for="">Services offered</label>
-				<input type="text" class="form-control" id="" placeholder="Services offered" />
+				<?php if($i == 1) : ?><label for="">Services offered</label><?php endif ?>
+				<select  class="form-control" id="">
+					<option>-- Services offered --</option>
+					<option value="">Adult abuse victim support</option>
+					<option value="">Adult education</option>
+					<option value="">Adult rape victim support</option>
+					<option value="">Animal abuse intervention</option>
+					<option value="">Child abuse victim support</option>
+					<option value="">Child rape victim support</option>
+					<option value="">Crisis pregnancy support</option>
+					<option value="">ECD education</option>
+					<option value="">Environmental projects</option>
+					<option value="">Feeding scheme</option>
+					<option value="">Food gardens</option>
+					<option value="">HIV and AIDS intervention</option>
+					<option value="">Literacy scheme</option>
+					<option value="">Lost and found animals</option>
+					<option value="">Lost and found children/adults</option>
+					<option value="">Skills training </option>
+					<option value="">Substance abuse</option>
+					<option value="">Support for homeless</option>
+					<option value="">Support for new mothers</option>
+					<option value="">Support for the disabled</option>
+					<option value="">Support for the elderly</option>
+					<option value="">Support for the terminal</option>
+					<option value="">Tertiary education</option>
+					<option value="">Wildlife</option>
+				</select>
 			</div>
+		<?php endfor; ?>
+
+
+			<h2>SKILLS/RESOURCE BANK</h2>
+
+			<div class="form-group">
+				<label for="">What can your organisation contribute? </label>
+				<textarea rows=4 type="text" class="form-control" id="" placeholder="What can your organisation contribute?"></textarea>
+			</div>
+
+			<div class="form-group">
+				<label for="">Associated Organisations</label>
+				<textarea rows=4 type="text" class="form-control" id="" placeholder="Associated organisations"></textarea>
+			</div>
+
+			<div class="form-group">
+				<label for="">Needs / Wish list</label>
+				<textarea rows=4 type="text" class="form-control" id="" placeholder="Needs / Wish list"></textarea>
+			</div>
+
+			<div class="checkbox">
+			    <label>
+			      <input type="checkbox"> Payment Made
+			    </label>
+			 </div>
 
 			<button type="submit" class="btn btn-default">Submit</button>
 		</form>	
@@ -168,4 +222,27 @@ class form_npo
 
 add_shortcode( SHORTCODE_THEHUBSA_FORM_SIGNUP_NPO, 'form_npo::shortcode' );
 
+// SELECT BY CATEGORY:
+// Agriculture/Food security
+// Arts & Culture
+// Environment & Biodiversity
+// Enterprise & Employment
+// Early Childhood Development (ECD)
+// Education
+// Health
+// Skills Development
+// Senior Citizenship
+// Youth Development
+// Animals
+// Environment
+// Homeless
+// Substance Abuse
+// Disabilities
+// Palliative Care
+// Sustainability
+// Women Empowerment
+// Safety & Security
+// Sport
+// Wildlife
+ 
 // [eof]
