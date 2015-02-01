@@ -22,7 +22,7 @@ defined('ABSPATH') or die("No script kiddies please!");
 // paymentEft TINYINT default 0,
 // paymentDeposit TINYINT default 0,
 
-class model_npos {
+class model_thehub_npos {
 
 
 	public
@@ -53,7 +53,7 @@ class model_npos {
 	static function instance() {
 		static $inst = null;
         if (is_null($inst)) {
-            $inst = new model_npos();
+            $inst = new model_thehubsa_npos();
         }
         return $inst;
 	}
@@ -189,13 +189,240 @@ class model_npos {
 	 *
 	 */
 
-	public function validate()
+	public function validate($data)
 	{
 		$errors = array();
 
 		// validate
 
-	    return array('errors'=>$errors);
+		$sanitize_rules = array(
+  			"npo-name" => 
+  					array(
+  							'filter' => FILTER_SANITIZE_STRING,
+  							'flags' => FILTER_SANITIZE_STRIPPED,
+  							'options' => array('default' => Null),
+  						),
+
+  			"npo-reg-number" => 
+  					array(
+  							'filter' => FILTER_SANITIZE_STRING,
+  							'flags' => FILTER_SANITIZE_STRIPPED,
+  							'options' => array('default' => Null),
+  						),
+
+  			"npo-reg-other" => 
+  					array(
+  							'filter' => FILTER_SANITIZE_STRING,
+  							'flags' => FILTER_SANITIZE_STRIPPED,
+  							'options' => array('default' => Null),
+  						),
+
+  			"npo-address" => 
+  					array(
+  							'filter' => FILTER_SANITIZE_STRING,
+  							'flags' => FILTER_SANITIZE_STRIPPED,
+  							'options' => array('default' => Null),
+  						),
+
+  			"npo-postal" => 
+  					array(
+  							'filter' => FILTER_SANITIZE_STRING,
+  							'flags' => FILTER_SANITIZE_STRIPPED,
+  							'options' => array('default' => Null),
+  						),
+
+  			"npo-contact" => 
+  					array(
+  							'filter' => FILTER_SANITIZE_STRING,
+  							'flags' => FILTER_SANITIZE_STRIPPED,
+  							'options' => array('default' => Null),
+  						),
+
+  			"npo-tel" => 
+  					array(
+  							'filter' => FILTER_SANITIZE_STRING,
+  							'flags' => FILTER_SANITIZE_STRIPPED,
+  							'options' => array('default' => Null),
+  						),
+
+  			"npo-mobile" => 
+  					array(
+  							'filter' => FILTER_SANITIZE_STRING,
+  							'flags' => FILTER_SANITIZE_STRIPPED,
+  							'options' => array('default' => Null),
+  						),
+
+  			"npo-email" => 
+  					array(
+  							'filter' => FILTER_SANITIZE_STRING,
+  							'flags' => FILTER_SANITIZE_STRIPPED,
+  							'options' => array('default' => Null),
+  						),
+
+  			"npo-website" => 
+  					array(
+  							'filter' => FILTER_SANITIZE_STRING,
+  							'flags' => FILTER_SANITIZE_STRIPPED,
+  							'options' => array('default' => Null),
+  						),
+
+  			"npo-url" => 
+  					array(
+  							'filter' => FILTER_SANITIZE_STRING,
+  							'flags' => FILTER_SANITIZE_STRIPPED,
+  							'options' => array('default' => Null),
+  						),
+
+  			"npo-facebook" => 
+  					array(
+  							'filter' => FILTER_SANITIZE_STRING,
+  							'flags' => FILTER_SANITIZE_STRIPPED,
+  							'options' => array('default' => Null),
+  						),
+
+  			"npo-description" => 
+  					array(
+  							'filter' => FILTER_SANITIZE_STRING,
+  							'flags' => FILTER_SANITIZE_STRIPPED,
+  							'options' => array('default' => Null),
+  						),
+
+  			"npo-services-other" => 
+  					array(
+  							'filter' => FILTER_SANITIZE_STRING,
+  							'flags' => FILTER_SANITIZE_STRIPPED,
+  							'options' => array('default' => Null),
+  						),
+
+  			"npo-associated" => 
+  					array(
+  							'filter' => FILTER_SANITIZE_STRING,
+  							'flags' => FILTER_SANITIZE_STRIPPED,
+  							'options' => array('default' => Null),
+  						),
+
+  			"npo-needs" => 
+  					array(
+  							'filter' => FILTER_SANITIZE_STRING,
+  							'flags' => FILTER_SANITIZE_STRIPPED,
+  							'options' => array('default' => Null),
+  						),
+
+  			"npo-wishlist" => 
+  					array(
+  							'filter' => FILTER_SANITIZE_STRING,
+  							'flags' => FILTER_SANITIZE_STRIPPED,
+  							'options' => array('default' => Null),
+  						),
+
+  			"npo-payment-eft" => 
+  					array(
+  							'filter' => FILTER_SANITIZE_NUMBER_INT,
+  							'flags' => FILTER_SANITIZE_STRIPPED,  							
+  							'options' => array('default' => 0),
+  						),
+
+  			"npo-payment-deposit" => 
+  					array(
+  							'filter' => FILTER_SANITIZE_NUMBER_INT,
+  							'flags' => FILTER_SANITIZE_STRIPPED,  							
+  							'options' => array('default' => 0),
+  						),
+			);
+
+		// dynamically add
+
+		for($i = 1; $i <= 5 ; $i++)
+		{
+  			$sanitize_rules["npo-service-offered-{$i}"] =
+  					array(
+  							'filter' => FILTER_SANITIZE_STRING,
+  							'flags' => FILTER_SANITIZE_STRIPPED,
+  							'options' => array('default' => Null),
+  						);
+
+  			$sanitize_rules["npo-service-offered-other-${i}"] = 
+  					array(
+  							'filter' => FILTER_SANITIZE_STRING,
+  							'flags' => FILTER_SANITIZE_STRIPPED,
+  							'options' => array('default' => Null),
+  						);
+		}
+
+		// sanitize data
+
+		$data = filter_var_array($data, $sanitize_rules);
+
+		if(empty($data['npo-name'])) {
+			$errors['npo-name'] = 'Please enter!';
+		}
+
+		if(empty($data['npo-reg-number'])) {
+			$errors['npo-reg-number'] = 'Please enter!';
+		}
+
+		if(empty($data['npo-address'])) {
+			$errors['npo-address'] = 'Please enter!';
+		}
+
+		if(empty($data['npo-postal'])) {
+			$errors['npo-postal'] = 'Please enter!';
+		}
+
+		if(empty($data['npo-contact'])) {
+			$errors['npo-contact'] = 'Please enter contact person!';
+		}
+
+		if(empty($data['npo-tel'])) {
+			$errors['npo-tel'] = 'Please enter telephonen number!';
+		}
+
+		if(empty($data['npo-mobile'])) {
+			$errors['npo-mobile'] = 'Please enter cellphone number!';
+		}
+
+		if(empty($data['npo-email'])) {
+			$errors['npo-email'] = 'Please enter email address!';
+		}
+
+		if(empty($data['npo-website'])) {
+			$errors['npo-website'] = 'Please enter!';
+		}
+
+		if(empty($data['npo-url'])) {
+			$errors['npo-url'] = 'Please enter!';
+		}
+
+		if(empty($data['npo-facebook'])) {
+			$errors['npo-facebook'] = 'Please enter!';
+		}
+
+		if(empty($data['npo-description'])) {
+			$errors['npo-description'] = 'Please enter!';
+		}
+
+		if(empty($data['npo-services-other'])) {
+			$errors['npo-services-other'] = 'Please enter!';
+		}
+
+		if(empty($data['npo-associated'])) {
+			$errors['npo-associated'] = 'Please enter!';
+		}
+
+		if(empty($data['npo-needs'])) {
+			$errors['npo-needs'] = 'Please enter!';
+		}
+
+		if(empty($data['npo-wishlist'])) {
+			$errors['npo-wishlist'] = 'Please enter!';
+		}
+
+		if(!isset($data['npo-payment-eft']) && !isset($data['npo-payment-deposit'])) {
+			$errors['npo-payment-eft'] = 'Please make a payment!';
+			$errors['npo-payment-deposit'] = 'Please make a payment!';
+		}
+		
+	    return array('errors'=>$errors, 'data' => $data);
 	}
 
 

@@ -40,6 +40,49 @@ function thehubsa_install_data()
 				array('id'=>$found->id));
 		}
 	}
+
+	// NPO Services
+	// we need to run this once
+	$table_name = model_thehub_npo_service_types::get_table_name();
+	$services = array(
+				'Adult abuse victim support',
+				'Adult education',
+				'Adult rape victim support',
+				'Animal abuse intervention',
+				'Child abuse victim support',
+				'Child rape victim support',
+				'Crisis pregnancy support',
+				'ECD education',
+				'Environmental projects',
+				'Feeding scheme',
+				'Food gardens',
+				'HIV and AIDS intervention',
+				'Literacy scheme',
+				'Lost and found animals',
+				'Lost and found children/adults',
+				'Skills training ',
+				'Substance abuse',
+				'Support for homeless',
+				'Support for new mothers',
+				'Support for the disabled',
+				'Support for the elderly',
+				'Support for the terminal',
+				'Tertiary education',
+				'Wildlife',
+				);
+
+	foreach($services as $service) {
+		$found = model_thehub_npo_service_types::get_by_service($service, False);
+
+		// insert if not found
+		if(empty($found)) {
+			$wpdb->insert( $table_name, 
+				array('Service'=>$service));
+		} else {
+			// update if exists
+		}
+	}
+
 }
 
 // lets install

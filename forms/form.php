@@ -57,6 +57,14 @@ abstract class form
      */
     public function addError($field, $msg='error')
     {
+        // bulk upload
+        if(is_array($field)) {
+            foreach($field as $f => $m) {
+                $this->addError($f, $m);
+            }
+            return;
+        }
+
     	if(!is_array($this->_form_errors)) {
     		$this->_form_errors=array();
     	}

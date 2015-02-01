@@ -35,12 +35,12 @@
 
 	<div class="form-group <?php $this->hasError('npo-address') && print 'has-error' ?>">
 		<label class="control-label" for="">Physical address : <?= $this->getError('npo-address') ?></label>
-		<textarea rows=4 type="text" value="<?= $this->getValue('npo-address'); ?>" name="npo-address" class="form-control" id="" placeholder="Physical address"></textarea>
+		<textarea rows=4 type="text" name="npo-address" class="form-control" id="" placeholder="Physical address"><?= $this->getValue('npo-address'); ?></textarea>
 	</div>
 
 	<div class="form-group  <?php $this->hasError('npo-postal') && print 'has-error' ?>">
 		<label class="control-label" for="">Postal address : <?= $this->getError('npo-postal') ?></label>
-		<textarea rows=4 type="text" value="<?= $this->getValue('npo-postal'); ?>" name="npo-postal" class="form-control" id="" placeholder="Postal address"></textarea>
+		<textarea rows=4 type="text" name="npo-postal" class="form-control" id="" placeholder="Postal address"><?= $this->getValue('npo-postal'); ?></textarea>
 	</div>
 
 
@@ -95,35 +95,14 @@
 
 			<select  class="form-control" name="npo-service-offered-<?= $i ?>" id="services_<?= $i; ?>">
 				<option>-- Services offered --</option>
-				<option value="">Adult abuse victim support</option>
-				<option value="">Adult education</option>
-				<option value="">Adult rape victim support</option>
-				<option value="">Animal abuse intervention</option>
-				<option value="">Child abuse victim support</option>
-				<option value="">Child rape victim support</option>
-				<option value="">Crisis pregnancy support</option>
-				<option value="">ECD education</option>
-				<option value="">Environmental projects</option>
-				<option value="">Feeding scheme</option>
-				<option value="">Food gardens</option>
-				<option value="">HIV and AIDS intervention</option>
-				<option value="">Literacy scheme</option>
-				<option value="">Lost and found animals</option>
-				<option value="">Lost and found children/adults</option>
-				<option value="">Skills training </option>
-				<option value="">Substance abuse</option>
-				<option value="">Support for homeless</option>
-				<option value="">Support for new mothers</option>
-				<option value="">Support for the disabled</option>
-				<option value="">Support for the elderly</option>
-				<option value="">Support for the terminal</option>
-				<option value="">Tertiary education</option>
-				<option value="">Wildlife</option>
-				<option value="-- Other --" id="services_other_<?= $i; ?>">-- Other (Please indicate) --</option>					
+				<?php foreach($services as $service): ?>
+					<option value="<?= $service->id ?>" <?php $this->getValue('npo-service-offered-'.$i) ==  $service->id && print 'selected'; ?> ><?= $service->Service; ?></option>
+				<?php endforeach; ?>
+				<option value="-- Other --" id="services_other_<?= $i; ?>" <?php $this->getValue('npo-service-offered-'.$i) == '-- Other --' && print 'selected'; ?>   >-- Other (Please indicate) --</option>					
 			</select>
 		</div>
 
-		<div style="display: none;" id="service_other_input_<?= $i; ?>">
+		<div <?php $this->getValue('npo-service-offered-'.$i) != '-- Other --' && print 'style="display: none;"' ?> id="service_other_input_<?= $i; ?>">
 			<div class="input-group">
 				<div class="input-group-addon">Other:</div>
 				<input  type="text" value="<?= $this->getValue('npo-service-offered-other-'.$i); ?>" name="npo-service-offered-other-<?= $i ?>" class="form-control"  placeholder="Other (Please inidcate)" />
@@ -153,9 +132,9 @@
 
 	<h2>SKILLS/RESOURCE BANK</h2>
 
-	<div class="form-group  <?php $this->hasError('npo-service-other') && print 'has-error' ?>">
-		<label class="control-label" for="">What can your organisation offer to the community (eg training, office space, haircuts) : <?= $this->getError('npo-service-other') ?></label>
-		<textarea rows=4 name="npo-services-other" type="text" class="form-control" id="" placeholder="What can your organisation offer to the community (eg training, office space, haircuts)"><?= $this->getValue('npo-service-other'); ?></textarea>
+	<div class="form-group  <?php $this->hasError('npo-services-other') && print 'has-error' ?>">
+		<label class="control-label" for="">What can your organisation offer to the community (eg training, office space, haircuts) : <?= $this->getError('npo-services-other') ?></label>
+		<textarea rows=4 name="npo-services-other" type="text" class="form-control" id="" placeholder="What can your organisation offer to the community (eg training, office space, haircuts)"><?= $this->getValue('npo-services-other'); ?></textarea>
 	</div>
 
 	<div class="form-group  <?php $this->hasError('npo-associated') && print 'has-error' ?>">
@@ -198,19 +177,21 @@
 		<strong>Confirmation of payment:</strong> lynettepullen@gmail.com
 	</p>
 
-	<div class="checkbox">
-	    <label class="control-label">
-	      <input name="npo-payment-eft" <?php $this->getValue('npo-payment-eft') && print 'checked' ?> onclick="$('#btn-submit').prop('disabled', false).addClass('btn-primary').removeClass('btn-default');" type="checkbox"> 
-	      Payment Made via EFT
-	    </label>
-	 </div>
-	<div class="checkbox">
-	    <label class="control-label">
-	      <input name="npo-payment-deposit" <?php $this->getValue('npo-payment-deposit') && print 'checked' ?> onclick="$('#btn-submit').prop('disabled', false).addClass('btn-primary').removeClass('btn-default');" type="checkbox"> 
-	      Payment Made via Deposit
-	    </label>
-	 </div>
+	<div class="form-group  <?php $this->hasError('npo-payment-eft') && print 'has-error' ?>">
+		<div class="checkbox">
+		    <label class="control-label">
+		      <input name="npo-payment-eft" <?php $this->getValue('npo-payment-eft') && print 'checked' ?> onclick="$('#btn-submit').prop('disabled', false).addClass('btn-primary').removeClass('btn-default');" type="checkbox"> 
+		      Payment Made via EFT <?= $this->getError('npo-payment-eft') ?>
+		    </label>
+		 </div>
+		<div class="checkbox">
+		    <label class="control-label">
+		      <input name="npo-payment-deposit" <?php $this->getValue('npo-payment-deposit') && print 'checked' ?> onclick="$('#btn-submit').prop('disabled', false).addClass('btn-primary').removeClass('btn-default');" type="checkbox"> 
+		      Payment Made via Deposit <?= $this->getError('npo-payment-deposit') ?>
+		    </label>
+		</div>
+	</div>
 
-	<button id="btn-submit" xxxdisabled type="submit" class="btn btn-default" name="npo-submit">Submit</button>
+	<button id="btn-submit" disabled type="submit" class="btn btn-default" name="npo-submit">Submit</button>
 	&nbsp;&nbsp;|&nbsp;&nbsp;<a href="">Reset Form</a>
 </form>	

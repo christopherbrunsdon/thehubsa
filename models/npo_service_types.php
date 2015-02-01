@@ -20,7 +20,7 @@ class model_thehub_npo_service_types {
 	static function get_table_name() 
 	{
 		global $wpdb;
-		return $wpdb->prefix."npo_service_types";
+		return $wpdb->prefix."thehub_npo_service_types";
 	}
 
 	/**
@@ -34,10 +34,10 @@ class model_thehub_npo_service_types {
 		$charset_collate = $wpdb->get_charset_collate();
 		$table_name = self::get_table_name();
 
-		$sql = "CREATE TABLE {$table_name} (
-			id     INT NOT NULL,
+		$sql = "CREATE TABLE IF NOT EXISTS {$table_name} (
+			id INT NOT NULL AUTO_INCREMENT  PRIMARY KEY,
 			Service varchar(512) NOT NULL DEFAULT '',
-			bActive TINYINT DEFAULT TRUE ,
+			bActive TINYINT DEFAULT TRUE
 			) {$charset_collate};";
 
 		return $sql;
@@ -47,12 +47,12 @@ class model_thehub_npo_service_types {
 	 * List of active types
 	 */
 
-	static public function get_types()
+	static public function get_services()
 	{
 		global $wpdb;
 		return $wpdb->get_results(
 			"SELECT 
-				id, idService 
+				id, Service 
 			FROM 
 				".self::get_table_name()." 
 			WHERE 
@@ -86,14 +86,14 @@ class model_thehub_npo_service_types {
 	 * @return object
 	 */
 
-	static public function get_by_type($type, $active = True)
+	static public function get_by_service($service, $active = True)
 	{
-		if($type == False)
+		if($service == False)
 			return Null;
 
 		global $wpdb;
 		return $wpdb->get_row("SELECT * FROM ".self::get_table_name()
-				." WHERE  lower(Service) = '".strtolower($type)."' " 
+				." WHERE  lower(Service) = '".strtolower($service)."' " 
 				. ($active?" AND bActive=True ":""), 
 				OBJECT);
 	}

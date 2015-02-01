@@ -5,6 +5,16 @@ defined('ABSPATH') or die("No script kiddies please!");
 
 class model_thehub_npo_services {
 
+	CONST NUMBER_PER_NPO = 5; // set the number per NPO here
+
+	public
+		$_id_npo = Null,
+		$_id_service = Null,
+		$_service_other = Null,
+		$_rank_order = Null,
+		$_notes = Null;
+
+
 	static function instance() {
 		static $inst = null;
         if (is_null($inst)) {
@@ -20,7 +30,7 @@ class model_thehub_npo_services {
 	static function get_table_name() 
 	{
 		global $wpdb;
-		return $wpdb->prefix."npo_services";
+		return $wpdb->prefix."thehub_npo_services";
 	}
 
 	/**
@@ -34,19 +44,83 @@ class model_thehub_npo_services {
 		$charset_collate = $wpdb->get_charset_collate();
 		$table_name = self::get_table_name();
 
-		$sql = "CREATE TABLE {$table_name} (
-			idNpo     INT NOT NULL,
-			idService INT DEFAULT NULL,	
-			ServiceOther varchar(512) NOT NULL DEFAULT '',
+		$fk_npo = model_thehub_npos::get_table_name();
+		$fk_services = model_thehub_npo_service_types::get_table_name();
+
+
+		$sql = "CREATE TABLE IF NOT EXISTS {$table_name} (
+			fkNpo     INT NOT NULL,
+			fkService INT DEFAULT NULL,	
+			ServiceOther varchar(128) NOT NULL DEFAULT '',
 			RankOrder mediumint(9) ,					
-			bActive TINYINT DEFAULT TRUE ,
+
+			bActive   	TINYINT DEFAULT TRUE,
+			Notes 		varchar(1024) DEFAULT '',
+			WhenCreated TIMESTAMP DEFAULT 0,
+			WhenUpdated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+		                ON UPDATE CURRENT_TIMESTAMP,
+
+			FOREIGN KEY (fkNpo)
+				REFERENCES {$fk_npo}(id),
+
+			FOREIGN KEY (fkService)
+				REFERENCES {$fk_services}(id)
+				ON DELETE SET NULL			
+
 			) {$charset_collate};";
 
 		return $sql;
 	}
 
+	
+	public function set_data($data)
+	{
+		if(!is_array($data)) {
+			return $this->set_data(array());
+		}
+
+		$this->_id_npo			= array_key_exists('fkNpo', $data) ? $data['fkNpo'] : Null;
+		$this->_id_service		= array_key_exists('fkService', $data) ? $data['fkService'] : Null;
+		$this->_service_other	= array_key_exists('ServiceOther', $data) ? $data['ServiceOther'] : Null;
+		$this->_rank_order		= array_key_exists('RankOrder', $data) ? $data['RankOrder'] : Null;
+	}
+
+
+	public function save()
+	{
+		global $wpdb;
+
+		$fields = array(
+					'fkNpo' 		=> $this->_id_npo,
+					// 'fkService' 	=> $this->_id_service,
+					'ServiceOther' 	=> $this->_service_other,
+					'RankOrder' 	=> $this->_rank_order,
+					'Notes' 		=> $this->_notes,
+					'WhenCreated' 	=> date("Y-m-d H:i"), // now()     
+					);
+
+		$field_meta = array(
+					'%d', // 'fkNpo' 
+					// '%d', // 'fkService' 
+					'%s', // 'ServiceOther' 
+					'%d', // 'RankOrder' 
+					'%s', // 'Notes' 
+					'%s', // 'WhenCreated' 
+					);
+
+
+		if($this->_id_service) {
+			$fields['fkService']= $this->_id_service;
+			$field_meta[] = '%d';
+		}
+			
+		$wpdb->insert(self::get_table_name(), $fields, $field_meta);
+	}
+
+
 	/**
 	 * List of active types
+	 * do inner join here
 	 */
 
 	static public function get_types()
@@ -54,7 +128,7 @@ class model_thehub_npo_services {
 		global $wpdb;
 		return $wpdb->get_results(
 			"SELECT 
-				idNpo, idService 
+				fkNpo, fkService 
 			FROM 
 				".self::get_table_name()." 
 			WHERE 

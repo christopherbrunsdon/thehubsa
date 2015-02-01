@@ -15,6 +15,9 @@ Author URI: http://www.brunsdon.co.za
 
 require_once('models/membership_types.php');
 require_once('models/memberships.php');
+require_once('models/npo_service_types.php');
+require_once('models/npo_services.php');
+require_once('models/npos.php');
 
 // +++ forms
 
