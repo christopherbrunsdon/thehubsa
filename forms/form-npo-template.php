@@ -16,79 +16,79 @@
 
 	<h2>NAME OF ORGANISATION</h2>
 
-	<div class="form-group">
-		<label for="">NPO name</label>
-		<input type="text" name="npo-name" class="form-control" id="" placeholder="NPO name" />
+	<div class="form-group <?php $this->hasError('npo-name') && print 'has-error' ?>">
+		<label class="control-label" for="">NPO name : <?= $this->getError('npo-name') ?></label>
+		<input type="text" name="npo-name" class="form-control" id="" placeholder="NPO name" value="<?= $this->getValue('npo-name'); ?>"/>
 	</div>
 
-	<div class="form-group">
-		<label for="">NPO registration number</label>
-		<input type="text" name="npo-reg-number" class="form-control" id="" placeholder="NPO registration number" />
+	<div class="form-group <?php $this->hasError('npo-reg-number') && print 'has-error' ?>">
+		<label class="control-label" for="">NPO registration number : <?= $this->getError('npo-reg-number') ?></label>
+		<input type="text" value="<?= $this->getValue('npo-reg-number'); ?>" name="npo-reg-number" class="form-control" id="" placeholder="NPO registration number" />
 	</div>
 
-	<div class="form-group">
-		<label for="">Other registration numbers and descriptions (not required) </label>
-		<input type="text" name="npo-reg-other" class="form-control" id="" placeholder="Other registration numbers" />
+	<div class="form-group <?php $this->hasError('npo-reg-other') && print 'has-error' ?>">
+		<label class="control-label" for="">Other registration numbers and descriptions (not required) : <?= $this->getError('npo-reg-other') ?></label>
+		<input type="text" value="<?= $this->getValue('npo-reg-other'); ?>" name="npo-reg-other" class="form-control" id="" placeholder="Other registration numbers" />
 	</div>
 
 	<!-- address type -->
 
-	<div class="form-group">
-		<label for="">Physical address </label>
-		<textarea rows=4 type="text" name="npo-address" class="form-control" id="" placeholder="Physical address"></textarea>
+	<div class="form-group <?php $this->hasError('npo-address') && print 'has-error' ?>">
+		<label class="control-label" for="">Physical address : <?= $this->getError('npo-address') ?></label>
+		<textarea rows=4 type="text" value="<?= $this->getValue('npo-address'); ?>" name="npo-address" class="form-control" id="" placeholder="Physical address"></textarea>
 	</div>
 
-	<div class="form-group">
-		<label for="">Postal address </label>
-		<textarea rows=4 type="text" name="npo-postal" class="form-control" id="" placeholder="Postal address"></textarea>
+	<div class="form-group  <?php $this->hasError('npo-postal') && print 'has-error' ?>">
+		<label class="control-label" for="">Postal address : <?= $this->getError('npo-postal') ?></label>
+		<textarea rows=4 type="text" value="<?= $this->getValue('npo-postal'); ?>" name="npo-postal" class="form-control" id="" placeholder="Postal address"></textarea>
 	</div>
 
 
 	<!-- contact details -->
 	<h2>CONTACT DETAILS</h2>
-	<div class="form-group"> 
-		<label for="">Contact person  (Title, First Name, Surname)</label>
-		<input type="text" name="npo-contact" class="form-control" id="" placeholder="Contact person " />
+	<div class="form-group  <?php $this->hasError('npo-contact') && print 'has-error' ?>"> 
+		<label class="control-label" for="">Contact person  (Title, First Name, Surname) : <?= $this->getError('npo-contact') ?></label>
+		<input type="text" value="<?= $this->getValue('npo-contact'); ?>" name="npo-contact" class="form-control" id="" placeholder="Contact person " />
 	</div>
 
-	<div class="form-group"> 
-		<label for="">Telephone number  (example: +2721800000 no spaces)"</label>
-		<input type="text" name="npo-tel" class="form-control" id="" placeholder="Telephone number " />
+	<div class="form-group  <?php $this->hasError('npo-tel') && print 'has-error' ?>"> 
+		<label class="control-label" for="">Telephone number  (example: +2721800000 no spaces) : <?= $this->getError('npo-tel') ?></label>
+		<input type="text" value="<?= $this->getValue('npo-tel'); ?>" name="npo-tel" class="form-control" id="" placeholder="Telephone number " />
 	</div>
 
-	<div class="form-group"> 
-		<label for="">Cell number  (example 0822222222222 no spaces)</label>
-		<input type="text" name="npo-mobile" class="form-control" id="" placeholder="Cell number " />
+	<div class="form-group  <?php $this->hasError('npo-mobile') && print 'has-error' ?>"> 
+		<label class="control-label" for="">Cell number  (example 0822222222222 no spaces) : <?= $this->getError('npo-mobile') ?></label>
+		<input type="text" value="<?= $this->getValue('npo-mobile'); ?>" name="npo-mobile" class="form-control" id="" placeholder="Cell number " />
 	</div>
 
-	<div class="form-group"> 
-		<label for="">email address </label>
-		<input type="text" name="npo-email" class="form-control" id="" placeholder="email address " />
+	<div class="form-group  <?php $this->hasError('npo-email') && print 'has-error' ?>"> 
+		<label class="control-label" for="">email address : <?= $this->getError('npo-email') ?></label>
+		<input type="text" value="<?= $this->getValue('npo-email'); ?>" name="npo-email" class="form-control" id="" placeholder="email address " />
 	</div>
 
-	<div class="form-group"> 
-		<label for="">Website address </label>
-		<input type="text" name="npo-website" class="form-control" id="" placeholder="Website address " />
+	<div class="form-group  <?php $this->hasError('npo-website') && print 'has-error' ?>"> 
+		<label class="control-label" for="">Website address : <?= $this->getError('npo-website') ?></label>
+		<input type="text" value="<?= $this->getValue('npo-website'); ?>" name="npo-website" class="form-control" id="" placeholder="Website address " />
 	</div>
 
-	<div class="form-group"> 
-		<label for="">Preferred link for listing  (if not your home page as above)</label>
-		<input type="text" name="npo-url" class="form-control" id="" placeholder="Preferred link for listing " />
+	<div class="form-group  <?php $this->hasError('npo-url') && print 'has-error' ?>"> 
+		<label class="control-label" for="">Preferred link for listing  (if not your home page as above) : <?= $this->getError('npo-url') ?></label>
+		<input type="text" value="<?= $this->getValue('npo-url'); ?>" name="npo-url" class="form-control" id="" placeholder="Preferred link for listing " />
 	</div>
 
-	<div class="form-group"> 
-		<label for="">Facebook page </label>
-		<input type="text" name="npo-facebook" class="form-control" id="" placeholder="Facebook page " />
+	<div class="form-group  <?php $this->hasError('npo-facebook') && print 'has-error' ?>"> 
+		<label class="control-label" for="">Facebook page : <?= $this->getError('npo-facebook') ?></label>
+		<input type="text" value="<?= $this->getValue('npo-facebook'); ?>" name="npo-facebook" class="form-control" id="" placeholder="Facebook page " />
 	</div>
 
-<!-- 			<div class="form-group"> 
-		<label for="">Operating hours </label>
+<!-- 			<div class="form-group  <?php $this->hasError('npo-xxx') && print 'has-error' ?>"> 
+		<label class="control-label" for="">Operating hours  <?= $this->getError('npo-xxx') ?></label>
 		<input type="text" class="form-control" id="" placeholder="Operating hours " />
 	</div>
 -->
 <?php for($i=1; $i <= 5; $i++): ?>
-	<div class="form-group"> 
-		<?php if($i == 1) : ?><label for="">Services offered (in order of importance)</label><?php endif ?>
+	<div class="form-group  <?php $this->hasError('npo-service-offered-<?= $i ?>') && print 'has-error' ?>"> 
+		<?php if($i == 1) : ?><label class="control-label" for="">Services offered (in order of importance) : <?= $this->getError('npo-service-offered-<?= $i ?>') ?></label><?php endif ?>
 
 		<div class="input-group">
 			<div class="input-group-addon"><?= $i ?>.</div>
@@ -126,7 +126,7 @@
 		<div style="display: none;" id="service_other_input_<?= $i; ?>">
 			<div class="input-group">
 				<div class="input-group-addon">Other:</div>
-				<input  type="text" name="npo-service-offered-other-<?= $i ?>" class="form-control"  placeholder="Other (Please inidcate)" />
+				<input  type="text" value="<?= $this->getValue('npo-service-offered-other-'.$i); ?>" name="npo-service-offered-other-<?= $i ?>" class="form-control"  placeholder="Other (Please inidcate)" />
 			</div>
 		</div>
 	</div>
@@ -144,33 +144,33 @@
 <?php endfor; ?>
 
 
-	<div class="form-group">
-		<label for="">Give a short description (400 characters or less) of your organisation</label>
-		<textarea rows=4 name="npo-description" type="text" class="form-control" id="" placeholder="Give a short description (400 characters or less) of your organisation"></textarea>
+	<div class="form-group  <?php $this->hasError('npo-description') && print 'has-error' ?>">
+		<label class="control-label" for="">Give a short description (400 characters or less) of your organisation : <?= $this->getError('npo-description') ?></label>
+		<textarea rows=4 name="npo-description" type="text" class="form-control" id="" placeholder="Give a short description (400 characters or less) of your organisation"><?= $this->getValue('npo-description'); ?></textarea>
 	</div>
 
 
 
 	<h2>SKILLS/RESOURCE BANK</h2>
 
-	<div class="form-group">
-		<label for="">What can your organisation offer to the community (eg training, office space, haircuts) </label>
-		<textarea rows=4 name="npo-services-other" type="text" class="form-control" id="" placeholder="What can your organisation offer to the community (eg training, office space, haircuts)"></textarea>
+	<div class="form-group  <?php $this->hasError('npo-service-other') && print 'has-error' ?>">
+		<label class="control-label" for="">What can your organisation offer to the community (eg training, office space, haircuts) : <?= $this->getError('npo-service-other') ?></label>
+		<textarea rows=4 name="npo-services-other" type="text" class="form-control" id="" placeholder="What can your organisation offer to the community (eg training, office space, haircuts)"><?= $this->getValue('npo-service-other'); ?></textarea>
 	</div>
 
-	<div class="form-group">
-		<label for="">Associated Organisations</label>
-		<textarea rows=4 name="npo-associated" type="text" class="form-control" id="" placeholder="Associated organisations"></textarea>
+	<div class="form-group  <?php $this->hasError('npo-associated') && print 'has-error' ?>">
+		<label class="control-label" for="">Associated Organisations : <?= $this->getError('npo-associated') ?></label>
+		<textarea rows=4 name="npo-associated" type="text" class="form-control" id="" placeholder="Associated organisations"><?= $this->getValue('npo-associated'); ?></textarea>
 	</div>
 
-	<div class="form-group">
-		<label for="">Needs list</label>
-		<textarea rows=4 name="npo-needs" type="text" class="form-control" id="" placeholder="Needs list"></textarea>
+	<div class="form-group  <?php $this->hasError('npo-needs') && print 'has-error' ?>">
+		<label class="control-label" for="">Needs list : <?= $this->getError('npo-needs') ?></label>
+		<textarea rows=4 name="npo-needs" type="text" class="form-control" id="" placeholder="Needs list"><?= $this->getValue('npo-needs'); ?></textarea>
 	</div>
 
-	<div class="form-group">
-		<label for=""> Wish list</label>
-		<textarea rows=4 name="npo-wishlist" type="text" class="form-control" id="" placeholder="Wish list"></textarea>
+	<div class="form-group  <?php $this->hasError('npo-wishlist') && print 'has-error' ?>">
+		<label class="control-label" for=""> Wish list : <?= $this->getError('npo-wishlist') ?></label>
+		<textarea rows=4 name="npo-wishlist" type="text" class="form-control" id="" placeholder="Wish list"><?= $this->getValue('npo-wishlist'); ?></textarea>
 	</div>
 
 	<p>
@@ -199,14 +199,14 @@
 	</p>
 
 	<div class="checkbox">
-	    <label>
-	      <input name="npo-payment-eft" onclick="$('#btn-submit').prop('disabled', false).addClass('btn-primary').removeClass('btn-default');" type="checkbox"> 
+	    <label class="control-label">
+	      <input name="npo-payment-eft" <?php $this->getValue('npo-payment-eft') && print 'checked' ?> onclick="$('#btn-submit').prop('disabled', false).addClass('btn-primary').removeClass('btn-default');" type="checkbox"> 
 	      Payment Made via EFT
 	    </label>
 	 </div>
 	<div class="checkbox">
-	    <label>
-	      <input name="npo-payment-deposit" onclick="$('#btn-submit').prop('disabled', false).addClass('btn-primary').removeClass('btn-default');" type="checkbox"> 
+	    <label class="control-label">
+	      <input name="npo-payment-deposit" <?php $this->getValue('npo-payment-deposit') && print 'checked' ?> onclick="$('#btn-submit').prop('disabled', false).addClass('btn-primary').removeClass('btn-default');" type="checkbox"> 
 	      Payment Made via Deposit
 	    </label>
 	 </div>

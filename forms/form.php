@@ -5,9 +5,9 @@ defined('ABSPATH') or die("No script kiddies please!");
 abstract class form 
 {
 
-	private $_form_errors = Null;
+	protected $_form_errors = Null;
 	
-	private $_form_data = Null;
+	protected $_form_data = Null;
 
 	
 	public function __constructor()
@@ -29,9 +29,9 @@ abstract class form
 	 * interface methods
 	 */
 
-	function render() {}
+	function render($data = Null, $errors = Null) {}
 
-	function process() {}
+	function process($data) {}
 
 	function render_thank_you() {}
 	
@@ -51,6 +51,17 @@ abstract class form
     	 			: Null;
     }
 
+    /**
+     * Add error
+     *
+     */
+    public function addError($field, $msg='error')
+    {
+    	if(!is_array($this->_form_errors)) {
+    		$this->_form_errors=array();
+    	}
+    	$this->_form_errors[$field] = $msg;
+    }
     /**
      * Get error
      *
