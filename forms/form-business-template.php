@@ -14,8 +14,6 @@
 
 	<!-- Name of organisation -->
 
-	<h2>NAME OF ORGANISATION</h2>
-
 	<div class="form-group <?php $this->hasError('business-name') && print 'has-error' ?>">
 		<label class="control-label" for="">Name Of Business : <?= $this->getError('business-name') ?></label>
 		<input type="text" name="business-name" class="form-control" id="" placeholder="Name Of Business" value="<?= $this->getValue('business-name'); ?>"/>
@@ -153,7 +151,21 @@ commitment you are making.
 		<strong>Confirmation of payment:</strong> lynettepullen@gmail.com
 	</p>
 
+	<div class="form-group  <?php $this->hasError('business-payment-eft') && print 'has-error' ?>">
+		<div class="checkbox">
+		    <label class="control-label">
+		      <input name="business-payment-eft" <?php $this->getValue('business-payment-eft') && print 'checked' ?> onclick="$('#btn-submit').prop('disabled', false).addClass('btn-primary').removeClass('btn-default');" type="checkbox"> 
+		      Payment Made via EFT <?= $this->getError('business-payment-eft') ?>
+		    </label>
+		 </div>
+		<div class="checkbox">
+		    <label class="control-label">
+		      <input name="business-payment-deposit" <?php $this->getValue('business-payment-deposit') && print 'checked' ?> onclick="$('#btn-submit').prop('disabled', false).addClass('btn-primary').removeClass('btn-default');" type="checkbox"> 
+		      Payment Made via Deposit <?= $this->getError('business-payment-deposit') ?>
+		    </label>
+		</div>
+	</div>
 
-	<button id="btn-submit" type="submit" class="btn btn-primary" name="business-submit">Submit</button>
+	<button id="btn-submit" disabled type="submit" class="btn btn-default" name="business-submit">Submit</button>
 	&nbsp;&nbsp;|&nbsp;&nbsp;<a href="">Reset Form</a>
 </form>	
