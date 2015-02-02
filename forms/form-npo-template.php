@@ -62,8 +62,8 @@
 	</div>
 
 	<div class="form-group  <?php $this->hasError('npo-email') && print 'has-error' ?>"> 
-		<label class="control-label" for="">email address : <?= $this->getError('npo-email') ?></label>
-		<input type="text" value="<?= $this->getValue('npo-email'); ?>" name="npo-email" class="form-control" id="" placeholder="email address " />
+		<label class="control-label" for="">Email address : <?= $this->getError('npo-email') ?></label>
+		<input type="text" value="<?= $this->getValue('npo-email'); ?>" name="npo-email" class="form-control" id="" placeholder="Email address " />
 	</div>
 
 	<div class="form-group  <?php $this->hasError('npo-website') && print 'has-error' ?>"> 

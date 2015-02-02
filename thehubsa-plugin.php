@@ -23,6 +23,7 @@ require_once('models/npos.php');
 
 require_once('forms/form-join.php');
 require_once('forms/form-npo.php');
+require_once('forms/form-business.php');
 
 // +++ database
 
