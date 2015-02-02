@@ -516,5 +516,55 @@ class model_thehub_npos {
 
   		return wp_mail( $to, $subject, $message, $headers );
 	}
+
+	/**
+	 * Get by name
+	 *
+	 * @return object
+	 */
+	static public function get_by_name($name_like = Null, $active = True)
+	{
+		$sql = "SELECT * FROM ".self::get_table_name();
+
+		$pre = ' WHERE ';
+		if($name_like) {
+			$sql .= $pre." lower(Name) like '".strtolower($name_like)."%' ";
+			$pre = ' AND ';
+		}
+
+		if($active) {
+			$sql .= $pre." bActive=True ";
+			$pre = ' AND ';
+		}
+
+		$sql .= " ORDER BY lower(Name) ";
+
+
+		global $wpdb;
+		return $wpdb->get_results($sql, OBJECT);
+	}
+
+	// /**
+	//  * Get by name
+	//  *
+	//  * @return object
+	//  */
+	// static public function get_by_id($id, $active = True)
+	// {
+	// 	if(!$id) {
+	// 		return Null;
+	// 	}
+
+	// 	$sql = "SELECT * FROM ".self::get_table_name()
+	// 		." WHERE id={$id} ";
+
+	// 	if($active) {
+	// 		$sql .= " AND bActive=True ";
+	// 	}
+
+	// 	global $wpdb;
+	// 	return $wpdb->get_row($sql, OBJECT);
+	// }
+
 }
 // [eof]

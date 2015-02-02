@@ -25,6 +25,10 @@ require_once('forms/form-join.php');
 require_once('forms/form-npo.php');
 require_once('forms/form-business.php');
 
+// +++ controllers (views)
+
+require_once('controllers/npo.php');
+
 // +++ database
 
 require_once('install/add_data.php');
