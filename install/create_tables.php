@@ -2,7 +2,7 @@
 defined('ABSPATH') or die("No script kiddies please!");
 
 // format date.version
-DEFINE('THEHUBSA_DB_VERSION', 201502080);
+DEFINE('THEHUBSA_DB_VERSION', 20150208);
 
 /**
  * Setup

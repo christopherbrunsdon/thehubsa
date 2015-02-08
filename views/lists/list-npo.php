@@ -80,19 +80,26 @@
 				<?php // $pre; ?>
 <?php endif; ?>
 
-<form>
-	<h2>Find</h2>
-	<p>
+
+
+
+<form class="form">
+	<div class="form-group">
+		<h2>Find</h2>
 		Looking for a cause to support
-	</p>
-
-  <div class="form-group">
-
-	<input class="form-control" type="text" placeholder="Search... " />
-	<!-- add search icon -->
-</div>
+	</div>
 
 
+	<div class="input-group custom-search-form">
+		<input type="text" class="form-control" placeholder="Search... ">
+		<span class="input-group-btn">
+			<button class="btn btn-default" type="button">
+	              <span class="glyphicon glyphicon-search"></span>
+			</button>
+		</span>
+	</div>
+
+	<br />
 
   <div class="form-group">
 
@@ -139,6 +146,106 @@
 
 <?php else: ?>
 
+<div style="background: #FFFFFF; padding: 1em;" >
+
+	<div class="page-header">	
+		<h1>
+			Viewing Charity: <?= $npo->Name; ?>
+		</h1>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+		
+			<p>
+				<img src="<?= $npo->logo; ?>" />
+			</p>
+
+			<p>
+				<?= nl2br($npo->Description); ?>
+			</p>
+
+
+		</div>
+
+	</div>
+
+	<div class="row">
+		<div class="col-md-6">
+
+			<p>
+				<strong>Registration Number: </strong><br /><?= $npo->RegNumber ?>
+			</p>
+
+			<?php if(trim($npo->Address)): ?>
+			<p>
+				<strong>Physical address:</strong><br />
+				<?= nl2br($npo->Address); ?>
+			</p>
+			<?php endif; ?>
+
+			<?php if(trim($npo->AddressPostal)): ?>
+			<p>
+				<strong>Postal address:</strong><br />
+				<?= nl2br($npo->AddressPostal); ?>
+			</p>
+			<?php endif; ?>
+
+
+			<p>
+				<strong>Links: </strong><br />
+
+				<a href="<?= (stripos($npo->wwwDomain, "http") !== 0?'http://':'').$npo->wwwDomain; ?>" target="_blank"><?= $npo->wwwDomain ?></a>
+			
+				<br />
+
+				<a href="<?= (stripos($npo->wwwFacebook, "http") !== 0?'http://':'').$npo->wwwFacebook; ?>" target="_blank">
+	<img src="http://png-1.findicons.com/files/icons/2155/social_media_bookmark/32/facebook.png"/>
+				</a>
+
+			</p>
+
+			<p>
+				<strong>Contact details:</strong><br />
+
+				<?php if(trim($npo->Contact)): ?>
+					<strong>Contact:</strong> <?= $npo->Contact; ?><br />
+				<?php endif; ?>
+
+				<?php if(trim($npo->Tel)): ?>
+					<strong>Tel: </strong> <?= $npo->Tel ?><br />
+				<?php endif; ?>
+
+				<?php if(trim($npo->Mobile)): ?>
+					<strong>Cell:</strong> <?= $npo->Mobile; ?><br />
+				<?php endif; ?>
+			</p>
+		</div>
+
+		<div class="col-md-6">
+				<strong>Services offered :</strong>
+				<?php // nl2br($npo->ServicesOffered); ?>
+				<ul>
+					<li>Adult education</li>
+					<li>ECD education</li>
+					<li>Literacy scheme</li>
+					<li>Skills training </li>
+					<li>Support for new mothers</li>
+				</ul>
+				<br />
+		
+				<strong>Needs List:</strong><br />
+				<?= ($npo->listNeeds); ?>
+				<br />
+
+				<strong>Wish List:</strong><br />
+				<?= ($npo->listWish); ?>
+			<br />	
+		</div>
+	</div>
+
+</div>
+
 <nav>
 	<ul class="pagination  pagination-sm">
 		<li>
@@ -147,113 +254,5 @@
 	</ul>
 </nav>
 
-<div class="page-header">	
-	<h1>
-		Viewing Charity: <?= $npo->Name; ?>
-	</h1>
-</div>
-
-<div class="row">
-	<div class="col-md-12">
-	
-		<p>
-			<img src="<?= $npo->logo; ?>" />
-		</p>
-
-		<p>
-			<?= nl2br($npo->Description); ?>
-		</p>
-
-
-	</div>
-
-</div>
-
-<div class="row">
-	<div class="col-md-6">
-
-		<p>
-			<strong>Registration Number: </strong><br /><?= $npo->RegNumber ?>
-		</p>
-
-		<?php if(trim($npo->Address)): ?>
-		<p>
-			<strong>Physical address:</strong><br />
-			<?= nl2br($npo->Address); ?>
-		</p>
-		<?php endif; ?>
-
-		<?php if(trim($npo->AddressPostal)): ?>
-		<p>
-			<strong>Postal address:</strong><br />
-			<?= nl2br($npo->AddressPostal); ?>
-		</p>
-		<?php endif; ?>
-
-
-		<p>
-			<strong>Links: </strong><br />
-
-			<a href="<?= (stripos($npo->wwwDomain, "http") !== 0?'http://':'').$npo->wwwDomain; ?>" target="_blank"><?= $npo->wwwDomain ?></a>
-		
-			<br />
-
-
-			<a href="<?= (stripos($npo->wwwFacebook, "http") !== 0?'http://':'').$npo->wwwFacebook; ?>" target="_blank">
-<img src="http://png-1.findicons.com/files/icons/2155/social_media_bookmark/32/facebook.png"/>
-			</a>
-
-		</p>
-
-		<p>
-			<strong>Contact details:</strong><br />
-
-			<?php if(trim($npo->Contact)): ?>
-				<strong>Contact:</strong> <?= $npo->Contact; ?><br />
-			<?php endif; ?>
-
-			<?php if(trim($npo->Tel)): ?>
-				<strong>Tel: </strong> <?= $npo->Tel ?><br />
-			<?php endif; ?>
-
-			<?php if(trim($npo->Mobile)): ?>
-				<strong>Cell:</strong> <?= $npo->Mobile; ?><br />
-			<?php endif; ?>
-		</p>
-	</div>
-
-	<div class="col-md-6">
-<!-- 		<p>
-			<img src="<?= $npo->logo; ?>" />
-		</p>
-
-		<p>
-			<?= nl2br($npo->Description); ?>
-		</p>
- -->
-		<p></p>
-			<strong>Services offered :</strong>
-			<?php // nl2br($npo->ServicesOffered); ?>
-			<!-- CSS: remove gap -->
-			<ul>
-				<li>Adult education</li>
-				<li>ECD education</li>
-				<li>Literacy scheme</li>
-				<li>Skills training </li>
-				<li>Support for new mothers</li>
-			</ul>
-
-		<br />
-
-		
-			<strong>Needs List:</strong><br />
-			<?= ($npo->listNeeds); ?>
-		<br />
-
-			<strong>Wish List:</strong><br />
-			<?= ($npo->listWish); ?>
-		<br />	
-	</div>
-</div>
 
 <?php endif; ?>
