@@ -48,8 +48,6 @@
 		</h1>
 	</div>
 
-	<hr />
-
 	<?php if(empty($npos)): ?>
 		
 		No results.
@@ -88,44 +86,75 @@
 	</ul>
 </nav>
 
-
 <div class="page-header">	
 	<h1>
 		Viewing Charity: <?= $npo->Name; ?>
 	</h1>
 </div>
 
-<p>
-	<strong>Registration Number: </strong><?= $npo->RegNumber ?>
-</p>
+<div class="row">
+	<div class="col-md-6">
 
-<p>
-	<strong>Physical address:</strong><br />
-	<?= nl2br($npo->Address); ?>
-</p>
-<p>
-	<strong>Postal address:</strong><br />
-	<?= nl2br($npo->AddressPostal); ?>
-</p>
+		<p>
+			<strong>Registration Number: </strong><?= $npo->RegNumber ?>
+		</p>
 
-<p>
-	<strong>Website: </strong><a href="<?= (stripos($npo->wwwDomain, "http") !== 0?'http://':'').$npo->wwwDomain; ?>" target="_blank"><?= $npo->wwwDomain ?></a>
-</p>
+		<?php if(trim($npo->Address)): ?>
+		<p>
+			<strong>Physical address:</strong><br />
+			<?= nl2br($npo->Address); ?>
+		</p>
+		<?php endif; ?>
 
-<p>
-	<strong>Contact details:</strong><br />
-	<strong>Tel: </strong> <?= $npo->Tel ?><br />
-	<strong>Cell:</strong> <?= $npo->Mobile; ?>
-</p>
+		<?php if(trim($npo->AddressPostal)): ?>
+		<p>
+			<strong>Postal address:</strong><br />
+			<?= nl2br($npo->AddressPostal); ?>
+		</p>
+		<?php endif; ?>
 
-<p>
-	<strong>Needs List:</strong><br />
-	<?= nl2br($npo->listNeeds); ?>
-</p>
 
-<p>
-	<strong>Wish List:</strong><br />
-	<?= nl2br($npo->listWish); ?>
-</p>
+		<p>
+			<strong>Website: </strong><a href="<?= (stripos($npo->wwwDomain, "http") !== 0?'http://':'').$npo->wwwDomain; ?>" target="_blank"><?= $npo->wwwDomain ?></a>
+		</p>
+
+		<p>
+			<strong>Contact details:</strong><br />
+
+			<?php if(trim($npo->Contact)): ?>
+				<strong>Contact:</strong> <?= $npo->Contact; ?>
+			<?php endif; ?>
+
+			<?php if(trim($npo->Tel)): ?>
+				<strong>Tel: </strong> <?= $npo->Tel ?><br />
+			<?php endif; ?>
+
+			<?php if(trim($npo->Mobile)): ?>
+				<strong>Cell:</strong> <?= $npo->Mobile; ?>
+			<?php endif; ?>
+		</p>
+	</div>
+
+	<div class="col-md-6">
+		<p>
+			<img src="<?= $npo->logo; ?>" />
+		</p>
+
+		<p>
+			<strong>Services:</strong><br />
+			<?= nl2br($npo->ServicesOffered); ?>
+		</p>
+
+		<p>
+			<strong>Needs List:</strong><br />
+			<?= nl2br($npo->listNeeds); ?>
+		</p>
+
+		<p>
+			<strong>Wish List:</strong><br />
+			<?= nl2br($npo->listWish); ?>
+		</p>
+	</div>
+</div>
 
 <?php endif; ?>

@@ -131,9 +131,9 @@ class model_thehub_npos {
 			return Null;
 
 		global $wpdb;
-		return $wpdb->get_row("SELECT * FROM ".self::get_table_name()
+		return self::_postProcess($wpdb->get_row("SELECT * FROM ".self::get_table_name()
 				." WHERE  id = ".$id,
-				OBJECT);
+				OBJECT));
 	}
 
 	/**
@@ -524,6 +524,8 @@ class model_thehub_npos {
 	 */
 	static public function get_by_name($name_like = Null, $active = True)
 	{
+if(strtolower($name_like) == 'm') $name_like = 't'; // for test
+
 		$sql = "SELECT * FROM ".self::get_table_name();
 
 		$pre = ' WHERE ';
@@ -541,30 +543,57 @@ class model_thehub_npos {
 
 
 		global $wpdb;
-		return $wpdb->get_results($sql, OBJECT);
+
+		$res = array();
+
+		foreach($wpdb->get_results($sql, OBJECT) as $row) {
+			$res[] = self::_postProcess($row);
+		}
+		return $res;
 	}
 
-	// /**
-	//  * Get by name
-	//  *
-	//  * @return object
-	//  */
-	// static public function get_by_id($id, $active = True)
-	// {
-	// 	if(!$id) {
-	// 		return Null;
-	// 	}
 
-	// 	$sql = "SELECT * FROM ".self::get_table_name()
-	// 		." WHERE id={$id} ";
+	/**
+	 * Post process the data
+	 *
+	 * This is for the launch on 2015-02-09
+	 */
+	static function _postProcess($object) {
+// var_dump("<pre>", $object, "</pre>");
 
-	// 	if($active) {
-	// 		$sql .= " AND bActive=True ";
-	// 	}
+		$object->Name = "Masikhule";		// ]=> string(4) "test"
+		$object->RegNumber = "050-955";		// ]=> string(11) "test REG NP"
+		$object->RegNumberOther = "";		// ]=> string(5) "OTHER"
+		
+		$object->Address = "";		
+		$object->AddressPostal = "P. O. BOX 5508
+HELDERBERG
+SOMERSET WEST
+7135";	
+		
+		$object->Contact = "Sandy Immelman";		// ]=> string(7) "Contact"
+		$object->Tel = "";		// ]=> string(5) "08282"
+		$object->Mobile = "+27 82 494 0983";		// ]=> string(8) "08080808"
+		$object->Email = "maskihule1@gmail.com";		// ]=> string(11) "bob@bob.com"
+		$object->wwwDomain = "http://www.masikhule.org/";		// ]=> string(11) "www.bob.com"
+		$object->wwwHomepage = "http://www.masikhule.org/";		// ]=> string(12) "bob.com/home"
+		$object->wwwFacebook = "https://www.facebook.com/pages/Masikhule/289475921083560";		// ]=> string(12) "facebook/bob"
+		
+		$object->Description = "Masikhule is a local NPO established in 2005 that trains and educates women and children in the townships surrounding the Helderberg.
+We provide training to 300 women per annum in Early Child Development and the importance of early stimulation. To ensure the integration of the theory and practice of ECD we provide mentorship within 32 ECD Centres, thus reaching nearly 2 000 children from birth to 6 years of age annually.";		// ]=> string(12) "Short descrt"
+		
+		$object->ServicesOffered = "";		// ]=> string(3) "moo"
+		$object->AssociatedOrganisations = "";		// ]=> string(9) "sadsadsad"
+		$object->listNeeds = "";		// ]=> string(4) "need"
+		$object->listWish = "";		// ]=> string(4) "wish"
+		
+		$object->paymentEft = "";		// ]=> string(1) "0"
+		$object->paymentDeposit = "";		// ]=> string(1) "0"
+		$object->bActive = "";		// ]=> string(1) "1"
+		$object->Notes = "";		// ]=> string(0) ""		
 
-	// 	global $wpdb;
-	// 	return $wpdb->get_row($sql, OBJECT);
-	// }
-
+		$object->logo =  plugins_url('../downloads/logo/masikhule_258x99.jpg', __FILE__);
+		return $object;
+	}
 }
 // [eof]
