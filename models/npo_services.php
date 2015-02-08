@@ -80,7 +80,7 @@ class model_thehub_npo_services {
 		}
 
 		$this->_id_npo			= array_key_exists('fkNpo', $data) ? $data['fkNpo'] : Null;
-		$this->_id_service		= array_key_exists('fkService', $data) ? $data['fkService'] : Null;
+		$this->_id_service		= array_key_exists('fkService', $data) && is_numeric($data['fkService']) ? $data['fkService'] : Null;
 		$this->_service_other	= array_key_exists('ServiceOther', $data) ? $data['ServiceOther'] : Null;
 		$this->_rank_order		= array_key_exists('RankOrder', $data) ? $data['RankOrder'] : Null;
 	}
@@ -107,7 +107,6 @@ class model_thehub_npo_services {
 					'%s', // 'Notes' 
 					'%s', // 'WhenCreated' 
 					);
-
 
 		if($this->_id_service) {
 			$fields['fkService']= $this->_id_service;

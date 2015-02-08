@@ -46,7 +46,8 @@ class model_thehub_npos {
 		$_listwish = Null,
 		$_payment_eft = Null,
 		$_payment_deposit = Null,
-		$_notes = Null;
+		$_notes = Null,
+		$_logo_path = Null;
 
 
 
@@ -88,33 +89,34 @@ class model_thehub_npos {
 		$charset_collate = $wpdb->get_charset_collate();
 		$table_name = self::get_table_name();
 
-		$sql = "CREATE TABLE IF NOT EXISTS {$table_name} (
+//IF NOT EXISTS 
+//		$sql = "CREATE TABLE IF NOT EXISTS {$table_name} (
+		$sql = "CREATE TABLE {$table_name} (
 			id INT NOT NULL AUTO_INCREMENT  PRIMARY KEY,
-
-			Name 					varchar(255) DEFAULT '',
-			RegNumber  				varchar(255) DEFAULT '',
-			RegNumberOther  		varchar(255) DEFAULT '',
-			Address 				varchar(512) NOT NULL  DEFAULT '',
-			AddressPostal 			varchar(512) NOT NULL  DEFAULT '',
-			Contact 				varchar(255) NOT NULL  DEFAULT '',
-			Tel 					varchar(255) NOT NULL  DEFAULT '',
-			Mobile 					varchar(255) NOT NULL  DEFAULT '',
-			Email 					varchar(255) NOT NULL  DEFAULT '',
-			wwwDomain 				varchar(255) NOT NULL  DEFAULT '',
-			wwwHomepage 			varchar(255) NOT NULL  DEFAULT '',
-			wwwFacebook 			varchar(255) NOT NULL  DEFAULT '',			
-			Description 			varchar(512) NOT NULL  DEFAULT '',
-			ServicesOffered 		varchar(512) NOT NULL  DEFAULT '',
+			Name varchar(255) DEFAULT '',
+			RegNumber varchar(255) DEFAULT '',
+			RegNumberOther varchar(255) DEFAULT '',
+			Address varchar(512) NOT NULL  DEFAULT '',
+			AddressPostal varchar(512) NOT NULL  DEFAULT '',
+			Contact varchar(255) NOT NULL  DEFAULT '',
+			Tel varchar(255) NOT NULL  DEFAULT '',
+			Mobile varchar(255) NOT NULL  DEFAULT '',
+			Email varchar(255) NOT NULL  DEFAULT '',
+			wwwDomain varchar(255) NOT NULL  DEFAULT '',
+			wwwHomepage varchar(255) NOT NULL  DEFAULT '',
+			wwwFacebook varchar(255) NOT NULL  DEFAULT '',			
+			Description varchar(512) NOT NULL  DEFAULT '',
+			ServicesOffered varchar(512) NOT NULL  DEFAULT '',
 			AssociatedOrganisations varchar(512) NOT NULL  DEFAULT '',			
-			listNeeds 				varchar(512) NOT NULL  DEFAULT '',
-			listWish 				varchar(512) NOT NULL  DEFAULT '',
-			paymentEft 				TINYINT default 0,
-			paymentDeposit 			TINYINT default 0,
-			bActive   	TINYINT DEFAULT TRUE,
-			Notes 		varchar(1024) DEFAULT '',
+			listNeeds varchar(512) NOT NULL  DEFAULT '',
+			listWish varchar(512) NOT NULL  DEFAULT '',
+			paymentEft TINYINT default 0,
+			paymentDeposit TINYINT default 0,
+			bActive TINYINT DEFAULT FALSE,
+			Notes varchar(1024) DEFAULT '',
+			LogoPath varchar(255) NOT NULL DEFAULT '',
 			WhenCreated TIMESTAMP DEFAULT 0,
-			WhenUpdated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-		                ON UPDATE CURRENT_TIMESTAMP
+			WhenUpdated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 			) {$charset_collate};";
 		return $sql;
 	}
@@ -182,6 +184,7 @@ class model_thehub_npos {
 		$this->_listwish				= array_key_exists('listWish', $data) ? $data['listWish'] : Null;
 		$this->_payment_eft				= array_key_exists('paymentEft', $data) ? $data['paymentEft'] : Null;
 		$this->_payment_deposit			= array_key_exists('paymentDeposit', $data) ? $data['paymentDeposit'] : Null;
+		$this->_logo_path				= array_key_exists('logo', $data) ? $data['logo'] : Null;
 	}
 
 	/**
@@ -373,29 +376,32 @@ class model_thehub_npos {
 			$errors['npo-contact'] = 'Please enter contact person!';
 		}
 
-		if(empty($data['npo-tel'])) {
-			$errors['npo-tel'] = 'Please enter telephonen number!';
+
+		// one or the other
+		if(empty($data['npo-tel']) && empty($data['npo-mobile'])) {
+			$errors['npo-tel'] = 'Please enter telephone number!';
 		}
 
-		if(empty($data['npo-mobile'])) {
+		if(empty($data['npo-mobile']) && empty($data['npo-tel'])) {
 			$errors['npo-mobile'] = 'Please enter cellphone number!';
 		}
+
 
 		if(empty($data['npo-email'])) {
 			$errors['npo-email'] = 'Please enter email address!';
 		}
 
-		if(empty($data['npo-website'])) {
-			$errors['npo-website'] = 'Please enter!';
-		}
+		// if(empty($data['npo-website'])) {
+		// 	$errors['npo-website'] = 'Please enter!';
+		// }
 
-		if(empty($data['npo-url'])) {
-			$errors['npo-url'] = 'Please enter!';
-		}
+		// if(empty($data['npo-url'])) {
+		// 	$errors['npo-url'] = 'Please enter!';
+		// }
 
-		if(empty($data['npo-facebook'])) {
-			$errors['npo-facebook'] = 'Please enter!';
-		}
+		// if(empty($data['npo-facebook'])) {
+		// 	$errors['npo-facebook'] = 'Please enter!';
+		// }
 
 		if(empty($data['npo-description'])) {
 			$errors['npo-description'] = 'Please enter!';
@@ -405,9 +411,9 @@ class model_thehub_npos {
 			$errors['npo-services-other'] = 'Please enter!';
 		}
 
-		if(empty($data['npo-associated'])) {
-			$errors['npo-associated'] = 'Please enter!';
-		}
+		// if(empty($data['npo-associated'])) {
+		// 	$errors['npo-associated'] = 'Please enter!';
+		// }
 
 		if(empty($data['npo-needs'])) {
 			$errors['npo-needs'] = 'Please enter!';
@@ -459,8 +465,10 @@ class model_thehub_npos {
 					'listWish' 			=> $this->_listwish,
 					'paymentEft' 		=> $this->_payment_eft,
 					'paymentDeposit' 	=> $this->_payment_deposit,
-					'Notes' => $this->_notes,
-					'WhenCreated' => date("Y-m-d H:i"), // now()     
+					'Notes' 			=> $this->_notes,
+					'LogoPath'			=> $this->_logo_path,
+					'WhenCreated' 		=> date("Y-m-d H:i"), // now()    
+					'bActive' 			=> False,  
 					),
 				array(
 					'%s', // Name
@@ -483,7 +491,9 @@ class model_thehub_npos {
 					'%s', // paymentEft
 					'%s', // paymentDeposit
 					'%s', // Notes
+					'%s', // Logo
 					'%s', // WhenCreated
+					'%d', // Active
 					));
 
 			$this->_id = $wpdb->insert_id;
@@ -580,12 +590,26 @@ SOMERSET WEST
 		$object->wwwFacebook = "https://www.facebook.com/pages/Masikhule/289475921083560";		// ]=> string(12) "facebook/bob"
 		
 		$object->Description = "Masikhule is a local NPO established in 2005 that trains and educates women and children in the townships surrounding the Helderberg.
+
 We provide training to 300 women per annum in Early Child Development and the importance of early stimulation. To ensure the integration of the theory and practice of ECD we provide mentorship within 32 ECD Centres, thus reaching nearly 2 000 children from birth to 6 years of age annually.";		// ]=> string(12) "Short descrt"
 		
 		$object->ServicesOffered = "";		// ]=> string(3) "moo"
 		$object->AssociatedOrganisations = "";		// ]=> string(9) "sadsadsad"
-		$object->listNeeds = "";		// ]=> string(4) "need"
-		$object->listWish = "";		// ]=> string(4) "wish"
+		$object->listNeeds = "<ul>
+<li>Funding for training.</li>
+<li>Infrastructure upgrades to ECD centres.</li>
+<li>Feeding schemes.</li>
+<li>Reading corners.</li>
+<li>Resources for toy and book library.		</li>
+		</ul>";		// ]=> string(4) "need"
+		$object->listWish = "
+		<ul>
+<li>First aid training for ECD staff.</li>
+<li>Security for ECD centres.</li>
+<li>First aid kits and fire extinguishers.</li>
+<li>Computers and printers.	</li>
+<li>Outdoor shade and playground equipment.	</li>
+		</ul>";		// ]=> string(4) "wish"
 		
 		$object->paymentEft = "";		// ]=> string(1) "0"
 		$object->paymentDeposit = "";		// ]=> string(1) "0"
