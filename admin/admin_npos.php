@@ -2,24 +2,11 @@
 
 defined('ABSPATH') or die("No script kiddies please!");
 
-// Sources:
-// http://codex.wordpress.org/Administration_Menus
-// http://www.smashingmagazine.com/2011/11/03/native-admin-tables-wordpress/
-
-
-//Our class extends the WP_List_Table class, so we need to make sure that it's there
-if(!class_exists('WP_List_Table'))
-{
-   require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
-}
-
-require_once('admin_npos.php');
-
 /**
  * Form Join
  *
  */
-class Link_List_Table extends WP_List_Table {
+class Link_List_NPO_Table extends WP_List_Table {
 
 	//@TODO: save these deaults
 
@@ -49,13 +36,13 @@ class Link_List_Table extends WP_List_Table {
 	function extra_tablenav( $which ) 
 	{
 	   if ( $which == "top" ){
-	      echo "List of people who have signed up";
+	      echo "List of NPOs who have signed up";
 	   }
 
 	   if ( $which == "bottom" ){
 	      echo "";
 	      echo "<p><small>Number of rows per page {$this->getPerPage()}</small></p>";
-	      echo "<p>To add this form to a page, use the shortcode: <b>[".SHORTCODE_THEHUBSA_FORM_JOIN."]</b></p>";
+	      echo "<p>To add this form to a page, use the shortcode: <b>[".SHORTCODE_THEHUBSA_FORM_SIGNUP_NPO."]</b></p>";
 	   }
 	}
 
@@ -67,10 +54,15 @@ class Link_List_Table extends WP_List_Table {
 	   return $columns= array(
 	      'id'             => 'ID',
 	      'Name'           => 'Name',
-	      'Surname'        => 'Surname',
+	      'Contact'        => 'Contact',
 	      'Email'          => 'Email',
+	      'Tel'          => 'Tel',
+	      'Mobile'          => 'Mobile',
+
+	      'paymentEft'          => 'paymentEft',
+	      'paymentDeposit'  => 'paymentDeposit',
+
 	      'bActive'        => 'Active',
-	      'MembershipType' => 'Membership Type',
 	      'WhenCreated'    => 'Created'
 	   );
 	}
@@ -85,7 +77,7 @@ class Link_List_Table extends WP_List_Table {
 	   	return $sortable = array(
 	      'id'      => 'id',
 	      'Name'    => 'Name',
-	      'Surname' => 'Surname',
+	      'Contact'        => 'Contact',
 	      'Email'   => 'Email',
 	   );
 	}
@@ -100,13 +92,7 @@ class Link_List_Table extends WP_List_Table {
 		$screen = get_current_screen();
 
 		/* -- Preparing your query -- */
-		$query = "SELECT 
-					m.*, 
-					mt.MembershipType 
-				  FROM ".model_thehub_memberships::get_table_name()." m 
-				  LEFT OUTER JOIN 
-					".model_thehub_membership_types::get_table_name()." mt 
-				  ON (m.fkMembershipType = mt.id) "; 
+		$query = "SELECT * FROM ".model_thehub_npos::get_table_name().""; 
 
 		// if (debug) ... error_log($query);
 
@@ -203,14 +189,30 @@ class Link_List_Table extends WP_List_Table {
 		            	echo "<td {$attributes}>".stripslashes($rec->Name).'5</td>'; 
 		            	break;
 		            
-		            case "surname": 
-		            	echo "<td {$attributes}>".stripslashes($rec->Surname)."</td>"; 
+		            case "contact": 
+		            	echo "<td {$attributes}>".stripslashes($rec->Contact)."</td>"; 
 		            	break;
 		            
 		            case "email": 
 		            	echo "<td {$attributes}>{$rec->Email}</td>"; 
 		            	break;
+
+		            case "tel": 
+		            	echo "<td {$attributes}>{$rec->Tel}</td>"; 
+		            	break;
+
+		            case "mobile": 
+		            	echo "<td {$attributes}>{$rec->Mobile}</td>"; 
+		            	break;
 		            
+		            case "paymenteft": 
+		            	echo "<td {$attributes}>{$rec->paymentEft}</td>"; 
+		            	break;
+
+		            case "paymentdeposit": 
+		            	echo "<td {$attributes}>{$rec->paymentDeposit}</td>"; 
+		            	break;
+
 		            case "bactive": 
 		            	echo "<td {$attributes}>".($rec->bActive?'Yes':'No')."</td>"; 
 		            	break;
@@ -219,9 +221,6 @@ class Link_List_Table extends WP_List_Table {
 		            	echo "<td {$attributes}>{$rec->WhenCreated}</td>"; 
 		            	break;
 
-		            case "membershiptype": 
-		            	echo "<td {$attributes}>{$rec->MembershipType}</td>"; 
-		            	break;
 
 		         }
 		      }
@@ -232,86 +231,3 @@ class Link_List_Table extends WP_List_Table {
 		}
 	}
 }
-
-// =========================================================
-
-/**
- * Add my menus
- *
- */
-
-/** Step 2 (from text above). */
-add_action( 'admin_menu', 'admin_thehubsa_menu' );
-
-/** Step 1. */
-function admin_thehubsa_menu() {
-	add_menu_page( 
-		'TheHubSA Admin', // menu title
-		'TheHubSA Admin',  // 
-		'manage_options',
-		'thehubsa/admin.php', 
-		'admin_thehubsa_options',
-		"" );
-}
-
-/** Step 3. */
-function admin_thehubsa_options() {
-	if ( !current_user_can( 'manage_options' ) )  {
-		//wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
-	}
-
-
-	echo '<div class="wrap">';
-	echo '<p>TheHubSA</p>';
-	echo '</div>';
-
-	//Prepare Table of elements
-	$wp_list_table = new Link_List_Table();
-	$wp_list_table->prepare_items();
-	$wp_list_table->display();
-
-
-	// NPOS
-	echo '<div class="wrap">';
-	echo '<p>TheHubSA NPOs</p>';
-	echo '</div>';
-
-	//Prepare Table of elements
-	$npos = new Link_List_NPO_Table();
-	$npos->prepare_items();
-	$npos->display();
-}
-
-// // =========================================================
-
-// add_action( 'admin_menu', 'admin_thehubsa_npo_menu' );
-
-// /** Step 1. */
-// function admin_thehubsa_npo_menu() {
-// 	add_menu_page( 
-// 		'TheHubSA Admin NPO', // menu title
-// 		'TheHubSA Admin NPO',  // 
-// 		'manage_options',
-// 		'thehubsa/admin.php', 
-// 		'admin_thehubsa_npo_options',
-// 		"" );
-// }
-
-// /** Step 3. */
-// function admin_thehubsa_npo_options() {
-// 	if ( !current_user_can( 'manage_options' ) )  {
-// 		//wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
-// 	}
-// 	echo '<div class="wrap">';
-// 	echo '<p>TheHubSA NPOs</p>';
-// 	echo '</div>';
-
-// 	//Prepare Table of elements
-// 	$wp_list_table = new Link_List_Table();
-// 	$wp_list_table->prepare_items();
-// 	$wp_list_table->display();
-
-// }
-
-// [eof]
-
