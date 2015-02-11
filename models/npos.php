@@ -51,7 +51,8 @@ class model_thehub_npos {
 
 
 
-	static function instance() {
+	static function instance() 
+	{
 		static $inst = null;
         if (is_null($inst)) {
             $inst = new model_thehubsa_npos();
@@ -463,8 +464,8 @@ class model_thehub_npos {
 					'AssociatedOrganisations' => $this->_associated_organisations,
 					'listNeeds' 		=> $this->_listneeds,
 					'listWish' 			=> $this->_listwish,
-					'paymentEft' 		=> $this->_payment_eft,
-					'paymentDeposit' 	=> $this->_payment_deposit,
+					'paymentEft' 		=> (bool)$this->_payment_eft,
+					'paymentDeposit' 	=> (bool)$this->_payment_deposit,
 					'Notes' 			=> $this->_notes,
 					'LogoPath'			=> $this->_logo_path,
 					'WhenCreated' 		=> date("Y-m-d H:i"), // now()    
@@ -488,8 +489,8 @@ class model_thehub_npos {
 					'%s', // AssociatedOrganisations
 					'%s', // listNeeds
 					'%s', // listWish
-					'%s', // paymentEft
-					'%s', // paymentDeposit
+					'%d', // paymentEft
+					'%d', // paymentDeposit
 					'%s', // Notes
 					'%s', // Logo
 					'%s', // WhenCreated
@@ -534,8 +535,6 @@ class model_thehub_npos {
 	 */
 	static public function get_by_name($name_like = Null, $active = True)
 	{
-if(strtolower($name_like) == 'm') $name_like = 't'; // for test
-
 		$sql = "SELECT * FROM ".self::get_table_name();
 
 		$pre = ' WHERE ';
@@ -569,54 +568,56 @@ if(strtolower($name_like) == 'm') $name_like = 't'; // for test
 	 * This is for the launch on 2015-02-09
 	 */
 	static function _postProcess($object) {
-// var_dump("<pre>", $object, "</pre>");
 
-		$object->Name = "Masikhule";		// ]=> string(4) "test"
-		$object->RegNumber = "050-955";		// ]=> string(11) "test REG NP"
-		$object->RegNumberOther = "";		// ]=> string(5) "OTHER"
-		
-		$object->Address = "";		
-		$object->AddressPostal = "P. O. BOX 5508
-HELDERBERG
-SOMERSET WEST
-7135";	
-		
-		$object->Contact = "Sandy Immelman";		// ]=> string(7) "Contact"
-		$object->Tel = "";		// ]=> string(5) "08282"
-		$object->Mobile = "+27 82 494 0983";		// ]=> string(8) "08080808"
-		$object->Email = "maskihule1@gmail.com";		// ]=> string(11) "bob@bob.com"
-		$object->wwwDomain = "http://www.masikhule.org/";		// ]=> string(11) "www.bob.com"
-		$object->wwwHomepage = "http://www.masikhule.org/";		// ]=> string(12) "bob.com/home"
-		$object->wwwFacebook = "https://www.facebook.com/pages/Masikhule/289475921083560";		// ]=> string(12) "facebook/bob"
-		
-		$object->Description = "Masikhule is a local NPO established in 2005 that trains and educates women and children in the townships surrounding the Helderberg.
+		if($object->id == 1) {
+			$object->Name = "Masikhule";		// ]=> string(4) "test"
+			$object->RegNumber = "050-955";		// ]=> string(11) "test REG NP"
+			$object->RegNumberOther = "";		// ]=> string(5) "OTHER"
+			
+			$object->Address = "";		
+			$object->AddressPostal = "P. O. BOX 5508
+	HELDERBERG
+	SOMERSET WEST
+	7135";	
+			
+			$object->Contact = "Sandy Immelman";		// ]=> string(7) "Contact"
+			$object->Tel = "";		// ]=> string(5) "08282"
+			$object->Mobile = "+27 82 494 0983";		// ]=> string(8) "08080808"
+			$object->Email = "maskihule1@gmail.com";		// ]=> string(11) "bob@bob.com"
+			$object->wwwDomain = "http://www.masikhule.org/";		// ]=> string(11) "www.bob.com"
+			$object->wwwHomepage = "http://www.masikhule.org/";		// ]=> string(12) "bob.com/home"
+			$object->wwwFacebook = "https://www.facebook.com/pages/Masikhule/289475921083560";		// ]=> string(12) "facebook/bob"
+			
+			$object->Description = "Masikhule is a local NPO established in 2005 that trains and educates women and children in the townships surrounding the Helderberg.
 
-We provide training to 300 women per annum in Early Child Development and the importance of early stimulation. To ensure the integration of the theory and practice of ECD we provide mentorship within 32 ECD Centres, thus reaching nearly 2 000 children from birth to 6 years of age annually.";		// ]=> string(12) "Short descrt"
-		
-		$object->ServicesOffered = "";		// ]=> string(3) "moo"
-		$object->AssociatedOrganisations = "";		// ]=> string(9) "sadsadsad"
-		$object->listNeeds = "<ul>
-<li>Funding for training.</li>
-<li>Infrastructure upgrades to ECD centres.</li>
-<li>Feeding schemes.</li>
-<li>Reading corners.</li>
-<li>Resources for toy and book library.		</li>
-		</ul>";		// ]=> string(4) "need"
-		$object->listWish = "
-		<ul>
-<li>First aid training for ECD staff.</li>
-<li>Security for ECD centres.</li>
-<li>First aid kits and fire extinguishers.</li>
-<li>Computers and printers.	</li>
-<li>Outdoor shade and playground equipment.	</li>
-		</ul>";		// ]=> string(4) "wish"
-		
-		$object->paymentEft = "";		// ]=> string(1) "0"
-		$object->paymentDeposit = "";		// ]=> string(1) "0"
-		$object->bActive = "";		// ]=> string(1) "1"
-		$object->Notes = "";		// ]=> string(0) ""		
+	We provide training to 300 women per annum in Early Child Development and the importance of early stimulation. To ensure the integration of the theory and practice of ECD we provide mentorship within 32 ECD Centres, thus reaching nearly 2 000 children from birth to 6 years of age annually.";		// ]=> string(12) "Short descrt"
+			
+			$object->ServicesOffered = "";		// ]=> string(3) "moo"
+			$object->AssociatedOrganisations = "";		// ]=> string(9) "sadsadsad"
+			$object->listNeeds = "<ul>
+	<li>Funding for training.</li>
+	<li>Infrastructure upgrades to ECD centres.</li>
+	<li>Feeding schemes.</li>
+	<li>Reading corners.</li>
+	<li>Resources for toy and book library.		</li>
+			</ul>";		// ]=> string(4) "need"
+			$object->listWish = "
+			<ul>
+	<li>First aid training for ECD staff.</li>
+	<li>Security for ECD centres.</li>
+	<li>First aid kits and fire extinguishers.</li>
+	<li>Computers and printers.	</li>
+	<li>Outdoor shade and playground equipment.	</li>
+			</ul>";		// ]=> string(4) "wish"
+			
+			$object->paymentEft = "";		// ]=> string(1) "0"
+			$object->paymentDeposit = "";		// ]=> string(1) "0"
+			$object->bActive = "";		// ]=> string(1) "1"
+			$object->Notes = "";		// ]=> string(0) ""		
 
-		$object->logo =  plugins_url('../downloads/logo/masikhule_258x99.jpg', __FILE__);
+			$object->logo =  plugins_url('../downloads/logo/masikhule_258x99.jpg', __FILE__);
+		}
+
 		return $object;
 	}
 }

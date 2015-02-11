@@ -6,7 +6,7 @@ defined('ABSPATH') or die("No script kiddies please!");
  * Form Join
  *
  */
-class Link_List_NPO_Table extends WP_List_Table {
+class Link_List_Memberships_Table extends WP_List_Table {
 
 	//@TODO: save these deaults
 
@@ -36,13 +36,13 @@ class Link_List_NPO_Table extends WP_List_Table {
 	function extra_tablenav( $which ) 
 	{
 	   if ( $which == "top" ){
-	      echo "List of NPOs who have signed up";
+	      echo "List of people who have signed up";
 	   }
 
 	   if ( $which == "bottom" ){
 	      echo "";
 	      echo "<p><small>Number of rows per page {$this->getPerPage()}</small></p>";
-	      echo "<p>To add this form to a page, use the shortcode: <b>[".SHORTCODE_THEHUBSA_FORM_SIGNUP_NPO."]</b></p>";
+	      echo "<p>To add this form to a page, use the shortcode: <b>[".SHORTCODE_THEHUBSA_FORM_JOIN."]</b></p>";
 	   }
 	}
 
@@ -54,15 +54,10 @@ class Link_List_NPO_Table extends WP_List_Table {
 	   return $columns= array(
 	      'id'             => 'ID',
 	      'Name'           => 'Name',
-	      'Contact'        => 'Contact',
+	      'Surname'        => 'Surname',
 	      'Email'          => 'Email',
-	      'Tel'          => 'Tel',
-	      'Mobile'          => 'Mobile',
-
-	      'paymentEft'          => 'paymentEft',
-	      'paymentDeposit'  => 'paymentDeposit',
-
 	      'bActive'        => 'Active',
+	      'MembershipType' => 'Membership Type',
 	      'WhenCreated'    => 'Created'
 	   );
 	}
@@ -77,7 +72,7 @@ class Link_List_NPO_Table extends WP_List_Table {
 	   	return $sortable = array(
 	      'id'      => 'id',
 	      'Name'    => 'Name',
-	      'Contact'        => 'Contact',
+	      'Surname' => 'Surname',
 	      'Email'   => 'Email',
 	   );
 	}
@@ -92,7 +87,13 @@ class Link_List_NPO_Table extends WP_List_Table {
 		$screen = get_current_screen();
 
 		/* -- Preparing your query -- */
-		$query = "SELECT * FROM ".model_thehub_npos::get_table_name().""; 
+		$query = "SELECT 
+					m.*, 
+					mt.MembershipType 
+				  FROM ".model_thehub_memberships::get_table_name()." m 
+				  LEFT OUTER JOIN 
+					".model_thehub_membership_types::get_table_name()." mt 
+				  ON (m.fkMembershipType = mt.id) "; 
 
 		// if (debug) ... error_log($query);
 
@@ -182,54 +183,32 @@ class Link_List_NPO_Table extends WP_List_Table {
 		         switch (strtolower($column_name))
 		         {
 		            case "id":  
-		            	echo "<td {$attributes}>{$rec->id}";
-
-		      			echo "<div><small><a href='?npo_id={$rec->id}'>Edit</a></small></div>";
-
-		            	echo "</td>";   
+		            	echo "<td {$attributes}>{$rec->id}</td>";   
 		            	break;
 		            
 		            case "name": 
 		            	echo "<td {$attributes}>".stripslashes($rec->Name).'5</td>'; 
 		            	break;
 		            
-		            case "contact": 
-		            	echo "<td {$attributes}>".stripslashes($rec->Contact)."</td>"; 
+		            case "surname": 
+		            	echo "<td {$attributes}>".stripslashes($rec->Surname)."</td>"; 
 		            	break;
 		            
 		            case "email": 
 		            	echo "<td {$attributes}>{$rec->Email}</td>"; 
 		            	break;
-
-		            case "tel": 
-		            	echo "<td {$attributes}>{$rec->Tel}</td>"; 
-		            	break;
-
-		            case "mobile": 
-		            	echo "<td {$attributes}>{$rec->Mobile}</td>"; 
-		            	break;
 		            
-		            case "paymenteft": 
-		            	echo "<td {$attributes}>{$rec->paymentEft}</td>"; 
-		            	break;
-
-		            case "paymentdeposit": 
-		            	echo "<td {$attributes}>{$rec->paymentDeposit}</td>"; 
-		            	break;
-
 		            case "bactive": 
-		            	echo "<td {$attributes}>".($rec->bActive?'Yes':'No');
-
-		      			echo "<div><small><a href='?npo_id={$rec->id}'>Edit</a></small></div>";
-
-		            	echo "</td>";   
-
+		            	echo "<td {$attributes}>".($rec->bActive?'Yes':'No')."</td>"; 
 		            	break;
 
 		            case "whencreated": 
 		            	echo "<td {$attributes}>{$rec->WhenCreated}</td>"; 
 		            	break;
 
+		            case "membershiptype": 
+		            	echo "<td {$attributes}>{$rec->MembershipType}</td>"; 
+		            	break;
 
 		         }
 		      }
@@ -240,3 +219,4 @@ class Link_List_NPO_Table extends WP_List_Table {
 		}
 	}
 }
+
