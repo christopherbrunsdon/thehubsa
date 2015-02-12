@@ -81,6 +81,19 @@
 	</tr>
 
 	<tr class="">
+		<th align="right">Services Offered:</th>
+		<td>
+			<?php if(isset($npo->services_offered)): ?>
+				<ul>
+					<?php foreach($npo->services_offered as $service): ?>
+						<li><?php echo $service->Service; ?></li>
+					<?php endforeach; ?>
+				</ul>
+			<?php endif; ?>
+		</td>
+	</tr>		
+
+	<tr class="">
 		<th align="right">Description:</th>
 		<td><?php echo nl2br($npo->Description); ?></td>
 	</tr>

@@ -172,6 +172,30 @@ class model_thehub_npo_services {
 				. ($active?" AND bActive=True ":""), 
 				OBJECT);
 	}
+
+	/**
+	 * Get by NPO
+	 *
+	 * @return object
+	 */
+
+	static public function get_by_npo($fkNpo, $active = True)
+	{
+		if($fkNpo == False)
+			return Null;
+
+		global $wpdb;
+		$sql="SELECT COALESCE(Service, ServiceOther) as Service FROM "
+				.self::get_table_name()." as ns "
+				." LEFT JOIN "
+				.model_thehub_npo_service_types::get_table_name()." as nst "
+				." ON (ns.fkService = nst.id )"
+				." WHERE  fkNpo = ".$fkNpo 
+				." ORDER BY RankOrder ";
+		// error_log($sql);
+		return $wpdb->get_results($sql, OBJECT);
+	}
+
 }
 
 // [eof]

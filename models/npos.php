@@ -624,6 +624,8 @@ class model_thehub_npos {
 		}
 
 		$object->logo = self::logo_url($object->LogoPath); 
+
+		$object->services_offered = model_thehub_npo_services::get_by_npo($object->id);
 		return $object;
 	}
 
