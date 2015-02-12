@@ -567,7 +567,11 @@ class model_thehub_npos {
 	 *
 	 * This is for the launch on 2015-02-09
 	 */
-	static function _postProcess($object) {
+	static function _postProcess($object) 
+	{	
+		if (empty($object)) {
+			return $object;
+		}
 
 		if($object->id == 1) {
 			$object->Name = "Masikhule";		// ]=> string(4) "test"
@@ -616,9 +620,24 @@ class model_thehub_npos {
 			$object->Notes = "";		// ]=> string(0) ""		
 
 			$object->logo =  plugins_url('../downloads/logo/masikhule_258x99.jpg', __FILE__);
+			return $object;
 		}
 
+		$object->logo = self::logo_url($object->LogoPath); 
 		return $object;
+	}
+
+	/**
+	 *
+	 */
+	static function logo_url($LogoPath)
+	{
+		$logo = Null;
+		if($LogoPath) {
+			$upload_dir = wp_upload_dir();
+			$logo = str_replace($upload_dir['basedir'], $upload_dir['baseurl'], $LogoPath);		
+		}
+		return $logo;
 	}
 }
 // [eof]

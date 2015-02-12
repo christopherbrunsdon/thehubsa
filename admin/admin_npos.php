@@ -52,18 +52,19 @@ class Link_List_NPO_Table extends WP_List_Table {
 
 	function get_columns() {
 	   return $columns= array(
-	      'id'             => 'ID',
-	      'Name'           => 'Name',
-	      'Contact'        => 'Contact',
-	      'Email'          => 'Email',
-	      'Tel'          => 'Tel',
-	      'Mobile'          => 'Mobile',
+	      'id'              => 'ID',
+	      'Name'            => 'Name',
+	      'Contact'         => 'Contact',
+	      'Email'           => 'Email',
+	      'Tel'             => 'Telephone',
+	      'Mobile'          => 'Cell',
+	      'LogoPath'		=> 'Logo',
 
-	      'paymentEft'          => 'paymentEft',
-	      'paymentDeposit'  => 'paymentDeposit',
+	      'paymentEft'      => 'Eft',
+	      'paymentDeposit'  => 'Deposit',
 
-	      'bActive'        => 'Active',
-	      'WhenCreated'    => 'Created'
+	      'bActive'         => 'Active',
+	      'WhenCreated'     => 'Date'
 	   );
 	}
 
@@ -152,18 +153,17 @@ class Link_List_NPO_Table extends WP_List_Table {
 	 */
 	function display_rows() 
 	{
-	   //Get the records registered in the prepare_items method
-	   $records = $this->items;
+		$records = $this->items;
+		if(empty($records)) {
+			return;
+		}
 
-	   //Get the columns registered in the get_columns and get_sortable_columns methods
-	   list( $columns, $hidden ) = $this->get_column_info();
-
-	   //Loop for each record
-	   if(!empty($records)) {
+		list( $columns, $hidden ) = $this->get_column_info();
 
 	   	foreach($records as $rec) {
-	      //Open the line
+			
 			echo '<tr id="record_'.$rec->id.'">';
+
 			foreach ( $columns as $column_name => $column_display_name ) {
 
 				//Style attributes for each col
@@ -176,67 +176,41 @@ class Link_List_NPO_Table extends WP_List_Table {
 		         $attributes = $class . $style;
 
 		         //edit link
-		         //$editlink  = '/wp-admin/link.php?action=edit&link_id='.(int)$rec->id;
+		         $edit_link  = admin_url("admin.php?page=".THEHUBSA_ADMIN_NPOS_SLUG."&id=".$rec->id."&action=view");
 
 		         //Display the cell
+
 		         switch (strtolower($column_name))
 		         {
 		            case "id":  
-		            	echo "<td {$attributes}>{$rec->id}";
-
-		      			echo "<div><small><a href='?npo_id={$rec->id}'>Edit</a></small></div>";
-
-		            	echo "</td>";   
+		            case "name":
+		            	echo "<td {$attributes}><a href='{$edit_link}'>{$rec->$column_name}</a></td>";
 		            	break;
+
 		            
-		            case "name": 
-		            	echo "<td {$attributes}>".stripslashes($rec->Name).'5</td>'; 
-		            	break;
-		            
-		            case "contact": 
-		            	echo "<td {$attributes}>".stripslashes($rec->Contact)."</td>"; 
-		            	break;
-		            
-		            case "email": 
-		            	echo "<td {$attributes}>{$rec->Email}</td>"; 
-		            	break;
-
-		            case "tel": 
-		            	echo "<td {$attributes}>{$rec->Tel}</td>"; 
-		            	break;
-
-		            case "mobile": 
-		            	echo "<td {$attributes}>{$rec->Mobile}</td>"; 
-		            	break;
-		            
-		            case "paymenteft": 
-		            	echo "<td {$attributes}>{$rec->paymentEft}</td>"; 
-		            	break;
-
-		            case "paymentdeposit": 
-		            	echo "<td {$attributes}>{$rec->paymentDeposit}</td>"; 
-		            	break;
-
 		            case "bactive": 
 		            	echo "<td {$attributes}>".($rec->bActive?'Yes':'No');
-
-		      			echo "<div><small><a href='?npo_id={$rec->id}'>Edit</a></small></div>";
-
 		            	echo "</td>";   
-
 		            	break;
 
-		            case "whencreated": 
-		            	echo "<td {$attributes}>{$rec->WhenCreated}</td>"; 
+		            case 'logopath':
+
+		            	echo "<td>"
+		            		."<img style='max-width: 100px; max-height: 100px;' src='"
+		            		.model_thehub_npos::logo_url($rec->LogoPath)
+		            		."' />"
+		            		."</td>";
 		            	break;
 
-
-		         }
+		            default:
+		            	echo "<td {$attributes}>{$rec->$column_name}</td>";
+		            	break;
+					}
 		      }
 
 		      //Close the line
 		      echo'</tr>';
-		   }
+		  
 		}
 	}
 }

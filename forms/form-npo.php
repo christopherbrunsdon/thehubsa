@@ -51,10 +51,10 @@ class form_npo extends form
       //   $res['errors']['npo-logo'] = "A technical error occured: {$fileData['npo-logo']['error']}";
       // }
 
-//      if($fileData['npo-logo']["size"] > self::MAX_LOGO_SIZE) {
-//        $res['errors']['npo-logo'] = "Image size is too big. Please upload a smaller file.";
-//      }
-       if($fileData['npo-logo']["type"] != "image/jpeg" && $fileData['npo-logo']["type"] != "image/png") {
+      if($fileData['npo-logo']["size"] > self::MAX_LOGO_SIZE) {
+       $res['errors']['npo-logo'] = "Image size is too big. Please upload a smaller file.";
+      } 
+      elseif($fileData['npo-logo']["type"] != "image/jpeg" && $fileData['npo-logo']["type"] != "image/png") {
         $res['errors']['npo-logo'] = "Image must be a JPEG or PNG";
       }
       else {

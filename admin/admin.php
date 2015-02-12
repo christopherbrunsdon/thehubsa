@@ -16,6 +16,15 @@ if(!class_exists('WP_List_Table'))
 require_once('admin_memberships.php');
 require_once('admin_npos.php');
 
+/**
+ * Slugs
+ *
+ */
+
+define('THEHUBSA_ADMIN_SLUG', "thehubsa-admin");
+define('THEHUBSA_ADMIN_NPOS_SLUG', "thehubsa-admin-npos");
+define('THEHUBSA_ADMIN_SIGNUPS_SLUG', "thehubsa-admin-signups");
+
 /*
  * Add my menus
  *
@@ -33,7 +42,7 @@ function admin_thehubsa_menu()
 		$page_title = 'TheHubSA Admin', // menu title
 		$menu_title = 'TheHubSA',  // 
 		$capability,
-		$menu_slug = $parent_slug, 
+		$menu_slug = THEHUBSA_ADMIN_SLUG, 
 		$function = 'admin_thehubsa_options',
 		$icon_url = "",
 		$position = 25.01 ); // below comments
@@ -44,7 +53,7 @@ function admin_thehubsa_menu()
 		$page_title = 'Manage NPOs', 
 		$menu_title = 'NPOs', 
 		$capability, 
-		$menu_slug = "{$parent_slug}-npos", 
+		$menu_slug = THEHUBSA_ADMIN_NPOS_SLUG, 
 		$function = "admin_thehubsa_npos");	
 
 	// submenus
@@ -53,7 +62,7 @@ function admin_thehubsa_menu()
 		$page_title = 'Landing Page Signups', 
 		$menu_title = 'Signups', 
 		$capability, 
-		$menu_slug = "{$parent_slug}-signups", 
+		$menu_slug = THEHUBSA_ADMIN_SIGNUPS_SLUG, 
 		$function = "admin_thehubsa_memberships");	
 }
 
@@ -71,8 +80,8 @@ function admin_thehubsa_options() {
 			<td>
 				<h2>Links</h2>
 				<ul>
-					<li><a href="">Manage NPOs</a></li>
-					<li><a href="">Manage Signups</a></li>
+					<li><a href="<?php echo admin_url("admin.php?page=".THEHUBSA_ADMIN_NPOS_SLUG); ?>">Manage NPOs</a></li>
+					<li><a href="<?php echo admin_url("admin.php?page=".THEHUBSA_ADMIN_SIGNUPS_SLUG); ?>">Manage Signups</a></li>
 				</ul>
 			</td>
 			<td width="50%">
@@ -88,13 +97,26 @@ function admin_thehubsa_options() {
  */
 function admin_thehubsa_npos() 
 {
-	// NPOS
 	echo '<div class="wrap"><p>TheHubSA NPOs</p></div>';
 
-	//Prepare Table of elements
-	$admin_npos = new Link_List_NPO_Table();
-	$admin_npos->prepare_items();
-	$admin_npos->display();
+	$action = filter_input(INPUT_GET, 'action');
+	$npo_id = filter_input(INPUT_GET, 'id');
+
+	if($action=='view' && $npo_id) {
+		echo "<div>Action: <a href='".admin_url("admin.php?page=".THEHUBSA_ADMIN_NPOS_SLUG)."'>Back to list</a></div>";
+
+		$npo = model_thehub_npos::get_by_id($npo_id);
+
+		if(empty($npo)) {
+			echo "<div>Id {$npo_id} not found</div>";
+		} else {
+			require( plugin_dir_path( __FILE__ )."../views/admin/npo_view.php");
+		}
+	} else {
+		$admin_npos = new Link_List_NPO_Table();
+		$admin_npos->prepare_items();
+		$admin_npos->display();
+	}
 }
 
 /**
