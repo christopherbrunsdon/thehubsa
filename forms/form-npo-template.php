@@ -9,7 +9,7 @@
 <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
 
 
-<form action="<?= esc_url( $_SERVER['REQUEST_URI']); ?>" method="post">
+<form action="<?= esc_url( $_SERVER['REQUEST_URI']); ?>"  enctype="multipart/form-data" method="post">
 	<h1>ORGANISATION REGISTRATION FORM</h1>
 
 	<!-- Name of organisation -->
@@ -79,6 +79,20 @@
 	<div class="form-group  <?php $this->hasError('npo-facebook') && print 'has-error' ?>"> 
 		<label class="control-label" for="">Facebook page : <?= $this->getError('npo-facebook') ?></label>
 		<input type="text" value="<?= $this->getValue('npo-facebook'); ?>" name="npo-facebook" class="form-control" id="" placeholder="Facebook page " />
+	</div>
+
+	<div class="form-group  <?php $this->hasError('npo-logo') && print 'has-error' ?>"> 
+		<label class="control-label" for="">Logo : <?= $this->getError('npo-logo') ?></label><br />
+		<small>Maximum size of 1000px x 1000px. JPEG or PNG format.</small>		
+		<input type="file" name="npo-logo" class="form-control" id="" placeholder="Logo" />
+	
+		<input type="hidden" value="<?= $this->getValue('npo-logo-file'); ?>" name="npo-logo-file" />
+		<?php if($this->getValue('npo-logo-url')): ?>
+			<img src="<?= $this->getValue('npo-logo-url'); ?>" />
+			<input type="hidden" value="<?= $this->getValue('npo-logo-url'); ?>" name="npo-logo-url" />
+		<?php endif; ?>
+	</div>
+	<div>
 	</div>
 
 <!-- 			<div class="form-group  <?php $this->hasError('npo-xxx') && print 'has-error' ?>"> 

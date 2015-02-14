@@ -2,7 +2,7 @@
 defined('ABSPATH') or die("No script kiddies please!");
 
 // format date.version
-DEFINE('THEHUBSA_DB_VERSION', 20150201.000);
+DEFINE('THEHUBSA_DB_VERSION', 20150208);
 
 /**
  * Setup
@@ -18,7 +18,7 @@ function thehubsa_install()
 	dbDelta(model_thehub_membership_types::get_create_table());
 	dbDelta(model_thehub_memberships::get_create_table());
 
-	dbDelta(model_thehub_npos::get_create_table());
+	dbDelta(model_thehub_npos::get_create_table()); //error_log(model_thehub_npos::get_create_table());
 	dbDelta(model_thehub_npo_service_types::get_create_table());
 	dbDelta(model_thehub_npo_services::get_create_table());
 

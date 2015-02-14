@@ -2,6 +2,13 @@
 
 defined('ABSPATH') or die("No script kiddies please!");
 
+// required for form uploading in wordpress
+if ( ! function_exists( 'wp_handle_upload' ) ) {
+  require_once( ABSPATH . 'wp-admin/includes/file.php' );
+}
+
+// form
+
 abstract class form 
 {
 
@@ -99,7 +106,7 @@ abstract class form
 
 	public function shortcode()
 	{
-		$res = $this->process($_POST);
+		$res = $this->process($_POST, $_FILES);
 
 	    ob_start();
 
