@@ -124,7 +124,12 @@ function thehubsa_admin_crud_npos()
 				echo "<div>Id {$npo_id} not found</div>";
 			} else {
 				$npo->setActive((bool)($action === 'activate'));
-				echo "NPO <strong>{$npo}</strong> is now <strong>".($npo->is_active()?'Active':'Deactive')."</strong>";
+				echo "<div>NPO <strong>{$npo}</strong> is now <strong>".($npo->is_active()?'Active':'Deactive')."</strong></div>";
+
+				echo "<ul>";
+				echo "<li><a href='".admin_url("admin.php?page=".THEHUBSA_ADMIN_NPOS_SLUG)."&id={$npo->id}&action=view'>View NPO {$npo}</a></li>";
+				echo "<li><a href='".admin_url("admin.php?page=".THEHUBSA_ADMIN_NPOS_SLUG)."'>View NPO list</a></li>";
+				echo "</ul>";
 			}
 			break;
 
