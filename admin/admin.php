@@ -54,7 +54,7 @@ function admin_thehubsa_menu()
 		$menu_title = 'NPOs', 
 		$capability, 
 		$menu_slug = THEHUBSA_ADMIN_NPOS_SLUG, 
-		$function = "admin_thehubsa_npos");	
+		$function = "thehubsa_admin_crud_npos");	
 
 	// submenus
 	add_submenu_page( 
@@ -63,7 +63,7 @@ function admin_thehubsa_menu()
 		$menu_title = 'Signups', 
 		$capability, 
 		$menu_slug = THEHUBSA_ADMIN_SIGNUPS_SLUG, 
-		$function = "admin_thehubsa_memberships");	
+		$function = "thehubsa_admin_crud_memberships");	
 }
 
 /**
@@ -95,34 +95,51 @@ function admin_thehubsa_options() {
 /**
  *
  */
-function admin_thehubsa_npos() 
+function thehubsa_admin_crud_npos() 
 {
-	echo '<div class="wrap"><p>TheHubSA NPOs</p></div>';
+	echo '<div class="wrap"><h1>TheHubSA NPOs</h1>';
 
 	$action = filter_input(INPUT_GET, 'action');
 	$npo_id = filter_input(INPUT_GET, 'id');
 
-	if($action=='view' && $npo_id) {
-		echo "<div>Action: <a href='".admin_url("admin.php?page=".THEHUBSA_ADMIN_NPOS_SLUG)."'>Back to list</a></div>";
+	switch(strtolower($action)) 
+	{
+		case 'view':
+			echo "<h2><a class='add-new-h2' href='".admin_url("admin.php?page=".THEHUBSA_ADMIN_NPOS_SLUG)."'><- Back to list</a></h2>";
 
-		$npo = model_thehub_npos::get_by_id($npo_id);
+			$npo = model_thehub_npos::get_by_id($npo_id);
 
-		if(empty($npo)) {
-			echo "<div>Id {$npo_id} not found</div>";
-		} else {
-			require( plugin_dir_path( __FILE__ )."../views/admin/npo_view.php");
-		}
-	} else {
-		$admin_npos = new Link_List_NPO_Table();
-		$admin_npos->prepare_items();
-		$admin_npos->display();
+			if(empty($npo)) {
+				echo "<div>Id {$npo_id} not found</div>";
+			} else {
+				require( plugin_dir_path( __FILE__ )."../views/admin/npo_view.php");
+			}
+			break;
+
+		case 'activate':
+		case 'deactivate':
+			$npo = model_thehub_npos::get_by_id($npo_id);
+			
+			if(empty($npo)) {
+				echo "<div>Id {$npo_id} not found</div>";
+			} else {
+				$npo->setActive((bool)($action === 'activate'));
+				echo "NPO <strong>{$npo}</strong> is now <strong>".($npo->is_active()?'Active':'Deactive')."</strong>";
+			}
+			break;
+
+		default:
+			$admin_npos = new Link_List_NPO_Table();
+			$admin_npos->prepare_items();
+			$admin_npos->display();
 	}
+	echo '</div>';
 }
 
 /**
  *
  */
-function admin_thehubsa_memberships() 
+function thehubsa_admin_crud_memberships() 
 {
 	echo '<div class="wrap"><p>TheHubSA Signups</p></div>';
 

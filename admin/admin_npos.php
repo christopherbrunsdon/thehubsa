@@ -47,6 +47,7 @@ class Link_List_NPO_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Table Cols
 	 *
 	 */
 
@@ -78,7 +79,7 @@ class Link_List_NPO_Table extends WP_List_Table {
 	   	return $sortable = array(
 	      'id'      => 'id',
 	      'Name'    => 'Name',
-	      'Contact'        => 'Contact',
+	      'Contact' => 'Contact',
 	      'Email'   => 'Email',
 	   );
 	}
@@ -92,21 +93,15 @@ class Link_List_NPO_Table extends WP_List_Table {
 		global $wpdb, $_wp_column_headers;
 		$screen = get_current_screen();
 
-		/* -- Preparing your query -- */
-		$query = "SELECT * FROM ".model_thehub_npos::get_table_name().""; 
+		// select from
+		$query = "SELECT * FROM ".model_thehub_npos::get_table_name();
+				 
+		// where
 
-		// if (debug) ... error_log($query);
-
-		/* -- Ordering parameters -- */
-        //Parameters that are going to be used to order the result
-		// $orderby = !empty($_GET["orderby"]) ? mysql_real_escape_string($_GET["orderby"]) : 'ASC';
-		// $order = !empty($_GET["order"]) ? mysql_real_escape_string($_GET["order"]) : '';
-
-		$orderby = filter_input(INPUT_GET, 'orderby', FILTER_SANITIZE_MAGIC_QUOTES);
-		$order = filter_input(INPUT_GET, 'order', FILTER_SANITIZE_MAGIC_QUOTES)?:'ASC';
-		if(!empty($orderby) & !empty($order)){ 
-			$query.=' ORDER BY '.$orderby.' '.$order; 
-		}
+		// order by
+		$query .= " ORDER BY "
+				 ." ".(filter_input(INPUT_GET, 'orderby', FILTER_SANITIZE_MAGIC_QUOTES)?:'id')
+				 ." ".(filter_input(INPUT_GET, 'order', FILTER_SANITIZE_MAGIC_QUOTES)?:'ASC');
 
 		/* -- Pagination parameters -- */
         //Number of elements in your table?
@@ -138,8 +133,8 @@ class Link_List_NPO_Table extends WP_List_Table {
 		//The pagination links are automatically built according to those parameters
 
 		 /* — Register the Columns — */
-		 $columns = $this->get_columns();
-		 $hidden = array();
+		 $columns  = $this->get_columns();
+		 $hidden   = array();
 		 $sortable = $this->get_sortable_columns();
 		 $this->_column_headers = array($columns, $hidden, $sortable);
 

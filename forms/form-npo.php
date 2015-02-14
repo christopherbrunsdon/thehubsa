@@ -105,7 +105,7 @@ class form_npo extends form
           'listWish' => $data["npo-wishlist"],
           'paymentEft' => isset($data["npo-payment-eft"])?$data["npo-payment-eft"]:0,
           'paymentDeposit' => isset($data["npo-payment-deposit"])?$data["npo-payment-deposit"]:0,
-          'logo' => $data["npo-logo-file"],
+          'logo_path' => $data["npo-logo-file"],
         );
 
       $npo->set_data($mapped_data);

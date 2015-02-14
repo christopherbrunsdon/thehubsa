@@ -24,33 +24,6 @@ defined('ABSPATH') or die("No script kiddies please!");
 
 class model_thehub_npos {
 
-
-	public
-		$_id = Null,
-		$_name = Null,
-		$_reg_number = Null,
-		$_reg_number_other = Null,
-		$_address = Null,
-		$_address_postal = Null,
-		$_contact = Null,
-		$_tel = Null,
-		$_mobile = Null,
-		$_email = Null,
-		$_www_domain = Null,
-		$_www_homepage = Null,
-		$_www_facebook = Null,
-		$_description = Null,
-		$_services_offered = Null,
-		$_associated_organisations = Null,
-		$_listneeds = Null,
-		$_listwish = Null,
-		$_payment_eft = Null,
-		$_payment_deposit = Null,
-		$_notes = Null,
-		$_logo_path = Null;
-
-
-
 	static function instance() 
 	{
 		static $inst = null;
@@ -67,6 +40,11 @@ class model_thehub_npos {
 	public function __construct($data = Null)
 	{
 		$this->set_data($data);
+	}
+
+	public function __toString() 
+	{
+		return $this->Name." (Reg: {$this->RegNumber})";
 	}
 
 	/**
@@ -151,9 +129,9 @@ class model_thehub_npos {
 			return Null;
 
 		global $wpdb;
-		return $wpdb->get_row("SELECT * FROM ".self::get_table_name()
+		return self::_postProcess($wpdb->get_row("SELECT * FROM ".self::get_table_name()
 				." WHERE  lower(email) = '".strtolower($email)."' ",
-				OBJECT);
+				OBJECT));
 	}
 
 	/**
@@ -162,35 +140,18 @@ class model_thehub_npos {
 
 	public function set_data($data)
 	{
-		if(!is_array($data)) {
-			return $this->set_data(array());
+		if(is_object($data)) {
+			return $this->set_data(get_object_vars($data));
 		}
 
-		$this->_name					= array_key_exists('Name', $data) ? $data['Name'] : Null;
-		$this->_reg_number				= array_key_exists('RegNumber', $data) ? $data['RegNumber'] : Null;
-		$this->_reg_number_other		= array_key_exists('RegNumberOther', $data) ? $data['RegNumberOther'] : Null;
-		$this->_address					= array_key_exists('Address', $data) ? $data['Address'] : Null;
-		$this->_address_postal			= array_key_exists('AddressPostal', $data) ? $data['AddressPostal'] : Null;
-		$this->_contact					= array_key_exists('Contact', $data) ? $data['Contact'] : Null;
-		$this->_tel						= array_key_exists('Tel', $data) ? $data['Tel'] : Null;
-		$this->_mobile					= array_key_exists('Mobile', $data) ? $data['Mobile'] : Null;
-		$this->_email					= array_key_exists('Email', $data) ? $data['Email'] : Null;
-		$this->_www_domain				= array_key_exists('wwwDomain', $data) ? $data['wwwDomain'] : Null;
-		$this->_www_homepage			= array_key_exists('wwwHomepage', $data) ? $data['wwwHomepage'] : Null;
-		$this->_www_facebook			= array_key_exists('wwwFacebook', $data) ? $data['wwwFacebook'] : Null;
-		$this->_description				= array_key_exists('Description', $data) ? $data['Description'] : Null;
-		$this->_services_offered		= array_key_exists('ServicesOffered', $data) ? $data['ServicesOffered'] : Null;
-		$this->_associated_organisations= array_key_exists('AssociatedOrganisations', $data) ? $data['AssociatedOrganisations'] : Null;
-		$this->_listneeds				= array_key_exists('listNeeds', $data) ? $data['listNeeds'] : Null;
-		$this->_listwish				= array_key_exists('listWish', $data) ? $data['listWish'] : Null;
-		$this->_payment_eft				= array_key_exists('paymentEft', $data) ? $data['paymentEft'] : Null;
-		$this->_payment_deposit			= array_key_exists('paymentDeposit', $data) ? $data['paymentDeposit'] : Null;
-		$this->_logo_path				= array_key_exists('logo', $data) ? $data['logo'] : Null;
+		foreach($data as $k=>$v) {
+			$this->$k=$v;
+		}
 	}
 
 	/**
 	 * Validate
-	 *
+	 * Change this to not be form specific.
 	 */
 
 	public function validate($data)
@@ -442,36 +403,34 @@ class model_thehub_npos {
 	{
 		global $wpdb;
 
-		if($this->_id == False) {
-			// add to db
+		// data
+		$data =  array(
+					'Name' 				=> $this->Name,
+					'RegNumber' 		=> $this->RegNumber,
+					'RegNumberOther' 	=> $this->RegNumberOther,
+					'Address' 			=> $this->Address,
+					'AddressPostal' 	=> $this->AddressPostal,
+					'Contact' 			=> $this->Contact,
+					'Tel' 				=> $this->Tel,
+					'Mobile' 			=> $this->Mobile,
+					'Email' 			=> $this->Email,
+					'wwwDomain' 		=> $this->wwwDomain,
+					'wwwHomepage' 		=> $this->wwwHomepage,
+					'wwwFacebook' 		=> $this->wwwFacebook,
+					'Description' 		=> $this->Description,
+					'ServicesOffered' 	=> $this->ServicesOffered,
+					'AssociatedOrganisations' => $this->AssociatedOrganisations,
+					'listNeeds' 		=> $this->listNeeds,
+					'listWish' 			=> $this->listWish,
+					'paymentEft' 		=> (bool)$this->paymentEft,
+					'paymentDeposit' 	=> (bool)$this->paymentDeposit,
+					'Notes' 			=> $this->Notes,
+					'LogoPath'			=> $this->LogoPath,
+					'bActive' 			=> $this->is_active(), // we can never force this  
+					);
 
-			$wpdb->insert(self::get_table_name(),
-				array(
-					'Name' 				=> $this->_name,
-					'RegNumber' 		=> $this->_reg_number,
-					'RegNumberOther' 	=> $this->_reg_number_other,
-					'Address' 			=> $this->_address,
-					'AddressPostal' 	=> $this->_address_postal,
-					'Contact' 			=> $this->_contact,
-					'Tel' 				=> $this->_tel,
-					'Mobile' 			=> $this->_mobile,
-					'Email' 			=> $this->_email,
-					'wwwDomain' 		=> $this->_www_domain,
-					'wwwHomepage' 		=> $this->_www_homepage,
-					'wwwFacebook' 		=> $this->_www_facebook,
-					'Description' 		=> $this->_description,
-					'ServicesOffered' 	=> $this->_services_offered,
-					'AssociatedOrganisations' => $this->_associated_organisations,
-					'listNeeds' 		=> $this->_listneeds,
-					'listWish' 			=> $this->_listwish,
-					'paymentEft' 		=> (bool)$this->_payment_eft,
-					'paymentDeposit' 	=> (bool)$this->_payment_deposit,
-					'Notes' 			=> $this->_notes,
-					'LogoPath'			=> $this->_logo_path,
-					'WhenCreated' 		=> date("Y-m-d H:i"), // now()    
-					'bActive' 			=> False,  
-					),
-				array(
+		// data format
+		$format = array(
 					'%s', // Name
 					'%s', // RegNumber
 					'%s', // RegNumberOther
@@ -493,39 +452,45 @@ class model_thehub_npos {
 					'%d', // paymentDeposit
 					'%s', // Notes
 					'%s', // Logo
-					'%s', // WhenCreated
 					'%d', // Active
-					));
+					);
 
-			$this->_id = $wpdb->insert_id;
+		// insert
+		if(!$this->id) {
+			$data['WhenCreated'] = date("Y-m-d H:i");    
+			$format[''] = '%s';
+
+			$wpdb->insert($table = self::get_table_name(), $data, $format);
+			$this->id = $wpdb->insert_id;
 		} else {
 			// update
+			$wpdb->update(
+				$table = self::get_table_name(), 
+				$data, 
+				$where = array('id' => $this->id),
+				$format,
+				$where_format = array('%d'));
 		}
 	}
 
-	/** 
-	 * Send email
+	/**
+	 * Is active
+	 * 
+	 * Apply active rules here
+	 *
+	 * @return bool
+	 */
+	public function is_active() {
+		return (bool)(isset($this->bActive) && $this->bActive);
+	}
+
+
+	/**
 	 *
 	 */
-
-	public function email($subject, $message)
-	{
-		if(empty($subject) || empty($message)) {
-			error_log(__CLASS__.":".__METHOS." Empty: [\$subject:{$suject}] [\$message:{$message}]");
-			return False;
-		}
-
-		if(filter_var($this->_email, FILTER_VALIDATE_EMAIL) == False)
-		{
-			error_log(__CLASS__.":".__METHOS." Invalid email ".$this->_email);
-			return False;
-		}
-
-        $to = $this->_email;
-        $from = get_option( 'admin_email' );
-        $headers = "From: TheHubSA <{$from}>" . "\r\n";
-
-  		return wp_mail( $to, $subject, $message, $headers );
+	public function setActive($active = True) {
+		$this->bActive = $active;
+		$this->save();
 	}
 
 	/**
@@ -573,7 +538,7 @@ class model_thehub_npos {
 			return $object;
 		}
 
-		if($object->id == 1) {
+		if($object->id == 111111) {
 			$object->Name = "Masikhule";		// ]=> string(4) "test"
 			$object->RegNumber = "050-955";		// ]=> string(11) "test REG NP"
 			$object->RegNumberOther = "";		// ]=> string(5) "OTHER"
@@ -598,7 +563,7 @@ class model_thehub_npos {
 			
 			$object->ServicesOffered = "";		// ]=> string(3) "moo"
 			$object->AssociatedOrganisations = "";		// ]=> string(9) "sadsadsad"
-			$object->listNeeds = "<ul>
+			$object->list_Needs = "<ul>
 	<li>Funding for training.</li>
 	<li>Infrastructure upgrades to ECD centres.</li>
 	<li>Feeding schemes.</li>
@@ -616,7 +581,7 @@ class model_thehub_npos {
 			
 			$object->paymentEft = "";		// ]=> string(1) "0"
 			$object->paymentDeposit = "";		// ]=> string(1) "0"
-			$object->bActive = "";		// ]=> string(1) "1"
+			$object->bActive = True;		// ]=> string(1) "1"
 			$object->Notes = "";		// ]=> string(0) ""		
 
 			$object->logo =  plugins_url('../downloads/logo/masikhule_258x99.jpg', __FILE__);
@@ -624,9 +589,8 @@ class model_thehub_npos {
 		}
 
 		$object->logo = self::logo_url($object->LogoPath); 
-
-		$object->services_offered = model_thehub_npo_services::get_by_npo($object->id);
-		return $object;
+		$object->npo_services = model_thehub_npo_services::get_by_npo($object->id);
+		return new self($object);
 	}
 
 	/**

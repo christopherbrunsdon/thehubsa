@@ -1,6 +1,15 @@
 <h2>
-	<u>Viewing NPO:</u> <?php echo $npo->Name; ?>
+	<u>Viewing NPO:</u> <?php echo $npo; ?>
+
+	&nbsp;&nbsp;
+
+
+	<a href='<?php echo admin_url("admin.php?page=".THEHUBSA_ADMIN_NPOS_SLUG."&id=".$npo->id.'&action='.($npo->is_active()?'deactivate':'activate')); ?>'
+		onclick="return confirm('You are about to <?php echo ($npo->is_active()? 'Deactivate' : 'Activate'); ?> the NPO <?php echo $npo->Name; ?>');"
+		class="add-new-h2" ><?php echo ($npo->is_active()? 'Deactivate' : 'Activate'); ?></a>
 </h2>
+
+<br />
 
 <table border=1>
 
@@ -130,7 +139,7 @@
 
 	<tr class="">
 		<th align="right">Active:</th>
-		<td><?php echo $npo->bActive?"Yes":"No"; ?></td>
+		<td><?php echo $npo->is_active()?"Yes":"No"; ?></td>
 	</tr>
 
 	<tr class="">
