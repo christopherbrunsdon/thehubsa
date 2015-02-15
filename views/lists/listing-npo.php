@@ -12,44 +12,40 @@
 
 	<div class="page-header">	
 		<h1>
-			Viewing Charity: <?= $npo->Name; ?>
+			Viewing Charity: <?php echo $npo->Name; ?>
 		</h1>
 	</div>
 
 	<div class="row">
 		<div class="col-md-12">
-		
 			<p>
-				<img src="<?= $npo->logo; ?>" />
+				<img style="max-width: 600px; max-height: 300px;"  src="<?php echo $npo->get_logo_url(); ?>" />
 			</p>
 
 			<p>
-				<?= nl2br($npo->Description); ?>
+				<?php echo nl2br($npo->Description); ?>
 			</p>
-
-
 		</div>
 
 	</div>
 
 	<div class="row">
 		<div class="col-md-6">
-
 			<p>
-				<strong>Registration Number: </strong><br /><?= $npo->RegNumber ?>
+				<strong>Registration Number: </strong><br /><?php echo $npo->RegNumber ?>
 			</p>
 
 			<?php if(trim($npo->Address)): ?>
 			<p>
 				<strong>Physical address:</strong><br />
-				<?= nl2br($npo->Address); ?>
+				<?php echo nl2br($npo->Address); ?>
 			</p>
 			<?php endif; ?>
 
 			<?php if(trim($npo->AddressPostal)): ?>
 			<p>
 				<strong>Postal address:</strong><br />
-				<?= nl2br($npo->AddressPostal); ?>
+				<?php echo nl2br($npo->AddressPostal); ?>
 			</p>
 			<?php endif; ?>
 
@@ -57,11 +53,11 @@
 			<p>
 				<strong>Links: </strong><br />
 
-				<a href="<?= (stripos($npo->wwwDomain, "http") !== 0?'http://':'').$npo->wwwDomain; ?>" target="_blank"><?= $npo->wwwDomain ?></a>
+				<a href="<?php echo (stripos($npo->wwwDomain, "http") !== 0?'http://':'').$npo->wwwDomain; ?>" target="_blank"><?php echo $npo->wwwDomain ?></a>
 			
 				<br />
 
-				<a href="<?= (stripos($npo->wwwFacebook, "http") !== 0?'http://':'').$npo->wwwFacebook; ?>" target="_blank">
+				<a href="<?php echo (stripos($npo->wwwFacebook, "http") !== 0?'http://':'').$npo->wwwFacebook; ?>" target="_blank">
 	<img src="http://png-1.findicons.com/files/icons/2155/social_media_bookmark/32/facebook.png"/>
 				</a>
 
@@ -71,15 +67,15 @@
 				<strong>Contact details:</strong><br />
 
 				<?php if(trim($npo->Contact)): ?>
-					<strong>Contact:</strong> <?= $npo->Contact; ?><br />
+					<strong>Contact:</strong> <?php echo $npo->Contact; ?><br />
 				<?php endif; ?>
 
 				<?php if(trim($npo->Tel)): ?>
-					<strong>Tel: </strong> <?= $npo->Tel ?><br />
+					<strong>Tel: </strong> <?php echo $npo->Tel ?><br />
 				<?php endif; ?>
 
 				<?php if(trim($npo->Mobile)): ?>
-					<strong>Cell:</strong> <?= $npo->Mobile; ?><br />
+					<strong>Cell:</strong> <?php echo $npo->Mobile; ?><br />
 				<?php endif; ?>
 			</p>
 		</div>
@@ -87,20 +83,21 @@
 		<div class="col-md-6">
 				<strong>Services offered :</strong>
 				<?php // nl2br($npo->ServicesOffered); ?>
-				
+
 				<ul>
 					<?php foreach($npo->npo_services as $service): ?>
+						<li><?php echo $service->Service; ?></li>
 					<?php endforeach; ?>
 				</ul>
 
 				<br />
 		
 				<strong>Needs List:</strong><br />
-				<?= ($npo->listNeeds); ?>
+				<?php echo ($npo->listNeeds); ?>
 				<br />
 
 				<strong>Wish List:</strong><br />
-				<?= ($npo->listWish); ?>
+				<?php echo ($npo->listWish); ?>
 			<br />	
 		</div>
 	</div>
