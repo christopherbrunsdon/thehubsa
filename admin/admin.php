@@ -25,6 +25,14 @@ define('THEHUBSA_ADMIN_SLUG', "thehubsa-admin");
 define('THEHUBSA_ADMIN_NPOS_SLUG', "thehubsa-admin-npos");
 define('THEHUBSA_ADMIN_SIGNUPS_SLUG', "thehubsa-admin-signups");
 
+/**
+ * Toolbar node
+ */
+
+// look at adding link in tool bar.
+
+// eg: edit NPO while viewing it.
+
 /*
  * Add my menus
  *
@@ -101,6 +109,7 @@ function thehubsa_admin_crud_npos()
 
 	$action = filter_input(INPUT_GET, 'action');
 	$npo_id = filter_input(INPUT_GET, 'id');
+	$filter = filter_input(INPUT_GET, 'filter');
 
 	switch(strtolower($action)) 
 	{
@@ -112,7 +121,7 @@ function thehubsa_admin_crud_npos()
 			if(empty($npo)) {
 				echo "<div>Id {$npo_id} not found</div>";
 			} else {
-				require( plugin_dir_path( __FILE__ )."../views/admin/npo_view.php");
+				require(plugin_dir_path( __FILE__ )."../views/admin/npo_view.php");
 			}
 			break;
 
@@ -135,6 +144,8 @@ function thehubsa_admin_crud_npos()
 
 		default:
 			$admin_npos = new Link_List_NPO_Table();
+			$admin_npos->set_base_url(admin_url("admin.php?page=".THEHUBSA_ADMIN_NPOS_SLUG));
+			$admin_npos->set_npo_filter($filter);
 			$admin_npos->prepare_items();
 			$admin_npos->display();
 	}

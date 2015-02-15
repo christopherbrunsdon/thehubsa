@@ -8,6 +8,11 @@ defined('ABSPATH') or die("No script kiddies please!");
  */
 class Link_List_NPO_Table extends WP_List_Table {
 
+	private
+		$_base_url,
+		$_npo_filter,
+		$_get_npo_count;
+
 	//@TODO: save these deaults
 
 	function getPerPage()
@@ -36,7 +41,23 @@ class Link_List_NPO_Table extends WP_List_Table {
 	function extra_tablenav( $which ) 
 	{
 	   if ( $which == "top" ){
-	      echo "List of NPOs who have signed up";
+			echo "List of "
+				.ucwords($this->_npo_filter?:'All')
+				." NPOs who have signed up";
+
+		}
+
+		// display filters
+		if(in_array($which, array("top","bottom"))) {
+			if(isset($this->_base_url)) {
+				echo '<div class="wrap">';
+				echo '<ul class="subsubsub">';
+				echo "<li class='all'><a href='{$this->_base_url}&filter=all' class='".(!in_array($this->_npo_filter, array('active','deactive'))?'current':'')."'>All <span class='count'>(".$this->get_npo_count('count_all').")</span></a> | </li>";
+				echo "<li class='active'><a href='{$this->_base_url}&filter=active' class='".($this->_npo_filter=='active'?'current':'')."'>Active <span class='count'>(".$this->get_npo_count('count_active').")</span></a> | </li>";
+				echo "<li class='deactive'><a href='{$this->_base_url}&filter=deactive' class='".($this->_npo_filter=='deactive'?'current':'')."'>Deactive <span class='count'>(".$this->get_npo_count('count_deactive').")</span></a></li>";
+				echo '</ul>';
+				echo '</div>';
+			}
 	   }
 
 	   if ( $which == "bottom" ){
@@ -97,6 +118,19 @@ class Link_List_NPO_Table extends WP_List_Table {
 		$query = "SELECT * FROM ".model_thehub_npos::get_table_name();
 				 
 		// where
+		switch ($this->_npo_filter) 
+		{
+			case 'active':
+				$query .= " WHERE bActive ";
+				break;
+
+			case 'deactive':
+				$query .= " WHERE NOT bActive ";
+				break;
+
+			default:
+				break;
+		}
 
 		// order by
 		$query .= " ORDER BY "
@@ -143,6 +177,41 @@ class Link_List_NPO_Table extends WP_List_Table {
 	}
 
 	/**
+	 *
+	 */
+	function get_npo_count($field = Null) 
+	{
+		if(!is_object($this->_get_npo_count)) {
+			global $wpdb;
+
+			$query = "SELECT COUNT(*) as count_all,
+				SUM(CASE WHEN bActive THEN 1 ELSE 0 END) AS count_active,
+				SUM(CASE WHEN NOT bActive THEN 1 ELSE 0 END) AS count_deactive
+				FROM ".model_thehub_npos::get_table_name();
+
+			$this->_get_npo_count = $wpdb->get_row($query, OBJECT);
+		}
+
+		if($field) {
+			return isset($this->_get_npo_count->$field)?$this->_get_npo_count->$field:False;
+		}
+		return $this->_get_npo_count;
+	}
+
+	/**
+	 *
+	 */
+	function set_base_url($base_url)
+	{
+		$this->_base_url=$base_url;
+	}
+
+	function set_npo_filter($filter)
+	{
+		$this->_npo_filter=$filter;
+	}
+
+	/**
 	 * Display the rows of records in the table
 	 * @return string, echo the markup of the rows
 	 */
@@ -155,9 +224,10 @@ class Link_List_NPO_Table extends WP_List_Table {
 
 		list( $columns, $hidden ) = $this->get_column_info();
 
-	   	foreach($records as $rec) {
-			
-			echo '<tr id="record_'.$rec->id.'">';
+	   	foreach($records as $row) {
+			$npo = new model_thehub_npos($row);
+
+			echo '<tr id="record_'.$npo->id.'">';
 
 			foreach ( $columns as $column_name => $column_display_name ) {
 
@@ -171,7 +241,7 @@ class Link_List_NPO_Table extends WP_List_Table {
 		         $attributes = $class . $style;
 
 		         //edit link
-		         $edit_link  = admin_url("admin.php?page=".THEHUBSA_ADMIN_NPOS_SLUG."&id=".$rec->id."&action=view");
+		         $edit_link  = admin_url("admin.php?page=".THEHUBSA_ADMIN_NPOS_SLUG."&id=".$npo->id."&action=view");
 
 		         //Display the cell
 
@@ -179,26 +249,25 @@ class Link_List_NPO_Table extends WP_List_Table {
 		         {
 		            case "id":  
 		            case "name":
-		            	echo "<td {$attributes}><a href='{$edit_link}'>{$rec->$column_name}</a></td>";
+		            	echo "<td {$attributes}><a href='{$edit_link}'>{$npo->$column_name}</a></td>";
 		            	break;
 
 		            
 		            case "bactive": 
-		            	echo "<td {$attributes}>".($rec->bActive?'Yes':'No');
+		            	echo "<td {$attributes}>".($npo->is_active()?'Yes':'No');
 		            	echo "</td>";   
 		            	break;
 
 		            case 'logopath':
-
-		            	echo "<td>"
-		            		."<img style='max-width: 100px; max-height: 100px;' src='"
-		            		.model_thehub_npos::logo_url($rec->LogoPath)
-		            		."' />"
-		            		."</td>";
+		            	if($npo->get_logo_url()) {
+			            	echo "<td><img style='max-width: 100px; max-height: 100px;' src='{$npo->get_logo_url()}'/></td>";
+			            } else {
+			            	echo '<td>* No Logo *</td>';
+			            }
 		            	break;
 
 		            default:
-		            	echo "<td {$attributes}>{$rec->$column_name}</td>";
+		            	echo "<td {$attributes}>{$npo->$column_name}</td>";
 		            	break;
 					}
 		      }

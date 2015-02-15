@@ -605,5 +605,10 @@ class model_thehub_npos {
 		}
 		return $logo;
 	}
+
+	function get_logo_url()
+	{
+		return self::logo_url($this->LogoPath);
+	}
 }
 // [eof]
