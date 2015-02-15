@@ -498,9 +498,14 @@ class model_thehub_npos {
 	 *
 	 * @return object
 	 */
-	static public function get_by_name($name_like = Null, $active = True)
+	static public function get_by_name($name_like = Null, $filter_service = Null, $active = True)
 	{
-		$sql = "SELECT * FROM ".self::get_table_name();
+		$sql = "SELECT npo.* FROM ".self::get_table_name()." As npo ";
+
+		if($filter_service) {
+			$sql .= " INNER JOIN ".model_thehub_npo_services::get_table_name()." AS ns ON(npo.id=ns.fkNpo) "
+				." INNER JOIN ".model_thehub_npo_service_types::get_table_name()." AS service ON(ns.fkService=service.id) ";
+		}
 
 		$pre = ' WHERE ';
 		if($name_like) {
@@ -508,8 +513,13 @@ class model_thehub_npos {
 			$pre = ' AND ';
 		}
 
+		if($filter_service) {
+			$sql .= $pre." service.id={$filter_service} ";
+			$pre = ' AND ';
+		}
+
 		if($active) {
-			$sql .= $pre." bActive=True ";
+			$sql .= $pre." npo.bActive=True ";
 			$pre = ' AND ';
 		}
 

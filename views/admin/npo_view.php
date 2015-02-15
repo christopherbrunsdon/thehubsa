@@ -4,9 +4,12 @@
 	&nbsp;&nbsp;
 
 
-	<a href='<?php echo admin_url("admin.php?page=".THEHUBSA_ADMIN_NPOS_SLUG."&id=".$npo->id.'&action='.($npo->is_active()?'deactivate':'activate')); ?>'
+	<a href='<?php echo admin_url("admin.php?page=".THEHUBSA_ADMIN_NPOS_SLUG."&id={$npo->id}&action=".($npo->is_active()?'deactivate':'activate')); ?>'
 		onclick="return confirm('You are about to <?php echo ($npo->is_active()? 'Deactivate' : 'Activate'); ?> the NPO <?php echo $npo->Name; ?>');"
 		class="add-new-h2" ><?php echo ($npo->is_active()? 'Deactivate' : 'Activate'); ?></a>
+
+	<a href="<?php echo admin_url("admin.php?page=".THEHUBSA_ADMIN_NPOS_SLUG."&id={$npo->id}&action=preview"); ?>"
+		class="add-new-h2">Preview</a>
 </h2>
 
 <br />

@@ -119,9 +119,20 @@ function thehubsa_admin_crud_npos()
 			$npo = model_thehub_npos::get_by_id($npo_id);
 
 			if(empty($npo)) {
-				echo "<div>Id {$npo_id} not found</div>";
+				echo "<div>Error: Id {$npo_id} not found</div>";
 			} else {
 				require(plugin_dir_path( __FILE__ )."../views/admin/npo_view.php");
+			}
+			break;
+
+		case 'preview':
+			echo "<h2>Preview <a class='add-new-h2' href='".admin_url("admin.php?page=".THEHUBSA_ADMIN_NPOS_SLUG."&id={$npo_id}&action=view")."'><- Back</a></h2>";
+
+			$npo = model_thehub_npos::get_by_id($npo_id);
+			if(empty($npo)) {
+				echo "<div>Error: Id {$npo_id} not found</div>";
+			} else {
+				require(plugin_dir_path( __FILE__ )."../views/lists/listing-npo.php");
 			}
 			break;
 
@@ -133,7 +144,8 @@ function thehubsa_admin_crud_npos()
 				echo "<div>Id {$npo_id} not found</div>";
 			} else {
 				$npo->setActive((bool)($action === 'activate'));
-				echo "<div>NPO <strong>{$npo}</strong> is now <strong>".($npo->is_active()?'Active':'Deactive')."</strong></div>";
+				echo "<div>NPO <strong>{$npo}</strong> is now <strong>".($npo->is_active()?'Active':'Deactive')."</strong>";
+				echo "</div>";
 
 				echo "<ul>";
 				echo "<li><a href='".admin_url("admin.php?page=".THEHUBSA_ADMIN_NPOS_SLUG)."&id={$npo->id}&action=view'>View NPO {$npo}</a></li>";

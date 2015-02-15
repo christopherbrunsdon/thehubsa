@@ -23,6 +23,12 @@ class model_thehub_npo_services {
         return $inst;
 	}
 
+
+	function __toString()
+	{
+		
+	}
+
 	/**
 	 *
 	 */
