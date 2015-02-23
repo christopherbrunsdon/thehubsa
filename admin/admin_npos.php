@@ -74,6 +74,7 @@ class Link_List_NPO_Table extends WP_List_Table {
 
 	function get_columns() {
 	   return $columns= array(
+	   	  'action'			=> 'Action',
 	      'id'              => 'ID',
 	      'Name'            => 'Name',
 	      'Contact'         => 'Contact',
@@ -247,6 +248,12 @@ class Link_List_NPO_Table extends WP_List_Table {
 
 		         switch (strtolower($column_name))
 		         {
+		         	case "action":
+		         		echo "<td {$attributes}>";
+		            	echo "<a href='{$edit_link}'>View</a>";
+		         		echo "</td>";
+		         		break;
+
 		            case "id":  
 		            case "name":
 		            	echo "<td {$attributes}><a href='{$edit_link}'>{$npo->$column_name}</a></td>";

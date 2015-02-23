@@ -16,110 +16,106 @@
 
 	<h2>NAME OF ORGANISATION</h2>
 
-	<div class="form-group <?php $this->hasError('npo-name') && print 'has-error' ?>">
-		<label class="control-label" for="">NPO name : <?= $this->getError('npo-name') ?></label>
-		<input type="text" name="npo-name" class="form-control" id="" placeholder="NPO name" value="<?= $this->getValue('npo-name'); ?>"/>
+	<div class="form-group <?php $this->error_Name && print 'has-error' ?>">
+		<label class="control-label" for="">NPO name : <?= $this->error_Name ?></label>
+		<input type="text" name="Name" class="form-control" id="Name" placeholder="NPO name" value="<?= $this->Name; ?>"/>
 	</div>
 
-	<div class="form-group <?php $this->hasError('npo-reg-number') && print 'has-error' ?>">
-		<label class="control-label" for="">NPO registration number : <?= $this->getError('npo-reg-number') ?></label>
-		<input type="text" value="<?= $this->getValue('npo-reg-number'); ?>" name="npo-reg-number" class="form-control" id="" placeholder="NPO registration number" />
+	<div class="form-group <?php $this->error_RegNumber && print 'has-error' ?>">
+		<label class="control-label" for="">NPO registration number : <?= $this->error_RegNumber ?></label>
+		<input type="text" value="<?= $this->RegNumber; ?>" name="RegNumber" class="form-control" id="RegNumber" placeholder="NPO registration number" />
 	</div>
 
-	<div class="form-group <?php $this->hasError('npo-reg-other') && print 'has-error' ?>">
-		<label class="control-label" for="">Other registration numbers and descriptions (not required) : <?= $this->getError('npo-reg-other') ?></label>
-		<input type="text" value="<?= $this->getValue('npo-reg-other'); ?>" name="npo-reg-other" class="form-control" id="" placeholder="Other registration numbers" />
+	<div class="form-group <?php $this->error_RegNumberOther && print 'has-error' ?>">
+		<label class="control-label" for="">Other registration numbers and descriptions (not required) : <?= $this->error_RegNumberOther ?></label>
+		<input type="text" value="<?= $this->RegNumberOther; ?>" name="RegNumberOther" class="form-control" id="RegNumberOther" placeholder="Other registration numbers" />
 	</div>
 
 	<!-- address type -->
 
-	<div class="form-group <?php $this->hasError('npo-address') && print 'has-error' ?>">
-		<label class="control-label" for="">Physical address : <?= $this->getError('npo-address') ?></label>
-		<textarea rows=4 type="text" name="npo-address" class="form-control" id="" placeholder="Physical address"><?= $this->getValue('npo-address'); ?></textarea>
+	<div class="form-group <?php $this->error_Address && print 'has-error' ?>">
+		<label class="control-label" for="">Physical address : <?= $this->error_Address ?></label>
+		<textarea rows=4 type="text" name="Address" class="form-control" id="Address" placeholder="Physical address"><?= $this->Address; ?></textarea>
 	</div>
 
-	<div class="form-group  <?php $this->hasError('npo-postal') && print 'has-error' ?>">
-		<label class="control-label" for="">Postal address : <?= $this->getError('npo-postal') ?></label>
-		<textarea rows=4 type="text" name="npo-postal" class="form-control" id="" placeholder="Postal address"><?= $this->getValue('npo-postal'); ?></textarea>
+	<div class="form-group  <?php $this->error_PostalAddress && print 'has-error' ?>">
+		<label class="control-label" for="">Postal address : <?= $this->error_PostalAddress ?></label>
+		<textarea rows=4 type="text" name="PostalAddress" class="form-control" id="PostalAddress" placeholder="Postal address"><?= $this->PostalAddress; ?></textarea>
 	</div>
 
 
 	<!-- contact details -->
 	<h2>CONTACT DETAILS</h2>
-	<div class="form-group  <?php $this->hasError('npo-contact') && print 'has-error' ?>"> 
-		<label class="control-label" for="">Contact person  (Title, First Name, Surname) : <?= $this->getError('npo-contact') ?></label>
-		<input type="text" value="<?= $this->getValue('npo-contact'); ?>" name="npo-contact" class="form-control" id="" placeholder="Contact person " />
+	<div class="form-group  <?php $this->error_Contact && print 'has-error' ?>"> 
+		<label class="control-label" for="">Contact person  (Title, First Name, Surname) : <?= $this->error_Contact ?></label>
+		<input type="text" value="<?= $this->Contact; ?>" name="Contact" class="form-control" id="Contact" placeholder="Contact person " />
 	</div>
 
-	<div class="form-group  <?php $this->hasError('npo-tel') && print 'has-error' ?>"> 
-		<label class="control-label" for="">Telephone number  (example: +2721800000 no spaces) : <?= $this->getError('npo-tel') ?></label>
-		<input type="text" value="<?= $this->getValue('npo-tel'); ?>" name="npo-tel" class="form-control" id="" placeholder="Telephone number " />
+	<div class="form-group  <?php $this->error_Tel && print 'has-error' ?>"> 
+		<label class="control-label" for="">Telephone number  (example: +2721800000 no spaces) : <?= $this->error_Tel ?></label>
+		<input type="text" value="<?= $this->Tel; ?>" name="Tel" class="form-control" id="Tel" placeholder="Telephone number " />
 	</div>
 
-	<div class="form-group  <?php $this->hasError('npo-mobile') && print 'has-error' ?>"> 
-		<label class="control-label" for="">Cell number  (example 0822222222222 no spaces) : <?= $this->getError('npo-mobile') ?></label>
-		<input type="text" value="<?= $this->getValue('npo-mobile'); ?>" name="npo-mobile" class="form-control" id="" placeholder="Cell number " />
+	<div class="form-group  <?php $this->error_Mobile && print 'has-error' ?>"> 
+		<label class="control-label" for="">Cell number  (example 0822222222222 no spaces) : <?= $this->error_Mobile ?></label>
+		<input type="text" value="<?= $this->Mobile; ?>" name="Mobile" class="form-control" id="Mobile" placeholder="Cell number " />
 	</div>
 
-	<div class="form-group  <?php $this->hasError('npo-email') && print 'has-error' ?>"> 
-		<label class="control-label" for="">Email address : <?= $this->getError('npo-email') ?></label>
-		<input type="text" value="<?= $this->getValue('npo-email'); ?>" name="npo-email" class="form-control" id="" placeholder="Email address " />
+	<div class="form-group  <?php $this->error_Email && print 'has-error' ?>"> 
+		<label class="control-label" for="">Email address : <?= $this->error_Email ?></label>
+		<input type="text" value="<?= $this->Email; ?>" name="Email" class="form-control" id="Email" placeholder="Email address " />
 	</div>
 
-	<div class="form-group  <?php $this->hasError('npo-website') && print 'has-error' ?>"> 
-		<label class="control-label" for="">Website address : <?= $this->getError('npo-website') ?></label>
-		<input type="text" value="<?= $this->getValue('npo-website'); ?>" name="npo-website" class="form-control" id="" placeholder="Website address " />
+	<div class="form-group  <?php $this->error_wwwDomain && print 'has-error' ?>"> 
+		<label class="control-label" for="">Website address : <?= $this->error_wwwDomain ?></label>
+		<input type="text" value="<?= $this->wwwDomain; ?>" name="wwwDomain" class="form-control" id="wwwDomain" placeholder="Website address " />
 	</div>
 
-	<div class="form-group  <?php $this->hasError('npo-url') && print 'has-error' ?>"> 
-		<label class="control-label" for="">Preferred link for listing  (if not your home page as above) : <?= $this->getError('npo-url') ?></label>
-		<input type="text" value="<?= $this->getValue('npo-url'); ?>" name="npo-url" class="form-control" id="" placeholder="Preferred link for listing " />
+	<div class="form-group  <?php $this->error_wwwHomepage && print 'has-error' ?>"> 
+		<label class="control-label" for="">Preferred link for listing  (if not your home page as above) : <?= $this->error_wwwHomepage ?></label>
+		<input type="text" value="<?= $this->wwwHomepage; ?>" name="wwwHomepage" class="form-control" id="wwwHomepage" placeholder="Preferred link for listing " />
 	</div>
 
-	<div class="form-group  <?php $this->hasError('npo-facebook') && print 'has-error' ?>"> 
-		<label class="control-label" for="">Facebook page : <?= $this->getError('npo-facebook') ?></label>
-		<input type="text" value="<?= $this->getValue('npo-facebook'); ?>" name="npo-facebook" class="form-control" id="" placeholder="Facebook page " />
+	<div class="form-group  <?php $this->error_wwwFacebook && print 'has-error' ?>"> 
+		<label class="control-label" for="">Facebook page : <?= $this->error_wwwFacebook ?></label>
+		<input type="text" value="<?= $this->wwwFacebook; ?>" name="wwwFacebook" class="form-control" id="wwwFacebook" placeholder="Facebook page " />
 	</div>
 
-	<div class="form-group  <?php $this->hasError('npo-logo') && print 'has-error' ?>"> 
-		<label class="control-label" for="">Logo : <?= $this->getError('npo-logo') ?></label><br />
+	<div class="form-group  <?php $this->error_LogoPath && print 'has-error' ?>"> 
+		<label class="control-label" for="">Logo : <?= $this->error_LogoPath ?></label><br />
 		<small>Maximum size of 1000px x 1000px. JPEG or PNG format.</small>		
-		<input type="file" name="npo-logo" class="form-control" id="" placeholder="Logo" />
+		<input type="file" name="logo" class="form-control" id="" placeholder="Logo" />
 	
-		<input type="hidden" value="<?= $this->getValue('npo-logo-file'); ?>" name="npo-logo-file" />
-		<?php if($this->getValue('npo-logo-url')): ?>
-			<img src="<?= $this->getValue('npo-logo-url'); ?>" />
-			<input type="hidden" value="<?= $this->getValue('npo-logo-url'); ?>" name="npo-logo-url" />
-		<?php endif; ?>
+		<input type="hidden" value="<?= $this->LogoPath; ?>" name="LogoPath" />
+		<?php /**if($this->get_logo_url()): ?>
+			<img src="<?= $this->get_logo_url(); ?>" />
+			<input type="hidden" value="<?= $this->get_logo_url(); ?>" name="logo-url" />
+		<?php endif; **/?>
 	</div>
 	<div>
 	</div>
 
-<!-- 			<div class="form-group  <?php $this->hasError('npo-xxx') && print 'has-error' ?>"> 
-		<label class="control-label" for="">Operating hours  <?= $this->getError('npo-xxx') ?></label>
-		<input type="text" class="form-control" id="" placeholder="Operating hours " />
-	</div>
--->
-<?php for($i=1; $i <= 5; $i++): ?>
-	<div class="form-group  <?php $this->hasError('npo-service-offered-<?= $i ?>') && print 'has-error' ?>"> 
-		<?php if($i == 1) : ?><label class="control-label" for="">Services offered (in order of importance) : <?= $this->getError('npo-service-offered-<?= $i ?>') ?></label><?php endif ?>
+
+<?php /*** for($i=1; $i <= 5; $i++): ?>
+	<div class="form-group  <?php $this->error_serviceffered-<?= $i ?>') && print 'has-error' ?>"> 
+		<?php if($i == 1) : ?><label class="control-label" for="">Services offered (in order of importance) : <?= $this->error_serviceffered-<?= $i ?>') ?></label><?php endif ?>
 
 		<div class="input-group">
 			<div class="input-group-addon"><?= $i ?>.</div>
 
-			<select  class="form-control" name="npo-service-offered-<?= $i ?>" id="services_<?= $i; ?>">
+			<select  class="form-control" name="service-offered-<?= $i ?>" id="services_<?= $i; ?>">
 				<option>-- Services offered --</option>
 				<?php foreach($services as $service): ?>
-					<option value="<?= $service->id ?>" <?php $this->getValue('npo-service-offered-'.$i) ==  $service->id && print 'selected'; ?> ><?= $service->Service; ?></option>
+					<option value="<?= $service->id ?>" <?php $this->service-offered-'.$i) ==  $service->id && print 'selected'; ?> ><?= $service->Service; ?></option>
 				<?php endforeach; ?>
-				<option value="-- Other --" id="services_other_<?= $i; ?>" <?php $this->getValue('npo-service-offered-'.$i) == '-- Other --' && print 'selected'; ?>   >-- Other (Please indicate) --</option>					
+				<option value="-- Other --" id="services_other_<?= $i; ?>" <?php $this->service-offered-'.$i) == '-- Other --' && print 'selected'; ?>   >-- Other (Please indicate) --</option>					
 			</select>
 		</div>
 
-		<div <?php $this->getValue('npo-service-offered-'.$i) != '-- Other --' && print 'style="display: none;"' ?> id="service_other_input_<?= $i; ?>">
+		<div <?php $this->service-offered-'.$i) != '-- Other --' && print 'style="display: none;"' ?> id="service_other_input_<?= $i; ?>">
 			<div class="input-group">
 				<div class="input-group-addon">Other:</div>
-				<input  type="text" value="<?= $this->getValue('npo-service-offered-other-'.$i); ?>" name="npo-service-offered-other-<?= $i ?>" class="form-control"  placeholder="Other (Please inidcate)" />
+				<input  type="text" value="<?= $this->service-offered-other-'.$i); ?>" name="service-offered-other-<?= $i ?>" class="form-control"  placeholder="Other (Please inidcate)" />
 			</div>
 		</div>
 	</div>
@@ -134,78 +130,88 @@
 			}
 		});
 	</script>
-<?php endfor; ?>
+<?php endfor; ***/ ?>
 
 
-	<div class="form-group  <?php $this->hasError('npo-description') && print 'has-error' ?>">
-		<label class="control-label" for="">Give a short description (400 characters or less) of your organisation : <?= $this->getError('npo-description') ?></label>
-		<textarea rows=4 name="npo-description" type="text" class="form-control" id="" placeholder="Give a short description (400 characters or less) of your organisation"><?= $this->getValue('npo-description'); ?></textarea>
+	<div class="form-group  <?php $this->error_Description && print 'has-error' ?>">
+		<label class="control-label" for="">Give a short description (400 characters or less) of your organisation : <?= $this->error_Description ?></label>
+		<textarea rows=4 name="Description" type="text" class="form-control" id="" placeholder="Give a short description (400 characters or less) of your organisation"><?= $this->Description; ?></textarea>
 	</div>
 
 
 
 	<h2>SKILLS/RESOURCE BANK</h2>
 
-	<div class="form-group  <?php $this->hasError('npo-services-other') && print 'has-error' ?>">
-		<label class="control-label" for="">What can your organisation offer to the community (eg training, office space, haircuts) : <?= $this->getError('npo-services-other') ?></label>
-		<textarea rows=4 name="npo-services-other" type="text" class="form-control" id="" placeholder="What can your organisation offer to the community (eg training, office space, haircuts)"><?= $this->getValue('npo-services-other'); ?></textarea>
+	<div class="form-group  <?php $this->error_ServicesOffered && print 'has-error' ?>">
+		<label class="control-label" for="">What can your organisation offer to the community (eg training, office space, haircuts) : <?= $this->error_ServicesOffered; ?></label>
+		<textarea rows=4 name="ServicesOffered" type="text" class="form-control" id="" placeholder="What can your organisation offer to the community (eg training, office space, haircuts)"><?= $this->ServicesOffered; ?></textarea>
 	</div>
 
-	<div class="form-group  <?php $this->hasError('npo-associated') && print 'has-error' ?>">
-		<label class="control-label" for="">Associated Organisations : <?= $this->getError('npo-associated') ?></label>
-		<textarea rows=4 name="npo-associated" type="text" class="form-control" id="" placeholder="Associated organisations"><?= $this->getValue('npo-associated'); ?></textarea>
+	<div class="form-group  <?php $this->error_AssociatedOrganisations && print 'has-error' ?>">
+		<label class="control-label" for="">Associated Organisations : <?= $this->error_AssociatedOrganisations ?></label>
+		<textarea rows=4 name="AssociatedOrganisations" type="text" class="form-control" id="" placeholder="Associated organisations"><?= $this->AssociatedOrganisations; ?></textarea>
 	</div>
 
-	<div class="form-group  <?php $this->hasError('npo-needs') && print 'has-error' ?>">
-		<label class="control-label" for="">Needs list : <?= $this->getError('npo-needs') ?></label>
-		<textarea rows=4 name="npo-needs" type="text" class="form-control" id="" placeholder="Needs list"><?= $this->getValue('npo-needs'); ?></textarea>
+	<div class="form-group  <?php $this->error_listNeeds && print 'has-error' ?>">
+		<label class="control-label" for="">Needs list : <?= $this->error_listNeeds ?></label>
+		<textarea rows=4 name="listNeeds" type="text" class="form-control" id="" placeholder="Needs list"><?= $this->listNeeds; ?></textarea>
 	</div>
 
-	<div class="form-group  <?php $this->hasError('npo-wishlist') && print 'has-error' ?>">
-		<label class="control-label" for=""> Wish list : <?= $this->getError('npo-wishlist') ?></label>
-		<textarea rows=4 name="npo-wishlist" type="text" class="form-control" id="" placeholder="Wish list"><?= $this->getValue('npo-wishlist'); ?></textarea>
+	<div class="form-group  <?php $this->error_listWish && print 'has-error' ?>">
+		<label class="control-label" for=""> Wish list : <?= $this->error_listWish ?></label>
+		<textarea rows=4 name="listWish" type="text" class="form-control" id="" placeholder="Wish list"><?= $this->listWish; ?></textarea>
 	</div>
 
-	<p>
-		The HUB SA Helderberg reserves the right to accept/decline any affiliation.
-	</p>
-	<p>
-		The HUB SA Helderberg, including its committee and other members and any other person acting on behalf of The HUB SA Helderberg (“The HUB SA Helderberg”) is hereby absolved from all and any liability or claims of whatsoever nature for loss or damage (including any special or consequential damages) arising directly or indirectly out of or flowing from any services or assistance rendered or function fulfilled or activity carried out to any person or party by The HUB SA Helderberg , provided that The HUB SA Helderberg acted in good faith and in a reasonable manner.
-	</p>
-	<p>
-		Commitment fee: R200
-	</p>
-	<p>
-		Applicable on submission of registration form (non-refundable)
-	</p>
-	<p>
-		Thereafter an annual fee will apply. The fee is about giving a monetary value to the commitment you are making.
-	</p>
-	<p>
-		<h4>Bank details: </h4> <br />
-		<strong>Name: </strong> The HUB SA Helderberg <br />
-		<strong>Bank: </strong> FNB <br />
-		<strong>ACCOUNT TYPE: </strong> Business Cheque <br />
-		<strong>Account number: </strong> 62501541339 <br />
-		<strong>Branch code: </strong> 200912 – Somerset Mall <br />
-		<strong>Confirmation of payment:</strong> lynettepullen@gmail.com
-	</p>
+	<?php if(!isset($this->show_banking) || $this->show_banking): ?>
+		<p>
+			The HUB SA Helderberg reserves the right to accept/decline any affiliation.
+		</p>
+		<p>
+			The HUB SA Helderberg, including its committee and other members and any other person acting on behalf of The HUB SA Helderberg (“The HUB SA Helderberg”) is hereby absolved from all and any liability or claims of whatsoever nature for loss or damage (including any special or consequential damages) arising directly or indirectly out of or flowing from any services or assistance rendered or function fulfilled or activity carried out to any person or party by The HUB SA Helderberg , provided that The HUB SA Helderberg acted in good faith and in a reasonable manner.
+		</p>
+		<p>
+			Commitment fee: R200
+		</p>
+		<p>
+			Applicable on submission of registration form (non-refundable)
+		</p>
+		<p>
+			Thereafter an annual fee will apply. The fee is about giving a monetary value to the commitment you are making.
+		</p>
+		<p>
+			<h4>Bank details: </h4> <br />
+			<strong>Name: </strong> The HUB SA Helderberg <br />
+			<strong>Bank: </strong> FNB <br />
+			<strong>ACCOUNT TYPE: </strong> Business Cheque <br />
+			<strong>Account number: </strong> 62501541339 <br />
+			<strong>Branch code: </strong> 200912 – Somerset Mall <br />
+			<strong>Confirmation of payment:</strong> lynettepullen@gmail.com
+		</p>
 
-	<div class="form-group  <?php $this->hasError('npo-payment-eft') && print 'has-error' ?>">
-		<div class="checkbox">
-		    <label class="control-label">
-		      <input name="npo-payment-eft" <?php $this->getValue('npo-payment-eft') && print 'checked' ?> onclick="$('#btn-submit').prop('disabled', false).addClass('btn-primary').removeClass('btn-default');" type="checkbox"> 
-		      Payment Made via EFT <?= $this->getError('npo-payment-eft') ?>
-		    </label>
-		 </div>
-		<div class="checkbox">
-		    <label class="control-label">
-		      <input name="npo-payment-deposit" <?php $this->getValue('npo-payment-deposit') && print 'checked' ?> onclick="$('#btn-submit').prop('disabled', false).addClass('btn-primary').removeClass('btn-default');" type="checkbox"> 
-		      Payment Made via Deposit <?= $this->getError('npo-payment-deposit') ?>
-		    </label>
+		<div class="form-group  <?php $this->error_paymentEft && print 'has-error' ?>">
+			<div class="checkbox">
+			    <label class="control-label">
+			      <input name="paymentEft" <?php $this->paymentEft && print 'checked' ?> onclick="$('#btn-submit').prop('disabled', false).addClass('btn-primary').removeClass('btn-default');" type="checkbox"> 
+			      Payment Made via EFT <?= $this->error_paymentEft ?>
+			    </label>
+			 </div>
+			<div class="checkbox">
+			    <label class="control-label">
+			      <input name="paymentDeposit" <?php $this->paymentDeposit && print 'checked' ?> onclick="$('#btn-submit').prop('disabled', false).addClass('btn-primary').removeClass('btn-default');" type="checkbox"> 
+			      Payment Made via Deposit <?= $this->error_paymentDeposit ?>
+			    </label>
+			</div>
 		</div>
-	</div>
+	<?php endif; ?>
 
-	<button id="btn-submit" disabled type="submit" class="btn btn-default" name="npo-submit">Submit</button>
+
+	<?php if($this->id): ?>
+		<input type="hidden" value="<?= $this->id; ?>" name="id" id="id" />
+		<button id="btn-submit" type="submit" class="btn btn-default" name="submit">Update</button>	
+	<?php else: ?>
+		<button id="btn-submit" disabled type="submit" class="btn btn-default" name="submit">Submit</button>
+	<?php endif; ?>
+
 	&nbsp;&nbsp;|&nbsp;&nbsp;<a href="">Reset Form</a>
+
 </form>	

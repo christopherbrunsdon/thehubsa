@@ -10,6 +10,9 @@
 
 	<a href="<?php echo admin_url("admin.php?page=".THEHUBSA_ADMIN_NPOS_SLUG."&id={$npo->id}&action=preview"); ?>"
 		class="add-new-h2">Preview</a>
+
+	<a href="<?php echo admin_url("admin.php?page=".THEHUBSA_ADMIN_NPOS_SLUG."&id={$npo->id}&action=edit"); ?>"
+		class="add-new-h2">Edit</a>
 </h2>
 
 <br />

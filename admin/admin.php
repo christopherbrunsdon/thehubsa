@@ -136,6 +136,19 @@ function thehubsa_admin_crud_npos()
 			}
 			break;
 
+		case 'edit':
+			$npo = model_thehub_npos::get_by_id($npo_id);
+
+			if(empty($npo)) {
+				echo "<div>Error: Id {$npo_id} not found</div>";
+			} else {
+				$form = new form_npo();
+				$form->show_banking = false;
+				$form->load_npo($npo);
+				require(plugin_dir_path( __FILE__ )."../views/admin/npo_edit.php");
+			}
+			break;
+
 		case 'activate':
 		case 'deactivate':
 			$npo = model_thehub_npos::get_by_id($npo_id);

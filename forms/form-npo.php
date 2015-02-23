@@ -15,10 +15,23 @@ class form_npo extends form
 
   const MAX_LOGO_SIZE = 1500000;
 
+  public $show_banking = true;
+
+  /**
+   *
+   */
+  public function load_npo($npo) 
+  {
+    if (empty($npo)) {
+      return false;
+    }
+
+    $this->_form_data = $npo;
+  }
+
 	/**
 	 *
 	 */
-
 	function render($data = Null, $errors = Null) 
 	{
     $services = model_thehub_npo_service_types::get_services();
@@ -28,15 +41,15 @@ class form_npo extends form
 	/**
 	 *
 	 */
-
 	function process($data, $fileData = Null)
 	{
 		if(!isset($data['npo-submit'])) {
 		    return Null;
 		}
-// var_dump("<pre>", $data, "</pre>");
+
     $npo = new model_thehub_npos();
-    $res = $npo->validate($data);
+    $npo->set_data($data);
+    $res = $npo->validate();
 
     $this->_form_data = $res['data'];
 
@@ -63,7 +76,7 @@ class form_npo extends form
         $movefile         = wp_handle_upload( $uploadedfile, $upload_overrides );
 
         if ( $movefile && isset($movefile['file'])) {
-          $this->_form_data["npo-logo-file"]=$data["npo-logo-file"] = $movefile['file'];
+          $this->_form_data["logo_path"]=$data["logo_path"] = $movefile['file'];
           $this->_form_data["npo-logo-url"] = $data["npo-logo-url"] = $movefile['url'];
           $data["npo-logo-type"] = $movefile['type'];
         } else {
@@ -72,8 +85,8 @@ class form_npo extends form
 // var_dump("<pre>", $movefile, "</pre>");die();
       }
     } else {
-      if (isset($data["npo-logo-file"])) {
-        $this->_form_data["npo-logo-file"] = $data["npo-logo-file"];
+      if (isset($data["logo_path"])) {
+        $this->_form_data["logo_path"] = $data["logo_path"];
       }
       
       if(isset($data["npo-logo-url"])) {
@@ -84,31 +97,9 @@ class form_npo extends form
     // var_dump("<pre>", $data);
     if (empty($res['errors'])) {
       // map data
+      //     'logo_path' => $data["logo_path"],
 
-      $mapped_data = array(
-          'Name' => $data["npo-name"],
-          'RegNumber' => $data["npo-reg-number"],
-          'RegNumberOther' => $data["npo-reg-other"],
-          'Address' => $data["npo-address"],
-          'AddressPostal' => $data["npo-postal"],
-          'Contact' => $data["npo-contact"],
-          'Tel' => $data["npo-tel"],
-          'Mobile' => $data["npo-mobile"],
-          'Email' => $data["npo-email"],
-          'wwwDomain' => $data["npo-website"],
-          'wwwHomepage' => $data["npo-url"],
-          'wwwFacebook' => $data["npo-facebook"],
-          'Description' => $data["npo-description"],
-          'ServicesOffered' => $data["npo-services-other"],
-          'AssociatedOrganisations' => $data["npo-associated"],
-          'listNeeds' => $data["npo-needs"],
-          'listWish' => $data["npo-wishlist"],
-          'paymentEft' => isset($data["npo-payment-eft"])?$data["npo-payment-eft"]:0,
-          'paymentDeposit' => isset($data["npo-payment-deposit"])?$data["npo-payment-deposit"]:0,
-          'logo_path' => $data["npo-logo-file"],
-        );
-
-      $npo->set_data($mapped_data);
+      $npo->set_data($data);
       $npo->save();
 
       for ($i = 1; $i <= model_thehub_npo_services::NUMBER_PER_NPO; $i++) {
@@ -140,7 +131,6 @@ class form_npo extends form
 	/**
 	 *
 	 */
-
 	function render_thank_you()
 	{
     echo "<h2>Thank You!</h2>";

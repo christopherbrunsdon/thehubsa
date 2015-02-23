@@ -12,9 +12,9 @@ if ( ! function_exists( 'wp_handle_upload' ) ) {
 abstract class form 
 {
 
-	protected $_form_errors = Null;
+	protected $_form_errors=Null;
 	
-	protected $_form_data = Null;
+	protected $_form_data=Null;
 
 	
 	public function __constructor()
@@ -36,14 +36,45 @@ abstract class form
 	 * interface methods
 	 */
 
-	function render($data = Null, $errors = Null) {}
+	function render($data=Null, $errors=Null) {}
 
 	function process($data) {}
 
 	function render_thank_you() {}
 	
+    /**
+     *
+     */
 	public function __toString() {
     	return $this->render();
+    }
+
+    /**
+     * Magic method get
+     *
+     * @return mixed/null on not exit
+     */
+    public function __set($name, $value)
+    {
+        if(strpos($name, 'error_')===0)
+        {
+            return $this->setError(substr($name, strlen('error_')), $value);
+        }
+        return $this->_form_data[$name]=$value;
+    }
+
+    /**
+     * Magic method get
+     *
+     * @return mixed/null on not exit
+     */
+    public function __get($name)
+    {
+        if(strpos($name, 'error_')===0)
+        {
+            return $this->getError(substr($name, strlen('error_')));
+        }
+        return $this->getValue($name);
     }
 
     /**
@@ -57,7 +88,7 @@ abstract class form
     	 			? $this->_form_data[$field]
     	 			: Null;
     }
-
+    
     /**
      * Add error
      *
@@ -75,8 +106,9 @@ abstract class form
     	if(!is_array($this->_form_errors)) {
     		$this->_form_errors=array();
     	}
-    	$this->_form_errors[$field] = $msg;
+    	$this->_form_errors[$field]=$msg;
     }
+
     /**
      * Get error
      *
@@ -106,7 +138,7 @@ abstract class form
 
 	public function shortcode()
 	{
-		$res = $this->process($_POST, $_FILES);
+		$res=$this->process($_POST, $_FILES);
 
 	    ob_start();
 
