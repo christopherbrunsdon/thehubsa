@@ -47,13 +47,25 @@ class form_npo extends form
 	 */
 	function process($data, $fileData = Null)
 	{
+        $has_error=False;
+
 		if(!isset($data['submit'])) {
 		    return Null;
 		}
 
         $this->npo=new model_thehub_npos();
         $this->npo->set_data($data);
-        $this->npo->validate();
+        $has_error=$this->npo->validate()?$has_error:True;
+
+
+        $this->npo_services=array();
+        for($i=1; $i <= model_thehub_npo_services::NUMBER_PER_NPO; $i++) {
+            $this->npo_services[$i]=new model_thehub_npo_services();
+            $this->npo_services[$i]->set_data($data);
+            $has_error=$this->npo_services[$i]->validate()?$has_error:True;
+        }
+
+        // image uploader
 
 //        $this->_form_data = $res['data'];
 //
@@ -99,31 +111,34 @@ class form_npo extends form
 //    }
 
     // var_dump("<pre>", $data);
-        if (empty($this->npo->validation_errors)) {
+        if (!$has_error) {
             $this->npo->save();
 
             for ($i = 1; $i <= model_thehub_npo_services::NUMBER_PER_NPO; $i++) {
-                $service_id    = $data["npo-service-offered-{$i}"];
-                $service_other = $data["npo-service-offered-other-{$i}"];
-
-                if($service_id == '-- Other --') {
-                    $service_id = Null;
-                } else {
-                    $service_other = Null;
-                }
-
-                $npo_service = new model_thehub_npo_services();
-                $npo_service->set_data(array(
-                  'fkNpo' => $npo->_id,
-                  'fkService' => $service_id,
-                  'ServiceOther' => $service_other,
-                  'RankOrder' => $i));
-
-                $npo_service->save();
-                return True;
+//                $service_id    = $data["npo-service-offered-{$i}"];
+//                $service_other = $data["npo-service-offered-other-{$i}"];
+//
+//                if($service_id == '-- Other --') {
+//                    $service_id = Null;
+//                } else {
+//                    $service_other = Null;
+//                }
+//
+//                $npo_service = new model_thehub_npo_services();
+//                $npo_service->set_data(array(
+//                  'fkNpo' => $npo->_id,
+//                  'fkService' => $service_id,
+//                  'ServiceOther' => $service_other,
+//                  'RankOrder' => $i));
+//
+//                $npo_service->save();
+//                return True;
             }
+            return True;
         } else {
+            // npo
             $this->error->load_errors($this->npo->validation_errors);
+            // per service
             return False;
         }
 	}

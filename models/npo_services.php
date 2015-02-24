@@ -2,19 +2,23 @@
 
 defined('ABSPATH') or die("No script kiddies please!");
 
+require_once("model_abstract.php");
+
 
 class model_thehub_npo_services {
 
 	CONST NUMBER_PER_NPO = 5; // set the number per NPO here
 
 	public
-		$_id_npo = Null,
-		$_id_service = Null,
-		$_service_other = Null,
-		$_rank_order = Null,
-		$_notes = Null;
+        $fkNpo = Null,
+		$fkService = Null,
+		$ServiceOther = Null,
+		$RankOrder = Null,
+		$Notes = Null;
 
-
+    /**
+     * @return model_thehub_npo_services
+     */
 	static function instance() {
 		static $inst = null;
         if (is_null($inst)) {
@@ -23,16 +27,17 @@ class model_thehub_npo_services {
         return $inst;
 	}
 
-
+    /**
+     *
+     */
 	function __toString()
 	{
 		
 	}
 
-	/**
-	 *
-	 */
-
+    /**
+     * @return string
+     */
 	static function get_table_name() 
 	{
 		global $wpdb;
@@ -43,7 +48,6 @@ class model_thehub_npo_services {
 	 * Create table sql
 	 *
 	 */
-
 	static function get_create_table()
 	{
 		global $wpdb;
@@ -78,30 +82,59 @@ class model_thehub_npo_services {
 		return $sql;
 	}
 
-	
-	public function set_data($data)
-	{
-		if(!is_array($data)) {
-			return $this->set_data(array());
-		}
+    /**
+     * @return bool
+     */
+    public function validate()
+    {
+        $this->validation_errors = array();
 
-		$this->_id_npo			= array_key_exists('fkNpo', $data) ? $data['fkNpo'] : Null;
-		$this->_id_service		= array_key_exists('fkService', $data) && is_numeric($data['fkService']) ? $data['fkService'] : Null;
-		$this->_service_other	= array_key_exists('ServiceOther', $data) ? $data['ServiceOther'] : Null;
-		$this->_rank_order		= array_key_exists('RankOrder', $data) ? $data['RankOrder'] : Null;
-	}
+        $sanitize_rules = array(
+                'fkService'=> array(
+                        'filter' => FILTER_SANITIZE_STRING,
+                        'flags' => FILTER_SANITIZE_STRIPPED,
+                        'options' => array('default' => Null),
+                    ),
+                'ServiceOther'=>array(
+                        'filter' => FILTER_SANITIZE_STRING,
+                        'flags' => FILTER_SANITIZE_STRIPPED,
+                        'options' => array('default' => Null),
+                ),
+        );
 
+        $this->set_data(filter_var_array(get_object_vars($this), $sanitize_rules));
 
+        if($this->fkService) {
+            //pass
+        }
+        if($this->ServiceOther){
+            //pass
+        }
+        return empty($this->validation_errors);
+    }
+
+    /**
+     * @param $fkNpo
+     */
+    static function delete_by_npo($fkNpo)
+    {
+        global $wpdb;
+        $wpdb->insert(self::get_table_name(), $fields, $field_meta);
+    }
+
+    /**
+     * Save
+     */
 	public function save()
 	{
 		global $wpdb;
 
 		$fields = array(
-					'fkNpo' 		=> $this->_id_npo,
+					'fkNpo' 		=> $this->fkNpo,
 					// 'fkService' 	=> $this->_id_service,
-					'ServiceOther' 	=> $this->_service_other,
-					'RankOrder' 	=> $this->_rank_order,
-					'Notes' 		=> $this->_notes,
+					'ServiceOther' 	=> $this->ServiceOther,
+					'RankOrder' 	=> $this->RankOrder,
+					'Notes' 		=> $this->Notes,
 					'WhenCreated' 	=> date("Y-m-d H:i"), // now()     
 					);
 
@@ -114,20 +147,18 @@ class model_thehub_npo_services {
 					'%s', // 'WhenCreated' 
 					);
 
-		if($this->_id_service) {
-			$fields['fkService']= $this->_id_service;
+		if($this->fkService) {
+			$fields['fkService']= $this->fkService;
 			$field_meta[] = '%d';
 		}
 			
 		$wpdb->insert(self::get_table_name(), $fields, $field_meta);
 	}
 
-
 	/**
 	 * List of active types
 	 * do inner join here
 	 */
-
 	static public function get_types()
 	{
 		global $wpdb;
@@ -148,7 +179,6 @@ class model_thehub_npo_services {
 	 *
 	 * @return object
 	 */
-
 	static public function get_by_id($id, $active = True)
 	{
 		if($id == False)
@@ -166,7 +196,6 @@ class model_thehub_npo_services {
 	 *
 	 * @return object
 	 */
-
 	static public function get_by_type($type, $active = True)
 	{
 		if($type == False)
@@ -184,7 +213,6 @@ class model_thehub_npo_services {
 	 *
 	 * @return object
 	 */
-
 	static public function get_by_npo($fkNpo, $active = True)
 	{
 		if($fkNpo == False)

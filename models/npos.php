@@ -2,10 +2,9 @@
 
 defined('ABSPATH') or die("No script kiddies please!");
 
-class model_thehub_npos /** extends model */{
+require_once("model_abstract.php");
 
-    public
-        $validation_errors = Null;
+class model_thehub_npos  extends model_abstract {
 
 	public
 		$id=Null,
@@ -141,26 +140,6 @@ class model_thehub_npos /** extends model */{
 		return self::_postProcess($wpdb->get_row("SELECT * FROM ".self::get_table_name()
 				." WHERE  lower(email) = '".strtolower($email)."' ",
 				OBJECT));
-	}
-
-	/**
-	 * 
-	 */
-	public function set_data($data)
-	{
-		if(is_object($data)) {
-			return $this->set_data(get_object_vars($data));
-		}
-
-        if(!is_array($data)) {
-            return;
-        }
-
-		foreach(get_object_vars($this) as $k=>$v) {
-			if(array_key_exists($k, $data)) {
-				$this->$k=$data[$k];
-			}
-		}
 	}
 
 	/**
@@ -317,30 +296,6 @@ class model_thehub_npos /** extends model */{
   						),
 			);
 
-		// dynamically add
-		// move to model
-		// for($i = 1; $i <= 5 ; $i++)
-		// {
-  // 			$sanitize_rules["service-offered-{$i}"] =
-  // 					array(
-  // 							'filter' => FILTER_SANITIZE_STRING,
-  // 							'flags' => FILTER_SANITIZE_STRIPPED,
-  // 							'options' => array('default' => Null),
-  // 						);
-
-  // 			$sanitize_rules["service-offered-other-${i}"] = 
-  // 					array(
-  // 							'filter' => FILTER_SANITIZE_STRING,
-  // 							'flags' => FILTER_SANITIZE_STRIPPED,
-  // 							'options' => array('default' => Null),
-  // 						);
-		// }
-
-		// sanitize data
-
-		// $data = get_object_vars($this);
-		// $data = filter_var_array($data, $sanitize_rules);
-		
 		$this->set_data(filter_var_array(get_object_vars($this), $sanitize_rules));
 
 		if(!$this->Name) {
