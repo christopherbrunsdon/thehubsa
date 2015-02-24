@@ -2,7 +2,10 @@
 
 defined('ABSPATH') or die("No script kiddies please!");
 
-class model_thehub_npos {
+class model_thehub_npos /** extends model */{
+
+    public
+        $validation_errors = Null;
 
 	public
 		$id=Null,
@@ -29,8 +32,10 @@ class model_thehub_npos {
 		$LogoPath=Null,
 		$bActive=Null;
 
-
-	static function instance() 
+    /**
+     * @return model_thehubsa_npos
+     */
+	static function instance()
 	{
 		static $inst = null;
         if (is_null($inst)) {
@@ -147,6 +152,10 @@ class model_thehub_npos {
 			return $this->set_data(get_object_vars($data));
 		}
 
+        if(!is_array($data)) {
+            return;
+        }
+
 		foreach(get_object_vars($this) as $k=>$v) {
 			if(array_key_exists($k, $data)) {
 				$this->$k=$data[$k];
@@ -158,9 +167,10 @@ class model_thehub_npos {
 	 * Validate
 	 * Change this to not be form specific.
 	 */
-	public function validate() 
+	public function validate()
 	{
-		$errors = array();
+
+		$this->validation_errors = array();
 
 		// validate
 
@@ -334,38 +344,38 @@ class model_thehub_npos {
 		$this->set_data(filter_var_array(get_object_vars($this), $sanitize_rules));
 
 		if(!$this->Name) {
-			$errors['Name'] = 'Please enter!';
+            $this->validation_errors['Name'] = 'Please enter!';
 		}
 
 		if(!$this->RegNumber) {
-			$errors['RegNumber'] = 'Please enter!';
+            $this->validation_errors['RegNumber'] = 'Please enter!';
 		}
 
 		if(!$this->Address) {
-			$errors['Address'] = 'Please enter!';
+            $this->validation_errors['Address'] = 'Please enter!';
 		}
 
 		if(!$this->AddressPostal) {
-			$errors['AddressPostal'] = 'Please enter!';
+            $this->validation_errors['AddressPostal'] = 'Please enter!';
 		}
 
 		if(!$this->Contact) {
-			$errors['Contact'] = 'Please enter contact person!';
+            $this->validation_errors['Contact'] = 'Please enter contact person!';
 		}
 
 
 		// one or the other
 		if(!$this->Tel && !$this->Mobile) {
-			$errors['Tel'] = 'Please enter telephone number!';
+            $this->validation_errors['Tel'] = 'Please enter telephone number!';
 		}
 
 		if(!$this->Mobile && !$this->Tel) {
-			$errors['Mobile'] = 'Please enter cellphone number!';
+            $this->validation_errors['Mobile'] = 'Please enter cellphone number!';
 		}
 
 
 		if(!$this->Email) {
-			$errors['Email'] = 'Please enter email address!';
+            $this->validation_errors['Email'] = 'Please enter email address!';
 		}
 
 		// if(empty($this->website)) {
@@ -381,11 +391,11 @@ class model_thehub_npos {
 		// }
 
 		if(!$this->Description) {
-			$errors['Description'] = 'Please enter!';
+            $this->validation_errors['Description'] = 'Please enter!';
 		}
 
 		if(!$this->ServicesOffered) {
-			$errors['ServicesOffered'] = 'Please enter!';
+            $this->validation_errors['ServicesOffered'] = 'Please enter!';
 		}
 
 		// if(empty($this->AssociatedOrganisations'])) {
@@ -393,22 +403,23 @@ class model_thehub_npos {
 		// }
 
 		if(!$this->listNeeds) {
-			$errors['listNeeds'] = 'Please enter!';
+            $this->validation_errors['listNeeds'] = 'Please enter!';
 		}
 
 		if(!$this->listWish) {
-			$errors['listWish'] = 'Please enter!';
+            $this->validation_errors['listWish'] = 'Please enter!';
 		}
 
 		// check payments for new entries.
 		if(!$this->id) {
 			if(!$this->paymentEft && !$this->paymentDeposit) {
-				$errors['paymentEft'] = 'Please make a payment!';
-				$errors['paymentDeposit'] = 'Please make a payment!';
+                $this->validation_errors['paymentEft'] = 'Please make a payment!';
+                $this->validation_errors['paymentDeposit'] = 'Please make a payment!';
 			}
 		}
 
-	    return array('errors'=>$errors);
+        // return
+	    return empty($this->validation_errors);
 	}
 
 
@@ -561,7 +572,8 @@ class model_thehub_npos {
 	 * This is for the launch on 2015-02-09
 	 */
 	static function _postProcess($object) 
-	{	
+	{
+        // we can remove this ....
 		if (empty($object)) {
 			return $object;
 		}
