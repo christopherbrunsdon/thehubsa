@@ -25,13 +25,14 @@ class form_npo extends form
     /**
      *
      */
-    public function __construct()
+    public function __construct($npo=null)
     {
         $this->error=new error_helper();
-        $this->npo=new model_thehub_npos();
+        $this->npo=($npo instanceof model_thehub_npos) ? $npo : new model_thehub_npos();
 
-        $this->npo->npo_services=array();
-        for($i=1; $i <= model_thehub_npo_services::NUMBER_PER_NPO; $i++) {
+        for ($i=sizeof($this->npo->get_npo_services())+1;
+                $i <= model_thehub_npo_services::NUMBER_PER_NPO;
+                $i++) {
             $this->npo->npo_services[$i] = new model_thehub_npo_services();
         }
     }
@@ -50,6 +51,8 @@ class form_npo extends form
 	 */
 	function process($data, $fileData = Null)
 	{
+//        var_dump("<pre>", $data, "</pre>");
+
         $has_error=False;
 
 		if(!isset($data['submit'])) {
@@ -60,17 +63,17 @@ class form_npo extends form
 
         $this->npo=new model_thehub_npos();
         $this->npo->set_data($data);
-        $has_error=$this->npo->validate()?:True;
+        $has_error=$this->npo->validate()?$has_error:True;
 
         $this->npo->npo_services=array();
         for($i=1; $i <= model_thehub_npo_services::NUMBER_PER_NPO; $i++) {
             $service_id=isset($data["service-offered-{$i}"])?$data["service-offered-{$i}"]:Null;
-            $service_other=isset($data["service-offered-other{$i}"])?$data["service-offered-other{$i}"]:Null;
+            $service_other=isset($data["service-offered-other-{$i}"])?$data["service-offered-other-{$i}"]:Null;
 
-            if($service_id=='-- Other --') {
-                $service_id=Null;
-            } else {
+            if(is_numeric($service_id) && $service_id >= 0){
                 $service_other=Null;
+            } else {
+                $service_id=Null;
             }
 
             $this->npo->npo_services[$i]=new model_thehub_npo_services();
@@ -88,17 +91,15 @@ class form_npo extends form
         //
         // Move this into a helper ....
         //
-        $image_error=Null;
-        $logo_path=Null;
-//        $logo_path_url=Null;
-//        $logo_type=Null;
 
         if(is_array($fileData) && $fileData['logo']['name']) {
+            $image_error=Null;
+            $logo_path=Null;
+
             if($fileData['logo']["error"]) {
                 $image_error="A technical error occured: {$fileData['logo']['error']}";
             }
-
-            if($fileData['logo']["size"] > self::MAX_LOGO_SIZE) {
+            elseif($fileData['logo']["size"] > self::MAX_LOGO_SIZE) {
                 $image_error="Image size is too big. Please upload a smaller file.";
             }
             elseif(!in_array($fileData['logo']["type"], array("image/jpeg", "image/png"))) {
@@ -118,26 +119,21 @@ class form_npo extends form
                 }
                 // var_dump("<pre>", $movefile, "</pre>");die();
             }
-        } else {
-            if (isset($data["logoPath"])) {
-                $logo_path=$data["logo_path"];
-            }
-        }
 
-        $this->npo->LogoPath=$logo_path;
-        if(isset($image_error)) {
-            $this->error->LogoPath=$image_error;
-            $has_error=True;
+            $this->npo->LogoPath=$logo_path;
+            $has_error=($this->error->LogoPath=$image_error)?True:$has_error;
         }
-
-    // var_dump("<pre>", $data);
 
         if (!$has_error) {
             $this->npo->save();
 
-            foreach($this->npo_services as $npo_service) {
+            model_thehub_npo_services::delete_by_npo($this->npo->id);
+            foreach($this->npo->npo_services as $npo_service) {
                 $npo_service->fkNpo=$this->npo->id;
-                $npo_service->save();
+
+                if($npo_service->validate()) {
+                    $npo_service->save();
+                }
             }
 
             return True;

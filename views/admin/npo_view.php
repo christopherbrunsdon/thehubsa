@@ -98,10 +98,10 @@
 	<tr class="">
 		<th align="right">Services Offered:</th>
 		<td>
-			<?php if(isset($npo->services_offered)): ?>
+			<?php if(sizeof($npo->get_npo_services())): ?>
 				<ul>
-					<?php foreach($npo->services_offered as $service): ?>
-						<li><?php echo $service->Service; ?></li>
+					<?php foreach($npo->get_npo_services() as $service): ?>
+						<li><?= $service->Service; ?></li>
 					<?php endforeach; ?>
 				</ul>
 			<?php endif; ?>

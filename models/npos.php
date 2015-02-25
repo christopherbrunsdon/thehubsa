@@ -31,6 +31,9 @@ class model_thehub_npos  extends model_abstract {
 		$LogoPath=Null,
 		$bActive=Null;
 
+    public
+        $_npo_services=Null;
+
     /**
      * @return model_thehubsa_npos
      */
@@ -288,7 +291,7 @@ class model_thehub_npos  extends model_abstract {
   							'options' => array('default' => 0),
   						),
 
-  			"paymentDeposit" => 
+  			"paymentDeposit" =>
   					array(
   							'filter' => FILTER_SANITIZE_NUMBER_INT,
   							'flags' => FILTER_SANITIZE_STRIPPED,  							
@@ -551,9 +554,27 @@ class model_thehub_npos  extends model_abstract {
 		return $logo;
 	}
 
+    /**
+     * @return mixed|null
+     */
 	function get_logo_url()
 	{
 		return self::logo_url($this->LogoPath);
 	}
+
+    /**
+     * @return null
+     */
+    function get_npo_services()
+    {
+        if(empty($this->_npo_services) && !is_array($this->_npo_services)) {
+            if($this->id) {
+                $this->_npo_services = model_thehub_npo_services::get_by_npo($this->id);
+            } else {
+                $this->_npo_services=array();
+            }
+        }
+        return $this->_npo_services;
+    }
 }
 // [eof]

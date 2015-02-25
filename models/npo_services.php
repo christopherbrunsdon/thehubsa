@@ -16,6 +16,9 @@ class model_thehub_npo_services  extends model_abstract  {
 		$RankOrder = Null,
 		$Notes = Null;
 
+    public
+        $DisplayName=Null; // from inner join
+
     /**
      * @return model_thehub_npo_services
      */
@@ -32,7 +35,7 @@ class model_thehub_npo_services  extends model_abstract  {
      */
 	function __toString()
 	{
-		
+        return $this->DisplayName;
 	}
 
     /**
@@ -91,7 +94,7 @@ class model_thehub_npo_services  extends model_abstract  {
 
         $sanitize_rules = array(
                 'fkService'=> array(
-                        'filter' => FILTER_SANITIZE_STRING,
+                        'filter' => FILTER_SANITIZE_NUMBER_INT,
                         'flags' => FILTER_SANITIZE_STRIPPED,
                         'options' => array('default' => Null),
                     ),
@@ -104,11 +107,10 @@ class model_thehub_npo_services  extends model_abstract  {
 
         $this->set_data(filter_var_array(get_object_vars($this), $sanitize_rules));
 
-        if($this->fkService) {
+        if($this->fkService > 0 || $this->ServiceOther){
             //pass
-        }
-        if($this->ServiceOther){
-            //pass
+        } else {
+            $this->validation_errors["general"]="Please set an option";
         }
         return empty($this->validation_errors);
     }
@@ -119,7 +121,7 @@ class model_thehub_npo_services  extends model_abstract  {
     static function delete_by_npo($fkNpo)
     {
         global $wpdb;
-        $wpdb->insert(self::get_table_name(), $fields, $field_meta);
+        $wpdb->delete(self::get_table_name(), array('fkNpo'=>$fkNpo)); //, array('%d'));
     }
 
     /**
@@ -147,11 +149,11 @@ class model_thehub_npo_services  extends model_abstract  {
 					'%s', // 'WhenCreated' 
 					);
 
-		if($this->fkService) {
-			$fields['fkService']= $this->fkService;
-			$field_meta[] = '%d';
-		}
-			
+		if($this->fkService > 0) {
+            $fields['fkService'] = $this->fkService;
+            $field_meta[] = '%d';
+        }
+
 		$wpdb->insert(self::get_table_name(), $fields, $field_meta);
 	}
 
@@ -215,11 +217,12 @@ class model_thehub_npo_services  extends model_abstract  {
 	 */
 	static public function get_by_npo($fkNpo, $active = True)
 	{
-		if($fkNpo == False)
-			return Null;
+		if($fkNpo == False) {
+            return Null;
+        }
 
 		global $wpdb;
-		$sql="SELECT COALESCE(Service, ServiceOther) as Service FROM "
+		$sql="SELECT ns.*, COALESCE(Service, ServiceOther) as DisplayName FROM "
 				.self::get_table_name()." as ns "
 				." LEFT JOIN "
 				.model_thehub_npo_service_types::get_table_name()." as nst "
@@ -227,9 +230,14 @@ class model_thehub_npo_services  extends model_abstract  {
 				." WHERE  fkNpo = ".$fkNpo 
 				." ORDER BY RankOrder ";
 		// error_log($sql);
-		return $wpdb->get_results($sql, OBJECT);
-	}
+//		return $wpdb->get_results($sql, OBJECT);
 
+        $rows=array();
+        foreach($wpdb->get_results($sql, OBJECT) as $object) {
+            $res[]=new self($object);
+        }
+        return $rows;
+	}
 }
 
 // [eof]

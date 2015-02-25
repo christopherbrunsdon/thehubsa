@@ -86,7 +86,7 @@
 		<small>Maximum size of 1000px x 1000px. JPEG or PNG format.</small>		
 		<input type="file" name="logo" class="form-control" id="" placeholder="Logo" />
 	
-		<input type="hidden" value="<?= $this->npo->LogoPath; ?>" name="LogoPath" />
+		<input type="text" value="<?= $this->npo->LogoPath; ?>" id="LogoPath" name="LogoPath" />
 		<?php if($this->npo->get_logo_url()): ?>
 			<img src="<?= $this->npo->get_logo_url(); ?>" />
 		<?php endif; ?>
@@ -106,11 +106,11 @@
 				<?php foreach($services as $service): ?>
 					<option value="<?= $service->id ?>" <?php $this->npo->npo_services[$i]->fkService == $service->id && print 'selected'; ?> ><?= $service->Service; ?></option>
 				<?php endforeach; ?>
-				<option value="-- Other --" id="services_other_<?= $i; ?>" <?php $this->npo->npo_services[$i]->fkService == '-- Other --' && print 'selected'; ?>   >-- Other (Please indicate) --</option>
+				<option value="-1" id="services_other_<?= $i; ?>" <?php !$this->npo->npo_services[$i]->fkService && $this->npo->npo_services[$i]->ServiceOther  && print 'selected'; ?>   >-- Other (Please indicate) --</option>
 			</select>
 		</div>
 
-		<div <?php $this->npo->service_offered_{$i} != '-- Other --' && print 'style="display: none;"' ?> id="service_other_input_<?= $i; ?>">
+		<div <?php $this->npo->npo_services[$i]->fkService && print 'style="display: none;"' ?> id="service_other_input_<?= $i; ?>">
 			<div class="input-group">
 				<div class="input-group-addon">Other:</div>
 				<input  type="text" value="<?= $this->npo->npo_services[$i]->ServiceOther ?>" name="service-offered-other-<?= $i ?>" class="form-control"  placeholder="Other (Please indicate)" />
@@ -121,7 +121,7 @@
 	<script type="text/javascript">
 		$('#services_<?= $i; ?>').change(function(){
 			var selected_item = $(this).val()
-			if(selected_item == "-- Other --"){ // 'Other' 
+			if(selected_item == -1){ // 'Other'
 			    $('#service_other_input_<?= $i; ?>').show(); //show textbox if Other is selected
 			}else{
 			    $('#service_other_input_<?= $i; ?>').hide(); //Hide textbox if anything else is selected
@@ -189,13 +189,13 @@
 		<div class="form-group  <?php isset($this->error->paymentEft) && print 'has-error' ?>">
 			<div class="checkbox">
 			    <label class="control-label">
-			      <input name="paymentEft" <?php $this->npo->paymentEft && print 'checked' ?> onclick="$('#btn-submit').prop('disabled', false).addClass('btn-primary').removeClass('btn-default');" type="checkbox"> 
+			      <input value=1 name="paymentEft" <?php $this->npo->paymentEft && print 'checked' ?> onclick="$('#btn-submit').prop('disabled', false).addClass('btn-primary').removeClass('btn-default');" type="checkbox">
 			      Payment Made via EFT <?= $this->error->paymentEft ?>
 			    </label>
 			 </div>
 			<div class="checkbox">
 			    <label class="control-label">
-			      <input name="paymentDeposit" <?php $this->npo->paymentDeposit && print 'checked' ?> onclick="$('#btn-submit').prop('disabled', false).addClass('btn-primary').removeClass('btn-default');" type="checkbox"> 
+			      <input value=1 name="paymentDeposit" <?php $this->npo->paymentDeposit && print 'checked' ?> onclick="$('#btn-submit').prop('disabled', false).addClass('btn-primary').removeClass('btn-default');" type="checkbox">
 			      Payment Made via Deposit <?= $this->error->paymentDeposit ?>
 			    </label>
 			</div>
@@ -203,7 +203,7 @@
 	<?php endif; ?>
 
 
-	<?php if(1 || isset($this->npo->id)): ?>
+	<?php if(isset($this->npo->id)): ?>
 		<input type="hidden" value="<?= $this->npo->id; ?>" name="id" id="id" />
 		<button id="btn-submit" type="submit" class="btn btn-default" name="submit">Update</button>	
 	<?php else: ?>

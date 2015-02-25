@@ -142,9 +142,8 @@ function thehubsa_admin_crud_npos()
 			if(empty($npo)) {
 				echo "<div>Error: Id {$npo_id} not found</div>";
 			} else {
-				$form = new form_npo();
+				$form = new form_npo($npo);
 				$form->show_banking = false;
-				$form->load_npo($npo);
 				require(plugin_dir_path( __FILE__ )."../views/admin/npo_edit.php");
 			}
 			break;

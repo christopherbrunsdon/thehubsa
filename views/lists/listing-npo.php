@@ -85,7 +85,7 @@
 				<?php // nl2br($npo->ServicesOffered); ?>
 
 				<ul>
-					<?php foreach($npo->npo_services as $service): ?>
+					<?php foreach($npo->get_npo_services() as $service): ?>
 						<li><?php echo $service->Service; ?></li>
 					<?php endforeach; ?>
 				</ul>
