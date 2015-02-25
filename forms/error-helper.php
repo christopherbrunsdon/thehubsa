@@ -45,7 +45,8 @@ class error_helper
      */
     public function __get($name)
     {
-    	return is_array($this->_errors) && array_key_exists($name, $this->_errors)
+//        error_log("\$name = {$name}");
+    	return is_array($this->_errors) && isset($this->_errors[$name])
     	 			? $this->_errors[$name]
     	 			: Null;
     }

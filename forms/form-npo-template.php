@@ -87,35 +87,33 @@
 		<input type="file" name="logo" class="form-control" id="" placeholder="Logo" />
 	
 		<input type="hidden" value="<?= $this->npo->LogoPath; ?>" name="LogoPath" />
-		<?php /**if($this->npo->get_logo_url()): ?>
+		<?php if($this->npo->get_logo_url()): ?>
 			<img src="<?= $this->npo->get_logo_url(); ?>" />
-			<input type="hidden" value="<?= $this->npo->get_logo_url(); ?>" name="logo-url" />
-		<?php endif; **/?>
+		<?php endif; ?>
 	</div>
 	<div>
 	</div>
 
 
-<?php /*** for($i=1; $i <= 5; $i++): ?>
-	<div class="form-group  <?php $this->error->serviceffered-<?= $i ?>') && print 'has-error' ?>"> 
-		<?php if($i == 1) : ?><label class="control-label" for="">Services offered (in order of importance) : <?= $this->error->serviceffered-<?= $i ?>') ?></label><?php endif ?>
+<?php for($i=1; $i <= model_thehub_npo_services::NUMBER_PER_NPO; $i++): ?>
+	<div class="form-group <?php $this->error->service_offered_{$i} && print 'has-error' ?>">
+		<?php if($i == 1) : ?><label class="control-label" for="">Services offered (in order of importance) : <?= $this->error->service_offered_{$i} ?></label><?php endif ?>
 
 		<div class="input-group">
 			<div class="input-group-addon"><?= $i ?>.</div>
-
 			<select  class="form-control" name="service-offered-<?= $i ?>" id="services_<?= $i; ?>">
 				<option>-- Services offered --</option>
 				<?php foreach($services as $service): ?>
-					<option value="<?= $service->id ?>" <?php $this->npo->service-offered-'.$i) ==  $service->id && print 'selected'; ?> ><?= $service->Service; ?></option>
+					<option value="<?= $service->id ?>" <?php $this->npo->npo_services[$i]->fkService == $service->id && print 'selected'; ?> ><?= $service->Service; ?></option>
 				<?php endforeach; ?>
-				<option value="-- Other --" id="services_other_<?= $i; ?>" <?php $this->npo->service-offered-'.$i) == '-- Other --' && print 'selected'; ?>   >-- Other (Please indicate) --</option>					
+				<option value="-- Other --" id="services_other_<?= $i; ?>" <?php $this->npo->npo_services[$i]->fkService == '-- Other --' && print 'selected'; ?>   >-- Other (Please indicate) --</option>
 			</select>
 		</div>
 
-		<div <?php $this->npo->service-offered-'.$i) != '-- Other --' && print 'style="display: none;"' ?> id="service_other_input_<?= $i; ?>">
+		<div <?php $this->npo->service_offered_{$i} != '-- Other --' && print 'style="display: none;"' ?> id="service_other_input_<?= $i; ?>">
 			<div class="input-group">
 				<div class="input-group-addon">Other:</div>
-				<input  type="text" value="<?= $this->npo->service-offered-other-'.$i); ?>" name="service-offered-other-<?= $i ?>" class="form-control"  placeholder="Other (Please inidcate)" />
+				<input  type="text" value="<?= $this->npo->npo_services[$i]->ServiceOther ?>" name="service-offered-other-<?= $i ?>" class="form-control"  placeholder="Other (Please indicate)" />
 			</div>
 		</div>
 	</div>
@@ -130,7 +128,7 @@
 			}
 		});
 	</script>
-<?php endfor; ***/ ?>
+<?php endfor; ?>
 
 
 	<div class="form-group  <?php isset($this->error->Description) && print 'has-error' ?>">
@@ -214,4 +212,5 @@
 
 	&nbsp;&nbsp;|&nbsp;&nbsp;<a href="">Reset Form</a>
 
-</form>	
+</form>
+

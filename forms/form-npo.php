@@ -27,9 +27,13 @@ class form_npo extends form
      */
     public function __construct()
     {
-        parent::__construct();
         $this->error=new error_helper();
         $this->npo=new model_thehub_npos();
+
+        $this->npo->npo_services=array();
+        for($i=1; $i <= model_thehub_npo_services::NUMBER_PER_NPO; $i++) {
+            $this->npo->npo_services[$i] = new model_thehub_npo_services();
+        }
     }
 
 	/**
@@ -38,7 +42,6 @@ class form_npo extends form
 	function render()
 	{
         $services=model_thehub_npo_service_types::get_services();
-
         include("form-npo-template.php");
 	}
 
@@ -53,92 +56,93 @@ class form_npo extends form
 		    return Null;
 		}
 
+        $this->error=new error_helper();
+
         $this->npo=new model_thehub_npos();
         $this->npo->set_data($data);
-        $has_error=$this->npo->validate()?$has_error:True;
+        $has_error=$this->npo->validate()?:True;
 
-
-        $this->npo_services=array();
+        $this->npo->npo_services=array();
         for($i=1; $i <= model_thehub_npo_services::NUMBER_PER_NPO; $i++) {
-            $this->npo_services[$i]=new model_thehub_npo_services();
-            $this->npo_services[$i]->set_data($data);
-            $has_error=$this->npo_services[$i]->validate()?$has_error:True;
+            $service_id=isset($data["service-offered-{$i}"])?$data["service-offered-{$i}"]:Null;
+            $service_other=isset($data["service-offered-other{$i}"])?$data["service-offered-other{$i}"]:Null;
+
+            if($service_id=='-- Other --') {
+                $service_id=Null;
+            } else {
+                $service_other=Null;
+            }
+
+            $this->npo->npo_services[$i]=new model_thehub_npo_services();
+            $this->npo->npo_services[$i]->set_data(array(
+                "fkService"=>$service_id,
+                "ServiceOther"=>$service_other,
+                "RankOrder"=>$i
+            ));
         }
 
         // image uploader
+        //
+        // ref: http://codex.wordpress.org/Function_Reference/wp_handle_upload
+        // image upload
+        //
+        // Move this into a helper ....
+        //
+        $image_error=Null;
+        $logo_path=Null;
+//        $logo_path_url=Null;
+//        $logo_type=Null;
 
-//        $this->_form_data = $res['data'];
-//
-//
-//    // ref: http://codex.wordpress.org/Function_Reference/wp_handle_upload
-//    // image upload
-//
-//    // Move this into a helper ....
-//
-//    if(is_array($fileData) && $fileData['npo-logo']['name'] != "") {
-//      // if($fileData['npo-logo']["error"]) {
-//      //   $res['errors']['npo-logo'] = "A technical error occured: {$fileData['npo-logo']['error']}";
-//      // }
-//
-//      if($fileData['npo-logo']["size"] > self::MAX_LOGO_SIZE) {
-//          $npo->validation_errors['errors']['npo-logo'] = "Image size is too big. Please upload a smaller file.";
-//      }
-//      elseif($fileData['npo-logo']["type"] != "image/jpeg" && $fileData['npo-logo']["type"] != "image/png") {
-//          $npo->validation_errors['errors']['npo-logo'] = "Image must be a JPEG or PNG";
-//      }
-//      else {
-//        $uploadedfile     = $fileData['npo-logo'];
-//        $upload_overrides = array( 'test_form' => false); //, 'test_type' => false ); // needs to be passed else upload will be rejected
-//        $movefile         = wp_handle_upload( $uploadedfile, $upload_overrides );
-//
-//        if ( $movefile && isset($movefile['file'])) {
-//          $this->_form_data["logo_path"]=$data["logo_path"] = $movefile['file'];
-//          $this->_form_data["npo-logo-url"] = $data["npo-logo-url"] = $movefile['url'];
-//          $data["npo-logo-type"] = $movefile['type'];
-//        } else {
-//            $npo->validation_errors['errors']['npo-log'] = "Technical error with logo upload.";
-//        }
-//// var_dump("<pre>", $movefile, "</pre>");die();
-//      }
-//    } else {
-//      if (isset($data["logo_path"])) {
-//        $this->_form_data["logo_path"] = $data["logo_path"];
-//      }
-//
-//      if(isset($data["npo-logo-url"])) {
-//        $this->_form_data["npo-logo-url"] = $data["npo-logo-url"];
-//      }
-//    }
+        if(is_array($fileData) && $fileData['logo']['name']) {
+            if($fileData['logo']["error"]) {
+                $image_error="A technical error occured: {$fileData['logo']['error']}";
+            }
+
+            if($fileData['logo']["size"] > self::MAX_LOGO_SIZE) {
+                $image_error="Image size is too big. Please upload a smaller file.";
+            }
+            elseif(!in_array($fileData['logo']["type"], array("image/jpeg", "image/png"))) {
+                $image_error="Image must be a JPEG or PNG";
+            }
+            else {
+                $uploaded_file=$fileData['logo'];
+                $upload_overrides=array( 'test_form' => false); //, 'test_type' => false ); // needs to be passed else upload will be rejected
+                $move_file=wp_handle_upload( $uploaded_file, $upload_overrides );
+
+                if ($move_file && isset($move_file['file'])) {
+                    $logo_path=$move_file['file'];
+//                    $logo_path_url=$move_file['url'];
+//                    $logo_type=$move_file['type'];
+                } else {
+                    $image_error="Technical error with logo upload.";
+                }
+                // var_dump("<pre>", $movefile, "</pre>");die();
+            }
+        } else {
+            if (isset($data["logoPath"])) {
+                $logo_path=$data["logo_path"];
+            }
+        }
+
+        $this->npo->LogoPath=$logo_path;
+        if(isset($image_error)) {
+            $this->error->LogoPath=$image_error;
+            $has_error=True;
+        }
 
     // var_dump("<pre>", $data);
+
         if (!$has_error) {
             $this->npo->save();
 
-            for ($i = 1; $i <= model_thehub_npo_services::NUMBER_PER_NPO; $i++) {
-//                $service_id    = $data["npo-service-offered-{$i}"];
-//                $service_other = $data["npo-service-offered-other-{$i}"];
-//
-//                if($service_id == '-- Other --') {
-//                    $service_id = Null;
-//                } else {
-//                    $service_other = Null;
-//                }
-//
-//                $npo_service = new model_thehub_npo_services();
-//                $npo_service->set_data(array(
-//                  'fkNpo' => $npo->_id,
-//                  'fkService' => $service_id,
-//                  'ServiceOther' => $service_other,
-//                  'RankOrder' => $i));
-//
-//                $npo_service->save();
-//                return True;
+            foreach($this->npo_services as $npo_service) {
+                $npo_service->fkNpo=$this->npo->id;
+                $npo_service->save();
             }
+
             return True;
         } else {
-            // npo
             $this->error->load_errors($this->npo->validation_errors);
-            // per service
             return False;
         }
 	}

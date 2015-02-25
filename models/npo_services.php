@@ -5,7 +5,7 @@ defined('ABSPATH') or die("No script kiddies please!");
 require_once("model_abstract.php");
 
 
-class model_thehub_npo_services {
+class model_thehub_npo_services  extends model_abstract  {
 
 	CONST NUMBER_PER_NPO = 5; // set the number per NPO here
 
