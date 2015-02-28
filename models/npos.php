@@ -81,9 +81,7 @@ class model_thehub_npos  extends model_abstract {
 		$charset_collate = $wpdb->get_charset_collate();
 		$table_name = self::get_table_name();
 
-//IF NOT EXISTS 
-//		$sql = "CREATE TABLE IF NOT EXISTS {$table_name} (
-		$sql = "CREATE TABLE {$table_name} (
+		$sql = "CREATE TABLE IF NOT EXISTS {$table_name} (
 			id INT NOT NULL AUTO_INCREMENT  PRIMARY KEY,
 			Name varchar(255) DEFAULT '',
 			RegNumber varchar(255) DEFAULT '',
@@ -113,6 +111,21 @@ class model_thehub_npos  extends model_abstract {
 		return $sql;
 	}
 
+    /**
+     * Get count stats
+     *
+     */
+    static function get_table_stats()
+    {
+        global $wpdb;
+
+        $query = "SELECT COUNT(*) as count_all,
+				SUM(CASE WHEN bActive THEN 1 ELSE 0 END) AS count_active,
+				SUM(CASE WHEN NOT bActive THEN 1 ELSE 0 END) AS count_deactive
+				FROM ".model_thehub_npos::get_table_name();
+
+        return $wpdb->get_row($query); //, OBJECT);
+    }
 	/**
 	 * Get by id
 	 *
@@ -124,9 +137,11 @@ class model_thehub_npos  extends model_abstract {
 			return Null;
 
 		global $wpdb;
-		return self::_postProcess($wpdb->get_row("SELECT * FROM ".self::get_table_name()
-				." WHERE  id = ".$id,
-				OBJECT));
+		$result=$wpdb->get_row("SELECT * FROM ".self::get_table_name()
+				." WHERE  id = {$id}",
+				OBJECT);
+
+        return $result ? new self($result) : False;
 	}
 
 	/**
@@ -136,13 +151,16 @@ class model_thehub_npos  extends model_abstract {
 	 */
 	static public function get_by_email($email)
 	{
-		if($type == False)
-			return Null;
+		if($email == False) {
+            return Null;
+        }
 
 		global $wpdb;
-		return self::_postProcess($wpdb->get_row("SELECT * FROM ".self::get_table_name()
+		$result=$wpdb->get_row("SELECT * FROM ".self::get_table_name()
 				." WHERE  lower(email) = '".strtolower($email)."' ",
-				OBJECT));
+				OBJECT);
+
+        return $result ? new self($result) : False;
 	}
 
 
@@ -484,9 +502,10 @@ class model_thehub_npos  extends model_abstract {
 		return (bool)(isset($this->bActive) && $this->bActive);
 	}
 
-
     /**
      * @param bool $active
+
+     * @return bool
      */
 	public function set_active($active = True) {
 		$this->bActive = $active;
@@ -494,6 +513,8 @@ class model_thehub_npos  extends model_abstract {
         if(!$this->is_new()) {
             $this->save();
         }
+
+        return $this->is_active();
 	}
 
 	/**

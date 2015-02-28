@@ -183,18 +183,10 @@ class Link_List_NPO_Table extends WP_List_Table {
 	function get_npo_count($field = Null) 
 	{
 		if(!is_object($this->_get_npo_count)) {
-			global $wpdb;
-
-			$query = "SELECT COUNT(*) as count_all,
-				SUM(CASE WHEN bActive THEN 1 ELSE 0 END) AS count_active,
-				SUM(CASE WHEN NOT bActive THEN 1 ELSE 0 END) AS count_deactive
-				FROM ".model_thehub_npos::get_table_name();
-
-			$this->_get_npo_count = $wpdb->get_row($query, OBJECT);
+            $this->_get_npo_count=model_thehub_npos::get_table_stats();
 		}
-
 		if($field) {
-			return isset($this->_get_npo_count->$field)?$this->_get_npo_count->$field:False;
+            return isset($this->_get_npo_count->$field)?$this->_get_npo_count->$field:False;
 		}
 		return $this->_get_npo_count;
 	}
