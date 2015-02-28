@@ -166,7 +166,9 @@ class Model_Npo_Service_Types_Test extends WP_UnitTestCase
         $this->assertEquals(model_thehub_npo_service_types::get_table_stats()->count_all, 1);
 
         // get by service again
-        $npo_service=model_thehub_npo_service_types::get_by_service("Test service");
+        $npo_services=model_thehub_npo_service_types::get_by_service("Test service");
+        $this->assertEquals(1, sizeof($npo_services));
+        list($npo_service)=$npo_services;
         $this->assertInstanceOf("model_thehub_npo_service_types", $npo_service);
 
 
@@ -197,6 +199,52 @@ class Model_Npo_Service_Types_Test extends WP_UnitTestCase
         $npo_service_2=model_thehub_npo_service_types::get_by_id($npo_service->id);
         $this->assertEquals($npo_service->id, $npo_service_2->id);
         $this->assertEquals("New service name", $npo_service_2->Service);
+    }
+
+    /**
+     *
+     */
+    public function test_search()
+    {
+        // create tests
+        $npo_service=helper_models::valid_npo_service_types();
+        $npo_service->save();
+
+        $npo_service_animals=helper_models::valid_npo_service_types();
+        $npo_service_animals->Service="Service abused animals";
+        $npo_service_animals->set_active();
+        $npo_service_animals->save();
+
+        $npo_service_rescue=helper_models::valid_npo_service_types();
+        $npo_service_rescue->Service="Service rescue animals";
+        $npo_service_rescue->set_active();
+        $npo_service_rescue->save();
+
+        $npo_service_fet=helper_models::valid_npo_service_types();
+        $npo_service_fet->Service="Service FET";
+        $npo_service_fet->set_active();
+        $npo_service_fet->save();
+
+
+        $this->assertEquals(model_thehub_npo_service_types::get_table_stats()->count_all, 4);
+        $this->assertEquals(model_thehub_npo_service_types::get_table_stats()->count_active, 3);
+        $this->assertEquals(model_thehub_npo_service_types::get_table_stats()->count_deactive, 1);
+
+        // search
+
+        $search=model_thehub_npo_service_types::get_by_service($name_like="rescue");
+        $this->assertEquals(1, sizeof($search));
+
+        $search=model_thehub_npo_service_types::get_by_service($name_like="animals");
+        $this->assertEquals(2, sizeof($search));
+
+        $search=model_thehub_npo_service_types::get_by_service($name_like="test");
+        $this->assertEquals(0, sizeof($search));
+
+        $search=model_thehub_npo_service_types::get_by_service($name_like="test", $active=False);
+        $this->assertEquals(1, sizeof($search));
+        $search=model_thehub_npo_service_types::get_by_service($name_like="test", $active=Null);
+        $this->assertEquals(1, sizeof($search));
     }
 
 }

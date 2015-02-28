@@ -20,7 +20,7 @@ abstract class model_abstract
     public function save() {}
 
     /**
-     *
+     * @param $data
      */
     public function set_data($data)
     {
@@ -37,6 +37,34 @@ abstract class model_abstract
                 $this->$k=$data[$k];
             }
         }
+    }
+
+    /**
+     * Is active
+     *
+     * Apply active rules here
+     *
+     * @return bool
+     */
+    public function is_active()
+    {
+        return (bool)(isset($this->bActive) && $this->bActive);
+    }
+
+    /**
+     * @param bool $active
+
+     * @return bool
+     */
+    public function set_active($active = True)
+    {
+        $this->bActive = $active;
+
+        if(!$this->is_new()) {
+            $this->save();
+        }
+
+        return $this->is_active();
     }
 
 }

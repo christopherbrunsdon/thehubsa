@@ -229,8 +229,6 @@ class model_thehub_npo_services  extends model_abstract  {
 				." ON (ns.fkService = nst.id )"
 				." WHERE  fkNpo = ".$fkNpo 
 				." ORDER BY RankOrder ";
-		// error_log($sql);
-//		return $wpdb->get_results($sql, OBJECT);
 
         $rows=array();
         foreach($wpdb->get_results($sql, OBJECT) as $object) {

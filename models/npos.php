@@ -4,7 +4,7 @@
 
 require_once("model_abstract.php");
 
-class model_thehub_npos  extends model_abstract {
+class model_thehub_npos extends model_abstract {
 
 	public
 		$id=Null,
@@ -112,8 +112,7 @@ class model_thehub_npos  extends model_abstract {
 	}
 
     /**
-     * Get count stats
-     *
+     * @return mixed
      */
     static function get_table_stats()
     {
@@ -122,10 +121,11 @@ class model_thehub_npos  extends model_abstract {
         $query = "SELECT COUNT(*) as count_all,
 				SUM(CASE WHEN bActive THEN 1 ELSE 0 END) AS count_active,
 				SUM(CASE WHEN NOT bActive THEN 1 ELSE 0 END) AS count_deactive
-				FROM ".model_thehub_npos::get_table_name();
+				FROM ".self::get_table_name();
 
-        return $wpdb->get_row($query); //, OBJECT);
+        return $wpdb->get_row($query);
     }
+
 	/**
 	 * Get by id
 	 *
@@ -133,8 +133,9 @@ class model_thehub_npos  extends model_abstract {
 	 */
 	static public function get_by_id($id)
 	{
-		if($id == False)
-			return Null;
+		if($id == False) {
+            return Null;
+        }
 
 		global $wpdb;
 		$result=$wpdb->get_row("SELECT * FROM ".self::get_table_name()
@@ -149,7 +150,7 @@ class model_thehub_npos  extends model_abstract {
 	 *
 	 * @return object
 	 */
-	static public function get_by_email($email)
+	static public function get_by_email($email, $active=Null)
 	{
 		if($email == False) {
             return Null;
@@ -157,12 +158,12 @@ class model_thehub_npos  extends model_abstract {
 
 		global $wpdb;
 		$result=$wpdb->get_row("SELECT * FROM ".self::get_table_name()
-				." WHERE  lower(email) = '".strtolower($email)."' ",
+				." WHERE  lower(email) = '".strtolower($email)."' "
+                . (!is_null($active)?" AND bActive=".($active?"True":"False")." ":""),
 				OBJECT);
 
         return $result ? new self($result) : False;
 	}
-
 
 	/**
 	 * Sanitize
@@ -492,32 +493,6 @@ class model_thehub_npos  extends model_abstract {
 	}
 
 	/**
-	 * Is active
-	 * 
-	 * Apply active rules here
-	 *
-	 * @return bool
-	 */
-	public function is_active() {
-		return (bool)(isset($this->bActive) && $this->bActive);
-	}
-
-    /**
-     * @param bool $active
-
-     * @return bool
-     */
-	public function set_active($active = True) {
-		$this->bActive = $active;
-
-        if(!$this->is_new()) {
-            $this->save();
-        }
-
-        return $this->is_active();
-	}
-
-	/**
 	 * Get by name
 	 *
 	 * @return object
@@ -547,13 +522,11 @@ class model_thehub_npos  extends model_abstract {
 			$pre = ' AND ';
 		}
 
-
         $sql .= " ORDER BY lower(Name) ";
 
 		global $wpdb;
 
 		$res = array();
-
 		foreach($wpdb->get_results($sql, OBJECT) as $row) {
 			$res[] = new self($row);
 		}

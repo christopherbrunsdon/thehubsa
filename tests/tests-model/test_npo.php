@@ -1,7 +1,7 @@
 <?php
 
 require_once("../models/npos.php");
-
+require_once("helpers/helper_models.php");
 
 class Model_Npo_Test extends WP_UnitTestCase
 {
@@ -83,31 +83,7 @@ class Model_Npo_Test extends WP_UnitTestCase
         $this->assertEquals($npo->validate(), False); // must fail
         $this->assertNotEmpty($npo->validation_errors); // must have errors
 
-        // load with null data
-        $npo->id = Null;
-        $npo->Name = Null;
-        $npo->RegNumber = Null;
-        $npo->RegNumberOther = Null;
-        $npo->Address = Null;
-        $npo->AddressPostal = Null;
-        $npo->Contact = Null;
-        $npo->Tel = Null;
-        $npo->Mobile = Null;
-        $npo->Email = Null;
-        $npo->wwwDomain = Null;
-        $npo->wwwHomepage = Null;
-        $npo->wwwFacebook = Null;
-        $npo->Description = Null;
-        $npo->ServicesOffered = Null;
-        $npo->AssociatedOrganisations = Null;
-        $npo->listNeeds = Null;
-        $npo->listWish = Null;
-        $npo->paymentEft = Null;
-        $npo->paymentDeposit = Null;
-        $npo->Notes = Null;
-        $npo->LogoPath = Null;
-        $npo->bActive = Null;
-
+        $npo=helper_models::empty_npo($npo);
         $this->assertEquals($npo->validate(), False); // must fail
 
 
@@ -145,31 +121,7 @@ class Model_Npo_Test extends WP_UnitTestCase
     public function test_validate_ok()
     {
         $npo = new model_thehub_npos();
-
-        // load with valid data
-//        $npo->id=Null;
-        $npo->Name="Test";
-        $npo->RegNumber="1234567890";
-//        $npo->RegNumberOther=Null;
-        $npo->Address="1 Test road, testville";
-        $npo->AddressPostal="1 testbox";
-        $npo->Contact="Mr Test";
-        $npo->Tel="0218501234";
-        $npo->Mobile="0821231234";
-        $npo->Email="test@test.com";
-        $npo->wwwDomain="http://test.com";
-        $npo->wwwHomepage="http://test.com/test";
-        $npo->wwwFacebook="/test";
-        $npo->Description="This is a unit test";
-        $npo->ServicesOffered="We offer testing";
-//        $npo->AssociatedOrganisations=Null;
-        $npo->listNeeds="We need more tests";
-        $npo->listWish="We wish for more tests";
-        $npo->paymentEft=True;
-//        $npo->paymentDeposit=Null;
-        $npo->Notes="Test test test";
-        $npo->LogoPath=Null;
-//        $npo->bActive=Null;
+        helper_models::valid_npo($npo);
 
         $this->assertEquals($npo->validate(), True);
 
@@ -216,7 +168,8 @@ class Model_Npo_Test extends WP_UnitTestCase
         $this->assertEquals(model_thehub_npos::get_table_stats()->count_all, 0);
 
         // load data
-        $npo=$this->helper_valid_npo();
+        $npo=helper_models::valid_npo();
+
 
         // assert
 
@@ -262,7 +215,7 @@ class Model_Npo_Test extends WP_UnitTestCase
         unset($npo);
 
         // add test data
-        $npo=$this->helper_valid_npo();
+        $npo=helper_models::valid_npo();
         $npo->save();
         unset($npo);
 
@@ -276,6 +229,13 @@ class Model_Npo_Test extends WP_UnitTestCase
         $npo_2=model_thehub_npos::get_by_id($npo->id);
         $this->assertInstanceOf("model_thehub_npos", $npo_2);
         $this->assertEquals($npo->id, $npo_2->id);
+
+
+        // no id
+        $npo_3=model_thehub_npos::get_by_id(Null);
+        $this->assertNotInstanceOf("model_thehub_npos", $npo_3);
+        $npo_4=model_thehub_npos::get_by_id(999999);
+        $this->assertNotInstanceOf("model_thehub_npos", $npo_4);
     }
 
     /**
@@ -284,7 +244,7 @@ class Model_Npo_Test extends WP_UnitTestCase
      */
     public function test_updates()
     {
-        $npo=$this->helper_valid_npo();
+        $npo=helper_models::valid_npo();
         $npo->save();
 
         $npo->Name="New name";
@@ -301,25 +261,25 @@ class Model_Npo_Test extends WP_UnitTestCase
     public function test_search()
     {
         // create tests
-        $npo_test = $this->helper_valid_npo();
+        $npo_test=helper_models::valid_npo();
         $npo_test->save();
 
-        $npo_dog = $this->helper_valid_npo();
+        $npo_dog=helper_models::valid_npo();
         $npo_dog->Name="Friends of the dog";
         $npo_dog->set_active();
         $npo_dog->save();
 
-        $npo_cat = $this->helper_valid_npo();
+        $npo_cat=helper_models::valid_npo();
         $npo_cat->Name="Friends of the cat";
         $npo_cat->set_active();
         $npo_cat->save();
 
-        $npo_kids = $this->helper_valid_npo();
+        $npo_kids=helper_models::valid_npo();
         $npo_kids->Name="Helping children";
         $npo_kids->set_active();
         $npo_kids->save();
 
-        $npo_old = $this->helper_valid_npo();
+        $npo_old=helper_models::valid_npo();
         $npo_old->Name="Loving old folk";
         $npo_old->set_active();
         $npo_old->save();
@@ -344,39 +304,5 @@ class Model_Npo_Test extends WP_UnitTestCase
         $this->assertEquals(1, sizeof($search));
         $search=model_thehub_npos::get_by_name($name_like="TEST",$filter_service=Null, $active=True);
         $this->assertEquals(0, sizeof($search));
-    }
-
-
-    /**
-     * @return model_thehub_npos
-     *
-     */
-    function helper_valid_npo()
-    {
-        $npo = new model_thehub_npos();
-
-        $npo->Name="Test";
-        $npo->RegNumber="1234567890";
-//        $npo->RegNumberOther=Null;
-        $npo->Address="1 Test road, testville";
-        $npo->AddressPostal="1 testbox";
-        $npo->Contact="Mr Test";
-        $npo->Tel="0218501234";
-        $npo->Mobile="0821231234";
-        $npo->Email="test@test.com";
-        $npo->wwwDomain="http://test.com";
-        $npo->wwwHomepage="http://test.com/test";
-        $npo->wwwFacebook="/test";
-        $npo->Description="This is a unit test";
-        $npo->ServicesOffered="We offer testing";
-//        $npo->AssociatedOrganisations=Null;
-        $npo->listNeeds="We need more tests";
-        $npo->listWish="We wish for more tests";
-        $npo->paymentEft=True;
-//        $npo->paymentDeposit=Null;
-        $npo->Notes="Test test test";
-        $npo->LogoPath=Null;
-
-        return $npo;
     }
 }
