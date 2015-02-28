@@ -145,163 +145,173 @@ class model_thehub_npos  extends model_abstract {
 				OBJECT));
 	}
 
+
 	/**
-	 * Validate
-	 * Change this to not be form specific.
+	 * Sanitize
+     *
+     * Prep the data coming in
 	 */
-	public function validate()
-	{
+	public function sanitize()
+    {
+        // sanitize
 
-		$this->validation_errors = array();
+        $sanitize_rules = array(
+            "id" =>
+                array(
+                    'filter' => FILTER_SANITIZE_NUMBER_INT,
+                    'flags' => FILTER_SANITIZE_STRIPPED,
+                    'options' => array('default' => Null),
+                ),
 
-		// validate
+            "Name" =>
+                array(
+                    'filter' => FILTER_SANITIZE_STRING,
+                    'flags' => FILTER_SANITIZE_STRIPPED,
+                    'options' => array('default' => Null),
+                ),
 
-		$sanitize_rules = array(
-  			"id" => 
-  					array(
-  							'filter' => FILTER_SANITIZE_NUMBER_INT,
-  							'flags' => FILTER_SANITIZE_STRIPPED,  							
-  							'options' => array('default' => Null),
-  						),
+            "RegNumber" =>
+                array(
+                    'filter' => FILTER_SANITIZE_STRING,
+                    'flags' => FILTER_SANITIZE_STRIPPED,
+                    'options' => array('default' => Null),
+                ),
 
-  			"Name" => 
-  					array(
-  							'filter' => FILTER_SANITIZE_STRING,
-  							'flags' => FILTER_SANITIZE_STRIPPED,
-  							'options' => array('default' => Null),
-  						),
+            "RegNumberOther" =>
+                array(
+                    'filter' => FILTER_SANITIZE_STRING,
+                    'flags' => FILTER_SANITIZE_STRIPPED,
+                    'options' => array('default' => Null),
+                ),
 
-  			"RegNumber" => 
-  					array(
-  							'filter' => FILTER_SANITIZE_STRING,
-  							'flags' => FILTER_SANITIZE_STRIPPED,
-  							'options' => array('default' => Null),
-  						),
+            "Address" =>
+                array(
+                    'filter' => FILTER_SANITIZE_STRING,
+                    'flags' => FILTER_SANITIZE_STRIPPED,
+                    'options' => array('default' => Null),
+                ),
 
-  			"RegNumberOther" => 
-  					array(
-  							'filter' => FILTER_SANITIZE_STRING,
-  							'flags' => FILTER_SANITIZE_STRIPPED,
-  							'options' => array('default' => Null),
-  						),
+            "AdressPostal" =>
+                array(
+                    'filter' => FILTER_SANITIZE_STRING,
+                    'flags' => FILTER_SANITIZE_STRIPPED,
+                    'options' => array('default' => Null),
+                ),
 
-  			"Address" => 
-  					array(
-  							'filter' => FILTER_SANITIZE_STRING,
-  							'flags' => FILTER_SANITIZE_STRIPPED,
-  							'options' => array('default' => Null),
-  						),
+            "Contact" =>
+                array(
+                    'filter' => FILTER_SANITIZE_STRING,
+                    'flags' => FILTER_SANITIZE_STRIPPED,
+                    'options' => array('default' => Null),
+                ),
 
-  			"AdressPostal" => 
-  					array(
-  							'filter' => FILTER_SANITIZE_STRING,
-  							'flags' => FILTER_SANITIZE_STRIPPED,
-  							'options' => array('default' => Null),
-  						),
+            "Tel" =>
+                array(
+                    'filter' => FILTER_SANITIZE_STRING,
+                    'flags' => FILTER_SANITIZE_STRIPPED,
+                    'options' => array('default' => Null),
+                ),
 
-  			"Contact" => 
-  					array(
-  							'filter' => FILTER_SANITIZE_STRING,
-  							'flags' => FILTER_SANITIZE_STRIPPED,
-  							'options' => array('default' => Null),
-  						),
+            "Mobile" =>
+                array(
+                    'filter' => FILTER_SANITIZE_STRING,
+                    'flags' => FILTER_SANITIZE_STRIPPED,
+                    'options' => array('default' => Null),
+                ),
 
-  			"Tel" => 
-  					array(
-  							'filter' => FILTER_SANITIZE_STRING,
-  							'flags' => FILTER_SANITIZE_STRIPPED,
-  							'options' => array('default' => Null),
-  						),
+            "Email" =>
+                array(
+                    'filter' => FILTER_SANITIZE_EMAIL,
+                    'flags' => FILTER_SANITIZE_STRIPPED,
+                    'options' => array('default' => Null),
+                ),
 
-  			"Mobile" => 
-  					array(
-  							'filter' => FILTER_SANITIZE_STRING,
-  							'flags' => FILTER_SANITIZE_STRIPPED,
-  							'options' => array('default' => Null),
-  						),
+            "wwwDomain" =>
+                array(
+                    'filter' => FILTER_SANITIZE_STRING,
+                    'flags' => FILTER_SANITIZE_STRIPPED,
+                    'options' => array('default' => Null),
+                ),
 
-  			"Email" => 
-  					array(
-  							'filter' => FILTER_SANITIZE_STRING,
-  							'flags' => FILTER_SANITIZE_STRIPPED,
-  							'options' => array('default' => Null),
-  						),
+            "wwwHomepage" =>
+                array(
+                    'filter' => FILTER_SANITIZE_STRING,
+                    'flags' => FILTER_SANITIZE_STRIPPED,
+                    'options' => array('default' => Null),
+                ),
 
-  			"wwwDomain" => 
-  					array(
-  							'filter' => FILTER_SANITIZE_STRING,
-  							'flags' => FILTER_SANITIZE_STRIPPED,
-  							'options' => array('default' => Null),
-  						),
+            "wwwFacebook" =>
+                array(
+                    'filter' => FILTER_SANITIZE_STRING,
+                    'flags' => FILTER_SANITIZE_STRIPPED,
+                    'options' => array('default' => Null),
+                ),
 
-  			"wwwHomepage" => 
-  					array(
-  							'filter' => FILTER_SANITIZE_STRING,
-  							'flags' => FILTER_SANITIZE_STRIPPED,
-  							'options' => array('default' => Null),
-  						),
+            "Description" =>
+                array(
+                    'filter' => FILTER_SANITIZE_STRING,
+                    'flags' => FILTER_SANITIZE_STRIPPED,
+                    'options' => array('default' => Null),
+                ),
 
-  			"wwwFacebook" => 
-  					array(
-  							'filter' => FILTER_SANITIZE_STRING,
-  							'flags' => FILTER_SANITIZE_STRIPPED,
-  							'options' => array('default' => Null),
-  						),
-
-  			"Description" => 
-  					array(
-  							'filter' => FILTER_SANITIZE_STRING,
-  							'flags' => FILTER_SANITIZE_STRIPPED,
-  							'options' => array('default' => Null),
-  						),
-
-  			"ServicesOffered" => 
-  					array(
-  							'filter' => FILTER_SANITIZE_STRING,
-  							'flags' => FILTER_SANITIZE_STRIPPED,
-  							'options' => array('default' => Null),
-  						),
+            "ServicesOffered" =>
+                array(
+                    'filter' => FILTER_SANITIZE_STRING,
+                    'flags' => FILTER_SANITIZE_STRIPPED,
+                    'options' => array('default' => Null),
+                ),
 
 
-  			"AssociatedOrganisations" => 
-  					array(
-  							'filter' => FILTER_SANITIZE_STRING,
-  							'flags' => FILTER_SANITIZE_STRIPPED,
-  							'options' => array('default' => Null),
-  						),
+            "AssociatedOrganisations" =>
+                array(
+                    'filter' => FILTER_SANITIZE_STRING,
+                    'flags' => FILTER_SANITIZE_STRIPPED,
+                    'options' => array('default' => Null),
+                ),
 
-  			"listNeeds" => 
-  					array(
-  							'filter' => FILTER_SANITIZE_STRING,
-  							'flags' => FILTER_SANITIZE_STRIPPED,
-  							'options' => array('default' => Null),
-  						),
+            "listNeeds" =>
+                array(
+                    'filter' => FILTER_SANITIZE_STRING,
+                    'flags' => FILTER_SANITIZE_STRIPPED,
+                    'options' => array('default' => Null),
+                ),
 
-  			"listWidh" => 
-  					array(
-  							'filter' => FILTER_SANITIZE_STRING,
-  							'flags' => FILTER_SANITIZE_STRIPPED,
-  							'options' => array('default' => Null),
-  						),
+            "listWish" =>
+                array(
+                    'filter' => FILTER_SANITIZE_STRING,
+                    'flags' => FILTER_SANITIZE_STRIPPED,
+                    'options' => array('default' => Null),
+                ),
 
-  			"paymentEft" => 
-  					array(
-  							'filter' => FILTER_SANITIZE_NUMBER_INT,
-  							'flags' => FILTER_SANITIZE_STRIPPED,  							
-  							'options' => array('default' => 0),
-  						),
+            "paymentEft" =>
+                array(
+                    'filter' => FILTER_SANITIZE_NUMBER_INT,
+                    'flags' => FILTER_SANITIZE_STRIPPED,
+                    'options' => array('default' => 0),
+                ),
 
-  			"paymentDeposit" =>
-  					array(
-  							'filter' => FILTER_SANITIZE_NUMBER_INT,
-  							'flags' => FILTER_SANITIZE_STRIPPED,  							
-  							'options' => array('default' => 0),
-  						),
-			);
+            "paymentDeposit" =>
+                array(
+                    'filter' => FILTER_SANITIZE_NUMBER_INT,
+                    'flags' => FILTER_SANITIZE_STRIPPED,
+                    'options' => array('default' => 0),
+                ),
+        );
 
-		$this->set_data(filter_var_array(get_object_vars($this), $sanitize_rules));
+        $this->set_data(filter_var_array(get_object_vars($this), $sanitize_rules));
+    }
 
-		if(!$this->Name) {
+    /**
+     * Validate data
+     *
+     * @return bool
+     */
+    public function validate()
+    {
+        $this->sanitize();
+        $this->validation_errors = array();
+
+        if(!$this->Name) {
             $this->validation_errors['Name'] = 'Please enter!';
 		}
 
@@ -331,12 +341,15 @@ class model_thehub_npos  extends model_abstract {
             $this->validation_errors['Mobile'] = 'Please enter cellphone number!';
 		}
 
-
+        // Email
 		if(!$this->Email) {
             $this->validation_errors['Email'] = 'Please enter email address!';
 		}
+        elseif (!filter_var($this->Email, FILTER_VALIDATE_EMAIL)) {
+            $this->validation_errors['Email'] = 'There is an error in the email address!';
+        }
 
-		// if(empty($this->website)) {
+            // if(empty($this->website)) {
 		// 	$errors['website'] = 'Please enter!';
 		// }
 
@@ -472,12 +485,15 @@ class model_thehub_npos  extends model_abstract {
 	}
 
 
-	/**
-	 *
-	 */
-	public function setActive($active = True) {
+    /**
+     * @param bool $active
+     */
+	public function set_active($active = True) {
 		$this->bActive = $active;
-		$this->save();
+
+        if(!$this->is_new()) {
+            $this->save();
+        }
 	}
 
 	/**

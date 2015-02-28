@@ -8,6 +8,13 @@ abstract class model_abstract
 
     // abstract methods
 
+    public function is_new()
+    {
+        return (bool)!isset($this->id);
+    }
+
+    public function sanitize() {}
+
     public function validate() {}
 
     public function save() {}
