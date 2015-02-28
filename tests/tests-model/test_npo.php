@@ -11,12 +11,17 @@ class Model_Npo_Test extends WP_UnitTestCase
      */
     public static function setUpBeforeClass()
     {
+        global $wpdb;
+        $wpdb->suppress_errors = false;
+        $wpdb->show_errors = true;
+        ini_set('display_errors', 1 );
+
+
         require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
         $sql=model_thehub_npos::get_create_table();
         dbDelta($sql);
 
         // truncate data
-        global $wpdb;
         $wpdb->query("TRUNCATE ".model_thehub_npos::get_table_name());
     }
 
@@ -244,6 +249,7 @@ class Model_Npo_Test extends WP_UnitTestCase
     }
 
     /**
+     * Test loading
      *
      */
     function test_load()
@@ -265,6 +271,79 @@ class Model_Npo_Test extends WP_UnitTestCase
         // get by email again
         $npo=model_thehub_npos::get_by_email("test@test.com");
         $this->assertInstanceOf("model_thehub_npos", $npo);
+
+        // get by id
+        $npo_2=model_thehub_npos::get_by_id($npo->id);
+        $this->assertInstanceOf("model_thehub_npos", $npo_2);
+        $this->assertEquals($npo->id, $npo_2->id);
+    }
+
+    /**
+     * Test updates
+     *
+     */
+    public function test_updates()
+    {
+        $npo=$this->helper_valid_npo();
+        $npo->save();
+
+        $npo->Name="New name";
+        $npo->save();
+
+        $npo_2=model_thehub_npos::get_by_id($npo->id);
+        $this->assertEquals($npo->id, $npo_2->id); // same npo
+        $this->assertEquals("New name", $npo_2->Name);
+    }
+
+    /**
+     *
+     */
+    public function test_search()
+    {
+        // create tests
+        $npo_test = $this->helper_valid_npo();
+        $npo_test->save();
+
+        $npo_dog = $this->helper_valid_npo();
+        $npo_dog->Name="Friends of the dog";
+        $npo_dog->set_active();
+        $npo_dog->save();
+
+        $npo_cat = $this->helper_valid_npo();
+        $npo_cat->Name="Friends of the cat";
+        $npo_cat->set_active();
+        $npo_cat->save();
+
+        $npo_kids = $this->helper_valid_npo();
+        $npo_kids->Name="Helping children";
+        $npo_kids->set_active();
+        $npo_kids->save();
+
+        $npo_old = $this->helper_valid_npo();
+        $npo_old->Name="Loving old folk";
+        $npo_old->set_active();
+        $npo_old->save();
+
+        // test stats
+        $this->assertEquals(model_thehub_npos::get_table_stats()->count_all, 5);
+        $this->assertEquals(model_thehub_npos::get_table_stats()->count_active, 4);
+        $this->assertEquals(model_thehub_npos::get_table_stats()->count_deactive, 1);
+
+        //---
+
+        $search=model_thehub_npos::get_by_name($name_like="dog");
+        $this->assertEquals(1, sizeof($search));
+
+        $search=model_thehub_npos::get_by_name($name_like="Friends of");
+        $this->assertEquals(2, sizeof($search));
+
+        // search for inactive
+        $search=model_thehub_npos::get_by_name($name_like="TEST",$filter_service=Null, $active=False);
+        $this->assertEquals(1, sizeof($search));
+        $search=model_thehub_npos::get_by_name($name_like="TEST",$filter_service=Null, $active=Null);
+        $this->assertEquals(1, sizeof($search));
+        $search=model_thehub_npos::get_by_name($name_like="TEST",$filter_service=Null, $active=True);
+        $this->assertEquals(0, sizeof($search));
     }
 
 

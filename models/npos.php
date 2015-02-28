@@ -416,7 +416,6 @@ class model_thehub_npos  extends model_abstract {
 	 * Save data
 	 *
 	 */
-
 	public function save()
 	{
 		global $wpdb;
@@ -480,6 +479,7 @@ class model_thehub_npos  extends model_abstract {
 
 			$wpdb->insert($table = self::get_table_name(), $data, $format);
 			$this->id = $wpdb->insert_id;
+            return $this->id;
 		} else {
 			// update
 			$wpdb->update(
@@ -533,7 +533,7 @@ class model_thehub_npos  extends model_abstract {
 
 		$pre = ' WHERE ';
 		if($name_like) {
-			$sql .= $pre." lower(Name) like '".strtolower($name_like)."%' ";
+			$sql .= $pre." lower(Name) like '%".strtolower($name_like)."%' ";
 			$pre = ' AND ';
 		}
 
@@ -542,13 +542,13 @@ class model_thehub_npos  extends model_abstract {
 			$pre = ' AND ';
 		}
 
-		if($active) {
-			$sql .= $pre." npo.bActive=True ";
+		if(!is_null($active)) {
+			$sql .= $pre." npo.bActive=".($active?"True ":"False ");
 			$pre = ' AND ';
 		}
 
-		$sql .= " ORDER BY lower(Name) ";
 
+        $sql .= " ORDER BY lower(Name) ";
 
 		global $wpdb;
 
@@ -560,15 +560,16 @@ class model_thehub_npos  extends model_abstract {
 		return $res;
 	}
 
-	/**
-	 *
-	 */
+    /**
+     * @param $LogoPath
+     * @return mixed|null
+     */
 	static function logo_url($LogoPath)
 	{
 		$logo = Null;
 		if($LogoPath) {
-			$upload_dir = wp_upload_dir();
-			$logo = str_replace($upload_dir['basedir'], $upload_dir['baseurl'], $LogoPath);		
+			$upload_dir=wp_upload_dir();
+			$logo=str_replace($upload_dir['basedir'], $upload_dir['baseurl'], $LogoPath);
 		}
 		return $logo;
 	}
@@ -588,7 +589,7 @@ class model_thehub_npos  extends model_abstract {
     {
         if(empty($this->_npo_services) && !is_array($this->_npo_services)) {
             if($this->id) {
-                $this->_npo_services = model_thehub_npo_services::get_by_npo($this->id);
+                $this->_npo_services=model_thehub_npo_services::get_by_npo($this->id);
             } else {
                 $this->_npo_services=array();
             }
