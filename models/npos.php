@@ -534,27 +534,9 @@ class model_thehub_npos  extends model_abstract {
 		$res = array();
 
 		foreach($wpdb->get_results($sql, OBJECT) as $row) {
-			$res[] = self::_postProcess($row);
+			$res[] = new self($row);
 		}
 		return $res;
-	}
-
-
-	/**
-	 * Post process the data
-	 *
-	 * This is for the launch on 2015-02-09
-	 */
-	static function _postProcess($object) 
-	{
-        // we can remove this ....
-		if (empty($object)) {
-			return $object;
-		}
-
-		$object->logo = self::logo_url($object->LogoPath); 
-		$object->npo_services = model_thehub_npo_services::get_by_npo($object->id);
-		return new self($object);
 	}
 
 	/**
