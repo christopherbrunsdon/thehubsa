@@ -1,6 +1,6 @@
 <?php
 
-defined('ABSPATH') or die("No script kiddies please!");
+//defined('ABSPATH') or die("No script kiddies please!");
 
 // Sources:
 // http://codex.wordpress.org/Administration_Menus

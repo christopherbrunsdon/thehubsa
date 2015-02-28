@@ -1,6 +1,6 @@
 <?php
 
-defined('ABSPATH') or die("No script kiddies please!");
+//defined('ABSPATH') or die("No script kiddies please!");
 define('SHORTCODE_THEHUBSA_LIST_NPO', 'thehubsa_list_npo');
 
 class controller_npo 

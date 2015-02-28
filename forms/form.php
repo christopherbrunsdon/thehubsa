@@ -1,6 +1,6 @@
 <?php
 
-defined('ABSPATH') or die("No script kiddies please!");
+//defined('ABSPATH') or die("No script kiddies please!");
 
 // required for form uploading in wordpress
 if ( ! function_exists( 'wp_handle_upload' ) ) {

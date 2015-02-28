@@ -1,5 +1,5 @@
 <?php
-defined('ABSPATH') or die("No script kiddies please!");
+//defined('ABSPATH') or die("No script kiddies please!");
 
 // format date.version
 DEFINE('THEHUBSA_DB_VERSION', 20150208);

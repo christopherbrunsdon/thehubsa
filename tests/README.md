@@ -12,6 +12,9 @@ https://make.wordpress.org/core/handbook/automated-testing/
 
 https://pippinsplugins.com/unit-tests-wordpress-plugins-setting-up-testing-suite/
 
+http://code.tutsplus.com/articles/the-beginners-guide-to-unit-testing-building-a-testable-plugin--wp-25741
+
+http://wern-ancheta.com/blog/2013/09/29/unit-testing-wordpress-plugins/
 
 Setting up:
 -----------
@@ -58,5 +61,9 @@ Now try running wp --info.
 $wp --info
 
 Upgrade using the same procedure.
+
+**Setup**
+
+$ sudo -u www-data -i -- wp scaffold plugin-tests restrict-content-pro --path='/var/www/html'
 
 [eof]
