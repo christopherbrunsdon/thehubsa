@@ -106,11 +106,11 @@
 				<?php foreach($services as $service): ?>
 					<option value="<?= $service->id ?>" <?php $this->npo->npo_services[$i]->fkService == $service->id && print 'selected'; ?> ><?= $service->Service; ?></option>
 				<?php endforeach; ?>
-				<option value="-1" id="services_other_<?= $i; ?>" <?php !$this->npo->npo_services[$i]->fkService && $this->npo->npo_services[$i]->ServiceOther  && print 'selected'; ?>   >-- Other (Please indicate) --</option>
+				<option value="-1" id="services_other_<?= $i; ?>" <?php !$this->npo->npo_services[$i]->fkService && $this->npo->npo_services[$i]->ServiceOther && print 'selected'; ?>   >-- Other (Please indicate) --</option>
 			</select>
 		</div>
 
-		<div <?php $this->npo->npo_services[$i]->fkService && print 'style="display: none;"' ?> id="service_other_input_<?= $i; ?>">
+		<div <?php ($this->npo->npo_services[$i]->fkService || !$this->npo->npo_services[$i]->ServiceOther) && print 'style="display: none;"' ?> id="service_other_input_<?= $i; ?>">
 			<div class="input-group">
 				<div class="input-group-addon">Other:</div>
 				<input  type="text" value="<?= $this->npo->npo_services[$i]->ServiceOther ?>" name="service-offered-other-<?= $i ?>" class="form-control"  placeholder="Other (Please indicate)" />

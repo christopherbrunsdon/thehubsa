@@ -170,9 +170,7 @@ class Model_Npo_Test extends WP_UnitTestCase
         // load data
         $npo=helper_models::valid_npo();
 
-
         // assert
-
         $this->assertTrue($npo->is_new());
 
         $npo->save();

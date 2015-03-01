@@ -164,65 +164,65 @@ class model_thehub_npo_services  extends model_abstract  {
 					);
 
 		if($this->fkService > 0) {
-            $fields['fkService'] = $this->fkService;
-            $field_meta[] = '%d';
+            $fields['fkService']=$this->fkService;
+            $field_meta[]='%d';
         }
 
 		$wpdb->insert(self::get_table_name(), $fields, $field_meta);
 	}
 
-	/**
-	 * List of active types
-	 * do inner join here
-	 */
-	static public function get_types()
-	{
-		global $wpdb;
-		return $wpdb->get_results(
-			"SELECT 
-				fkNpo, fkService 
-			FROM 
-				".self::get_table_name()." 
-			WHERE 
-				bActive = True 
-			ORDER BY 
-				DisplayOrder, id", 
-			OBJECT);
-	}
+//	/**
+//	 * List of active types
+//	 * do inner join here
+//	 */
+//	static public function get_types()
+//	{
+//		global $wpdb;
+//		return $wpdb->get_results(
+//			"SELECT
+//				fkNpo, fkService
+//			FROM
+//				".self::get_table_name()."
+//			WHERE
+//				bActive = True
+//			ORDER BY
+//				DisplayOrder, id",
+//			OBJECT);
+//	}
 
-	/**
-	 * Get by id
-	 *
-	 * @return object
-	 */
-	static public function get_by_id($id, $active = True)
-	{
-		if($id == False)
-			return Null;
+//	/**
+//	 * Get by id
+//	 *
+//	 * @return object
+//	 */
+//	static public function get_by_id($id, $active = True)
+//	{
+//		if($id == False)
+//			return Null;
+//
+//		global $wpdb;
+//		return $wpdb->get_row("SELECT * FROM ".self::get_table_name()
+//				." WHERE  id = ".$id
+//				. ($active?" AND bActive=True ":""),
+//				OBJECT);
+//	}
 
-		global $wpdb;
-		return $wpdb->get_row("SELECT * FROM ".self::get_table_name()
-				." WHERE  id = ".$id 
-				. ($active?" AND bActive=True ":""), 
-				OBJECT);
-	}
-
-	/**
-	 * Get by id
-	 *
-	 * @return object
-	 */
-	static public function get_by_type($type, $active = True)
-	{
-		if($type == False)
-			return Null;
-
-		global $wpdb;
-		return $wpdb->get_row("SELECT * FROM ".self::get_table_name()
-				." WHERE  lower(MembershipType) = '".strtolower($type)."' " 
-				. ($active?" AND bActive=True ":""), 
-				OBJECT);
-	}
+//	/**
+//	 * Get by id
+//	 *
+//	 * @return object
+//	 */
+//	static public function get_by_type($type, $active = True)
+//	{
+//		if($type == False)
+//			return Null;
+//
+//		global $wpdb;
+//		return $wpdb->get_row("SELECT * FROM ".self::get_table_name()
+//				." WHERE  lower(MembershipType) = '".strtolower($type)."' "
+//				. ($active?" AND bActive=True ":""),
+//				OBJECT);
+//	}
 
 	/**
 	 * Get by NPO
@@ -246,7 +246,7 @@ class model_thehub_npo_services  extends model_abstract  {
 
         $rows=array();
         foreach($wpdb->get_results($sql, OBJECT) as $object) {
-            $res[]=new self($object);
+            $rows[]=new self($object);
         }
         return $rows;
 	}

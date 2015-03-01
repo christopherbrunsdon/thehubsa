@@ -106,4 +106,19 @@ class helper_models
 //        $npo_service->bActive=Null;
         return $npo_service;
     }
+
+    /**
+     * @param null $npo_services
+     * @return model_thehub_npo_services|null
+     */
+    static public function valid_npo_services($npo_services=Null)
+    {
+        if($npo_services instanceof model_thehub_npo_services == False) {
+            $npo_services=new model_thehub_npo_services();
+        }
+        $npo_services->fkNpo=1;
+        $npo_services->fkService=1;
+        $npo_services->bActive=1;
+        return $npo_services;
+    }
 }

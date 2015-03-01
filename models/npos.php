@@ -558,8 +558,11 @@ class model_thehub_npos extends model_abstract {
     /**
      * @return null
      */
-    function get_npo_services()
+    function get_npo_services($refresh=False)
     {
+        if($refresh) {
+            $this->_npo_services = Null;
+        }
         if(empty($this->_npo_services) && !is_array($this->_npo_services)) {
             if($this->id) {
                 $this->_npo_services=model_thehub_npo_services::get_by_npo($this->id);
