@@ -30,10 +30,9 @@ class form_npo extends form
         $this->error=new error_helper();
         $this->npo=($npo instanceof model_thehub_npos) ? $npo : new model_thehub_npos();
 
-        for ($i=sizeof($this->npo->get_npo_services())+1;
-                $i <= model_thehub_npo_services::NUMBER_PER_NPO;
-                $i++) {
-            $this->npo->npo_services[$i] = new model_thehub_npo_services();
+        $this->npo->get_npo_services(); // preload
+        while (sizeof($this->npo->_npo_services) < model_thehub_npo_services::NUMBER_PER_NPO) {
+            $this->npo->_npo_services[] = new model_thehub_npo_services();
         }
     }
 
@@ -65,7 +64,7 @@ class form_npo extends form
         $this->npo->set_data($data);
         $has_error=$this->npo->validate()?$has_error:True;
 
-        $this->npo->npo_services=array();
+        $this->npo->_npo_services=array();
         for($i=1; $i <= model_thehub_npo_services::NUMBER_PER_NPO; $i++) {
             $service_id=isset($data["service-offered-{$i}"])?$data["service-offered-{$i}"]:Null;
             $service_other=isset($data["service-offered-other-{$i}"])?$data["service-offered-other-{$i}"]:Null;
@@ -76,8 +75,7 @@ class form_npo extends form
                 $service_id=Null;
             }
 
-            $this->npo->npo_services[$i]=new model_thehub_npo_services();
-            $this->npo->npo_services[$i]->set_data(array(
+            $this->npo->_npo_services[]=new model_thehub_npo_services(array(
                 "fkService"=>$service_id,
                 "ServiceOther"=>$service_other,
                 "RankOrder"=>$i
@@ -128,7 +126,7 @@ class form_npo extends form
             $this->npo->save();
 
             model_thehub_npo_services::delete_by_npo($this->npo->id);
-            foreach($this->npo->npo_services as $npo_service) {
+            foreach($this->npo->_npo_services as $npo_service) {
                 $npo_service->fkNpo=$this->npo->id;
 
                 if($npo_service->validate()) {

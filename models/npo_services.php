@@ -31,7 +31,15 @@ class model_thehub_npo_services  extends model_abstract  {
 	}
 
     /**
-     *
+     * @param null $data
+     */
+    public function __construct($data = Null)
+    {
+        $this->set_data($data);
+    }
+
+    /**
+     * @return null
      */
 	function __toString()
 	{
@@ -171,59 +179,6 @@ class model_thehub_npo_services  extends model_abstract  {
 		$wpdb->insert(self::get_table_name(), $fields, $field_meta);
 	}
 
-//	/**
-//	 * List of active types
-//	 * do inner join here
-//	 */
-//	static public function get_types()
-//	{
-//		global $wpdb;
-//		return $wpdb->get_results(
-//			"SELECT
-//				fkNpo, fkService
-//			FROM
-//				".self::get_table_name()."
-//			WHERE
-//				bActive = True
-//			ORDER BY
-//				DisplayOrder, id",
-//			OBJECT);
-//	}
-
-//	/**
-//	 * Get by id
-//	 *
-//	 * @return object
-//	 */
-//	static public function get_by_id($id, $active = True)
-//	{
-//		if($id == False)
-//			return Null;
-//
-//		global $wpdb;
-//		return $wpdb->get_row("SELECT * FROM ".self::get_table_name()
-//				." WHERE  id = ".$id
-//				. ($active?" AND bActive=True ":""),
-//				OBJECT);
-//	}
-
-//	/**
-//	 * Get by id
-//	 *
-//	 * @return object
-//	 */
-//	static public function get_by_type($type, $active = True)
-//	{
-//		if($type == False)
-//			return Null;
-//
-//		global $wpdb;
-//		return $wpdb->get_row("SELECT * FROM ".self::get_table_name()
-//				." WHERE  lower(MembershipType) = '".strtolower($type)."' "
-//				. ($active?" AND bActive=True ":""),
-//				OBJECT);
-//	}
-
 	/**
 	 * Get by NPO
 	 *
@@ -231,8 +186,8 @@ class model_thehub_npo_services  extends model_abstract  {
 	 */
 	static public function get_by_npo($fkNpo, $active = True)
 	{
-		if($fkNpo == False) {
-            return Null;
+		if(!$fkNpo) {
+            return False;
         }
 
 		global $wpdb;

@@ -86,7 +86,7 @@
 
 				<ul>
 					<?php foreach($npo->get_npo_services() as $service): ?>
-						<li><?php echo $service->Service; ?></li>
+						<li><?= $service; ?></li>
 					<?php endforeach; ?>
 				</ul>
 

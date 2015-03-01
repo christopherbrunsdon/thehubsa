@@ -29,7 +29,9 @@ class model_thehub_npos extends model_abstract {
 		$paymentDeposit=Null,
 		$Notes=Null,
 		$LogoPath=Null,
-		$bActive=Null;
+		$bActive=Null,
+        $WhenCreated=Null,
+        $WhenUpdated=Null;
 
     public
         $_npo_services=Null;
@@ -548,6 +550,11 @@ class model_thehub_npos extends model_abstract {
 	}
 
     /**
+     * @TODO: For the images we want to be able to return
+     * a resized image. Eg - small, medium, original, large ...
+     */
+
+    /**
      * @return mixed|null
      */
 	function get_logo_url()
@@ -565,7 +572,7 @@ class model_thehub_npos extends model_abstract {
         }
         if(empty($this->_npo_services) && !is_array($this->_npo_services)) {
             if($this->id) {
-                $this->_npo_services=model_thehub_npo_services::get_by_npo($this->id);
+                $this->_npo_services=model_thehub_npo_services::get_by_npo($this->id)?:array(); //set to array if failed
             } else {
                 $this->_npo_services=array();
             }

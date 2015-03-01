@@ -199,6 +199,9 @@ class Link_List_NPO_Table extends WP_List_Table {
 		$this->_base_url=$base_url;
 	}
 
+    /**
+     * @param $filter
+     */
 	function set_npo_filter($filter)
 	{
 		$this->_npo_filter=$filter;

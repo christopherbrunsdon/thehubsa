@@ -32,8 +32,8 @@
 	<tr class="">
 		<th align="right">Logo:</th>
 		<td>
-			<?php if($npo->logo): ?> 
-				<img style="max-width: 100px; max-height: 100px;" src="<?php echo $npo->logo; ?>" />  
+			<?php if($npo->get_logo_url()): ?>
+				<img style="max-width: 100px; max-height: 100px;" src="<?= $npo->get_logo_url(); ?>" />
 			<?php else:  ?>
 				* No Logo *
 			<?php endif; ?>
@@ -98,13 +98,11 @@
 	<tr class="">
 		<th align="right">Services Offered:</th>
 		<td>
-			<?php if(sizeof($npo->get_npo_services())): ?>
 				<ul>
 					<?php foreach($npo->get_npo_services() as $service): ?>
-						<li><?= $service->Service; ?></li>
+						<li><?= $service; ?></li>
 					<?php endforeach; ?>
 				</ul>
-			<?php endif; ?>
 		</td>
 	</tr>		
 

@@ -86,7 +86,7 @@
 		<small>Maximum size of 1000px x 1000px. JPEG or PNG format.</small>		
 		<input type="file" name="logo" class="form-control" id="" placeholder="Logo" />
 	
-		<input type="text" value="<?= $this->npo->LogoPath; ?>" id="LogoPath" name="LogoPath" />
+		<input type="hidden" value="<?= $this->npo->LogoPath; ?>" id="LogoPath" name="LogoPath" />
 		<?php if($this->npo->get_logo_url()): ?>
 			<img src="<?= $this->npo->get_logo_url(); ?>" />
 		<?php endif; ?>
@@ -104,16 +104,16 @@
 			<select  class="form-control" name="service-offered-<?= $i ?>" id="services_<?= $i; ?>">
 				<option>-- Services offered --</option>
 				<?php foreach($services as $service): ?>
-					<option value="<?= $service->id ?>" <?php $this->npo->npo_services[$i]->fkService == $service->id && print 'selected'; ?> ><?= $service->Service; ?></option>
+					<option value="<?= $service->id ?>" <?php $this->npo->_npo_services[$i-1]->fkService == $service->id && print 'selected'; ?> ><?= $service->Service; ?></option>
 				<?php endforeach; ?>
-				<option value="-1" id="services_other_<?= $i; ?>" <?php !$this->npo->npo_services[$i]->fkService && $this->npo->npo_services[$i]->ServiceOther && print 'selected'; ?>   >-- Other (Please indicate) --</option>
+				<option value="-1" id="services_other_<?= $i; ?>" <?php !$this->npo->_npo_services[$i-1]->fkService && $this->npo->_npo_services[$i-1]->ServiceOther && print 'selected'; ?>   >-- Other (Please indicate) --</option>
 			</select>
 		</div>
 
-		<div <?php ($this->npo->npo_services[$i]->fkService || !$this->npo->npo_services[$i]->ServiceOther) && print 'style="display: none;"' ?> id="service_other_input_<?= $i; ?>">
+		<div <?php ($this->npo->_npo_services[$i-1]->fkService || !$this->npo->_npo_services[$i-1]->ServiceOther) && print 'style="display: none;"' ?> id="service_other_input_<?= $i; ?>">
 			<div class="input-group">
 				<div class="input-group-addon">Other:</div>
-				<input  type="text" value="<?= $this->npo->npo_services[$i]->ServiceOther ?>" name="service-offered-other-<?= $i ?>" class="form-control"  placeholder="Other (Please indicate)" />
+				<input  type="text" value="<?= $this->npo->_npo_services[$i-1]->ServiceOther ?>" name="service-offered-other-<?= $i ?>" class="form-control"  placeholder="Other (Please indicate)" />
 			</div>
 		</div>
 	</div>
@@ -160,7 +160,7 @@
 		<textarea rows=4 name="listWish" type="text" class="form-control" id="" placeholder="Wish list"><?= $this->npo->listWish; ?></textarea>
 	</div>
 
-	<?php if(!isset($this->npo->show_banking) || $this->npo->show_banking): ?>
+	<?php if(!isset($this->npo->id)): //!isset($this->npo->show_banking) || $this->npo->show_banking): ?>
 		<p>
 			The HUB SA Helderberg reserves the right to accept/decline any affiliation.
 		</p>

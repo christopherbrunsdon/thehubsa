@@ -144,6 +144,7 @@ function thehubsa_admin_crud_npos()
 			} else {
 				$form = new form_npo($npo);
 				$form->show_banking = false;
+                $form->shortcode();
 				require(plugin_dir_path( __FILE__ )."../views/admin/npo_edit.php");
 			}
 			break;
@@ -155,7 +156,7 @@ function thehubsa_admin_crud_npos()
 			if(empty($npo)) {
 				echo "<div>Id {$npo_id} not found</div>";
 			} else {
-				$npo->setActive((bool)($action === 'activate'));
+				$npo->set_active((bool)($action === 'activate'));
 				echo "<div>NPO <strong>{$npo}</strong> is now <strong>".($npo->is_active()?'Active':'Deactive')."</strong>";
 				echo "</div>";
 
