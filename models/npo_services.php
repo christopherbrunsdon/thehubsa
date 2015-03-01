@@ -4,7 +4,6 @@
 
 require_once("model_abstract.php");
 
-
 class model_thehub_npo_services  extends model_abstract  {
 
 	CONST NUMBER_PER_NPO = 5; // set the number per NPO here
@@ -22,7 +21,8 @@ class model_thehub_npo_services  extends model_abstract  {
     /**
      * @return model_thehub_npo_services
      */
-	static function instance() {
+	static function instance()
+    {
 		static $inst = null;
         if (is_null($inst)) {
             $inst = new model_thehub_npo_services();
@@ -60,9 +60,8 @@ class model_thehub_npo_services  extends model_abstract  {
 		$fk_npo = model_thehub_npos::get_table_name();
 		$fk_services = model_thehub_npo_service_types::get_table_name();
 
-
 		$sql = "CREATE TABLE IF NOT EXISTS {$table_name} (
-			fkNpo     INT NOT NULL,
+			fkNpo INT NOT NULL,
 			fkService INT DEFAULT NULL,	
 			ServiceOther varchar(128) NOT NULL DEFAULT '',
 			RankOrder mediumint(9) ,					
@@ -86,26 +85,41 @@ class model_thehub_npo_services  extends model_abstract  {
 	}
 
     /**
+     *
+     */
+    public function sanitize()
+    {
+        $sanitize_rules = array(
+            'fkNpo' => array(
+                'filter' => FILTER_SANITIZE_NUMBER_INT,
+                'flags' => FILTER_SANITIZE_STRIPPED,
+                'options' => array('default' => Null),
+            ),
+            'fkService' => array(
+                'filter' => FILTER_SANITIZE_NUMBER_INT,
+                'flags' => FILTER_SANITIZE_STRIPPED,
+                'options' => array('default' => Null),
+            ),
+            'ServiceOther' => array(
+                'filter' => FILTER_SANITIZE_STRING,
+                'flags' => FILTER_SANITIZE_STRIPPED,
+                'options' => array('default' => Null),
+            ),
+        );
+        $this->set_data(filter_var_array(get_object_vars($this), $sanitize_rules));
+    }
+
+    /**
      * @return bool
      */
     public function validate()
     {
         $this->validation_errors = array();
+        $this->sanitize();
 
-        $sanitize_rules = array(
-                'fkService'=> array(
-                        'filter' => FILTER_SANITIZE_NUMBER_INT,
-                        'flags' => FILTER_SANITIZE_STRIPPED,
-                        'options' => array('default' => Null),
-                    ),
-                'ServiceOther'=>array(
-                        'filter' => FILTER_SANITIZE_STRING,
-                        'flags' => FILTER_SANITIZE_STRIPPED,
-                        'options' => array('default' => Null),
-                ),
-        );
-
-        $this->set_data(filter_var_array(get_object_vars($this), $sanitize_rules));
+        if(!$this->fkNpo) {
+            $this->validation_errors['fkNpo']="Need to set an npo";
+        }
 
         if($this->fkService > 0 || $this->ServiceOther){
             //pass

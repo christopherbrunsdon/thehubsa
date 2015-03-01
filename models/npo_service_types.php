@@ -2,6 +2,7 @@
 
 //defined('ABSPATH') or die("No script kiddies please!");
 
+require_once("model_abstract.php");
 
 class model_thehub_npo_service_types extends model_abstract {
 

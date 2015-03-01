@@ -22,7 +22,7 @@ class Model_Npo_Test extends WP_UnitTestCase
         dbDelta($sql);
 
         // truncate data
-        $wpdb->query("TRUNCATE ".model_thehub_npos::get_table_name());
+        $wpdb->query("DELETE FROM ".model_thehub_npos::get_table_name().";");
     }
 
     /**
