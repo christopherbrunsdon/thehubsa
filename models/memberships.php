@@ -1,6 +1,6 @@
 <?php
 
-defined('ABSPATH') or die("No script kiddies please!");
+//defined('ABSPATH') or die("No script kiddies please!");
 
 // +------------------+--------------+------+-----+---------------------+-----------------------------+
 // | Field            | Type         | Null | Key | Default             | Extra                       |

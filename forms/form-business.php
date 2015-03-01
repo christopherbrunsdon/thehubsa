@@ -1,6 +1,6 @@
 <?php
 
-defined('ABSPATH') or die("No script kiddies please!");
+//defined('ABSPATH') or die("No script kiddies please!");
 define('SHORTCODE_THEHUBSA_FORM_SIGNUP_BUSINESS', 'thehubsa_form_signup_business');
 
 require_once("form.php");

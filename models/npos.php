@@ -1,30 +1,45 @@
 <?php
 
-defined('ABSPATH') or die("No script kiddies please!");
+//defined('ABSPATH') or die("No script kiddies please!");
 
-// Name 			varchar(255) DEFAULT '',
-// RegNumber  		varchar(255) DEFAULT '',
-// RegNumberOther  varchar(255) DEFAULT '',
-// Address 		varchar(512) NOT NULL  DEFAULT '',
-// AddressPostal 	varchar(512) NOT NULL  DEFAULT '',
-// Contact 		varchar(255) NOT NULL  DEFAULT '',
-// Tel 			varchar(255) NOT NULL  DEFAULT '',
-// Mobile 			varchar(255) NOT NULL  DEFAULT '',
-// Email 			varchar(255) NOT NULL  DEFAULT '',			
-// wwwDomain 		varchar(255) NOT NULL  DEFAULT '',
-// wwwHomepage 	varchar(255) NOT NULL  DEFAULT '',
-// wwwFacebook 	varchar(255) NOT NULL  DEFAULT '',			
-// Description 			varchar(512) NOT NULL  DEFAULT '',
-// ServicesOffered 		varchar(512) NOT NULL  DEFAULT '',
-// AssociatedOrganisations varchar(512) NOT NULL  DEFAULT '',
-// listNeeds 	varchar(512) NOT NULL  DEFAULT '',
-// listWish 	varchar(512) NOT NULL  DEFAULT '',
-// paymentEft TINYINT default 0,
-// paymentDeposit TINYINT default 0,
+require_once("model_abstract.php");
 
-class model_thehub_npos {
+class model_thehub_npos extends model_abstract {
 
-	static function instance() 
+	public
+		$id=Null,
+		$Name=Null,
+		$RegNumber=Null,
+		$RegNumberOther=Null,
+		$Address=Null,
+		$AddressPostal=Null,
+		$Contact=Null,
+		$Tel=Null,
+		$Mobile=Null,
+		$Email=Null,
+		$wwwDomain=Null,
+		$wwwHomepage=Null,
+		$wwwFacebook=Null,
+		$Description=Null,
+		$ServicesOffered=Null,
+		$AssociatedOrganisations=Null,
+		$listNeeds=Null,
+		$listWish=Null,
+		$paymentEft=Null,
+		$paymentDeposit=Null,
+		$Notes=Null,
+		$LogoPath=Null,
+		$bActive=Null,
+        $WhenCreated=Null,
+        $WhenUpdated=Null;
+
+    public
+        $_npo_services=Null;
+
+    /**
+     * @return model_thehubsa_npos
+     */
+	static function instance()
 	{
 		static $inst = null;
         if (is_null($inst)) {
@@ -36,12 +51,14 @@ class model_thehub_npos {
 	/**
 	 *
 	 */
-
 	public function __construct($data = Null)
 	{
 		$this->set_data($data);
 	}
 
+	/**
+	 *
+	 */
 	public function __toString() 
 	{
 		return $this->Name." (Reg: {$this->RegNumber})";
@@ -50,7 +67,6 @@ class model_thehub_npos {
 	/**
 	 *
 	 */
-
 	static function get_table_name() 
 	{
 		global $wpdb;
@@ -61,16 +77,13 @@ class model_thehub_npos {
 	 * Create table sql
 	 *
 	 */
-
 	static function get_create_table()
 	{
 		global $wpdb;
 		$charset_collate = $wpdb->get_charset_collate();
 		$table_name = self::get_table_name();
 
-//IF NOT EXISTS 
-//		$sql = "CREATE TABLE IF NOT EXISTS {$table_name} (
-		$sql = "CREATE TABLE {$table_name} (
+		$sql = "CREATE TABLE IF NOT EXISTS {$table_name} (
 			id INT NOT NULL AUTO_INCREMENT  PRIMARY KEY,
 			Name varchar(255) DEFAULT '',
 			RegNumber varchar(255) DEFAULT '',
@@ -100,21 +113,38 @@ class model_thehub_npos {
 		return $sql;
 	}
 
+    /**
+     * @return mixed
+     */
+    static function get_table_stats()
+    {
+        global $wpdb;
+
+        $query = "SELECT COUNT(*) as count_all,
+				SUM(CASE WHEN bActive THEN 1 ELSE 0 END) AS count_active,
+				SUM(CASE WHEN NOT bActive THEN 1 ELSE 0 END) AS count_deactive
+				FROM ".self::get_table_name();
+
+        return $wpdb->get_row($query);
+    }
+
 	/**
 	 * Get by id
 	 *
 	 * @return object
 	 */
-
 	static public function get_by_id($id)
 	{
-		if($id == False)
-			return Null;
+		if($id == False) {
+            return Null;
+        }
 
 		global $wpdb;
-		return self::_postProcess($wpdb->get_row("SELECT * FROM ".self::get_table_name()
-				." WHERE  id = ".$id,
-				OBJECT));
+		$result=$wpdb->get_row("SELECT * FROM ".self::get_table_name()
+				." WHERE  id = {$id}",
+				OBJECT);
+
+        return $result ? new self($result) : False;
 	}
 
 	/**
@@ -122,275 +152,266 @@ class model_thehub_npos {
 	 *
 	 * @return object
 	 */
-
-	static public function get_by_email($email)
+	static public function get_by_email($email, $active=Null)
 	{
-		if($type == False)
-			return Null;
+		if($email == False) {
+            return Null;
+        }
 
 		global $wpdb;
-		return self::_postProcess($wpdb->get_row("SELECT * FROM ".self::get_table_name()
-				." WHERE  lower(email) = '".strtolower($email)."' ",
-				OBJECT));
+		$result=$wpdb->get_row("SELECT * FROM ".self::get_table_name()
+				." WHERE  lower(email) = '".strtolower($email)."' "
+                . (!is_null($active)?" AND bActive=".($active?"True":"False")." ":""),
+				OBJECT);
+
+        return $result ? new self($result) : False;
 	}
 
 	/**
-	 * 
+	 * Sanitize
+     *
+     * Prep the data coming in
 	 */
+	public function sanitize()
+    {
+        // sanitize
 
-	public function set_data($data)
-	{
-		if(is_object($data)) {
-			return $this->set_data(get_object_vars($data));
+        $sanitize_rules = array(
+            "id" =>
+                array(
+                    'filter' => FILTER_SANITIZE_NUMBER_INT,
+                    'flags' => FILTER_SANITIZE_STRIPPED,
+                    'options' => array('default' => Null),
+                ),
+
+            "Name" =>
+                array(
+                    'filter' => FILTER_SANITIZE_STRING,
+                    'flags' => FILTER_SANITIZE_STRIPPED,
+                    'options' => array('default' => Null),
+                ),
+
+            "RegNumber" =>
+                array(
+                    'filter' => FILTER_SANITIZE_STRING,
+                    'flags' => FILTER_SANITIZE_STRIPPED,
+                    'options' => array('default' => Null),
+                ),
+
+            "RegNumberOther" =>
+                array(
+                    'filter' => FILTER_SANITIZE_STRING,
+                    'flags' => FILTER_SANITIZE_STRIPPED,
+                    'options' => array('default' => Null),
+                ),
+
+            "Address" =>
+                array(
+                    'filter' => FILTER_SANITIZE_STRING,
+                    'flags' => FILTER_SANITIZE_STRIPPED,
+                    'options' => array('default' => Null),
+                ),
+
+            "AdressPostal" =>
+                array(
+                    'filter' => FILTER_SANITIZE_STRING,
+                    'flags' => FILTER_SANITIZE_STRIPPED,
+                    'options' => array('default' => Null),
+                ),
+
+            "Contact" =>
+                array(
+                    'filter' => FILTER_SANITIZE_STRING,
+                    'flags' => FILTER_SANITIZE_STRIPPED,
+                    'options' => array('default' => Null),
+                ),
+
+            "Tel" =>
+                array(
+                    'filter' => FILTER_SANITIZE_STRING,
+                    'flags' => FILTER_SANITIZE_STRIPPED,
+                    'options' => array('default' => Null),
+                ),
+
+            "Mobile" =>
+                array(
+                    'filter' => FILTER_SANITIZE_STRING,
+                    'flags' => FILTER_SANITIZE_STRIPPED,
+                    'options' => array('default' => Null),
+                ),
+
+            "Email" =>
+                array(
+                    'filter' => FILTER_SANITIZE_EMAIL,
+                    'flags' => FILTER_SANITIZE_STRIPPED,
+                    'options' => array('default' => Null),
+                ),
+
+            "wwwDomain" =>
+                array(
+                    'filter' => FILTER_SANITIZE_STRING,
+                    'flags' => FILTER_SANITIZE_STRIPPED,
+                    'options' => array('default' => Null),
+                ),
+
+            "wwwHomepage" =>
+                array(
+                    'filter' => FILTER_SANITIZE_STRING,
+                    'flags' => FILTER_SANITIZE_STRIPPED,
+                    'options' => array('default' => Null),
+                ),
+
+            "wwwFacebook" =>
+                array(
+                    'filter' => FILTER_SANITIZE_STRING,
+                    'flags' => FILTER_SANITIZE_STRIPPED,
+                    'options' => array('default' => Null),
+                ),
+
+            "Description" =>
+                array(
+                    'filter' => FILTER_SANITIZE_STRING,
+                    'flags' => FILTER_SANITIZE_STRIPPED,
+                    'options' => array('default' => Null),
+                ),
+
+            "ServicesOffered" =>
+                array(
+                    'filter' => FILTER_SANITIZE_STRING,
+                    'flags' => FILTER_SANITIZE_STRIPPED,
+                    'options' => array('default' => Null),
+                ),
+
+
+            "AssociatedOrganisations" =>
+                array(
+                    'filter' => FILTER_SANITIZE_STRING,
+                    'flags' => FILTER_SANITIZE_STRIPPED,
+                    'options' => array('default' => Null),
+                ),
+
+            "listNeeds" =>
+                array(
+                    'filter' => FILTER_SANITIZE_STRING,
+                    'flags' => FILTER_SANITIZE_STRIPPED,
+                    'options' => array('default' => Null),
+                ),
+
+            "listWish" =>
+                array(
+                    'filter' => FILTER_SANITIZE_STRING,
+                    'flags' => FILTER_SANITIZE_STRIPPED,
+                    'options' => array('default' => Null),
+                ),
+
+            "paymentEft" =>
+                array(
+                    'filter' => FILTER_SANITIZE_NUMBER_INT,
+                    'flags' => FILTER_SANITIZE_STRIPPED,
+                    'options' => array('default' => 0),
+                ),
+
+            "paymentDeposit" =>
+                array(
+                    'filter' => FILTER_SANITIZE_NUMBER_INT,
+                    'flags' => FILTER_SANITIZE_STRIPPED,
+                    'options' => array('default' => 0),
+                ),
+        );
+
+        $this->set_data(filter_var_array(get_object_vars($this), $sanitize_rules));
+    }
+
+    /**
+     * Validate data
+     *
+     * @return bool
+     */
+    public function validate()
+    {
+        $this->sanitize();
+        $this->validation_errors = array();
+
+        if(!$this->Name) {
+            $this->validation_errors['Name'] = 'Please enter!';
 		}
 
-		foreach($data as $k=>$v) {
-			$this->$k=$v;
-		}
-	}
-
-	/**
-	 * Validate
-	 * Change this to not be form specific.
-	 */
-
-	public function validate($data)
-	{
-		$errors = array();
-
-		// validate
-
-		$sanitize_rules = array(
-  			"npo-name" => 
-  					array(
-  							'filter' => FILTER_SANITIZE_STRING,
-  							'flags' => FILTER_SANITIZE_STRIPPED,
-  							'options' => array('default' => Null),
-  						),
-
-  			"npo-reg-number" => 
-  					array(
-  							'filter' => FILTER_SANITIZE_STRING,
-  							'flags' => FILTER_SANITIZE_STRIPPED,
-  							'options' => array('default' => Null),
-  						),
-
-  			"npo-reg-other" => 
-  					array(
-  							'filter' => FILTER_SANITIZE_STRING,
-  							'flags' => FILTER_SANITIZE_STRIPPED,
-  							'options' => array('default' => Null),
-  						),
-
-  			"npo-address" => 
-  					array(
-  							'filter' => FILTER_SANITIZE_STRING,
-  							'flags' => FILTER_SANITIZE_STRIPPED,
-  							'options' => array('default' => Null),
-  						),
-
-  			"npo-postal" => 
-  					array(
-  							'filter' => FILTER_SANITIZE_STRING,
-  							'flags' => FILTER_SANITIZE_STRIPPED,
-  							'options' => array('default' => Null),
-  						),
-
-  			"npo-contact" => 
-  					array(
-  							'filter' => FILTER_SANITIZE_STRING,
-  							'flags' => FILTER_SANITIZE_STRIPPED,
-  							'options' => array('default' => Null),
-  						),
-
-  			"npo-tel" => 
-  					array(
-  							'filter' => FILTER_SANITIZE_STRING,
-  							'flags' => FILTER_SANITIZE_STRIPPED,
-  							'options' => array('default' => Null),
-  						),
-
-  			"npo-mobile" => 
-  					array(
-  							'filter' => FILTER_SANITIZE_STRING,
-  							'flags' => FILTER_SANITIZE_STRIPPED,
-  							'options' => array('default' => Null),
-  						),
-
-  			"npo-email" => 
-  					array(
-  							'filter' => FILTER_SANITIZE_STRING,
-  							'flags' => FILTER_SANITIZE_STRIPPED,
-  							'options' => array('default' => Null),
-  						),
-
-  			"npo-website" => 
-  					array(
-  							'filter' => FILTER_SANITIZE_STRING,
-  							'flags' => FILTER_SANITIZE_STRIPPED,
-  							'options' => array('default' => Null),
-  						),
-
-  			"npo-url" => 
-  					array(
-  							'filter' => FILTER_SANITIZE_STRING,
-  							'flags' => FILTER_SANITIZE_STRIPPED,
-  							'options' => array('default' => Null),
-  						),
-
-  			"npo-facebook" => 
-  					array(
-  							'filter' => FILTER_SANITIZE_STRING,
-  							'flags' => FILTER_SANITIZE_STRIPPED,
-  							'options' => array('default' => Null),
-  						),
-
-  			"npo-description" => 
-  					array(
-  							'filter' => FILTER_SANITIZE_STRING,
-  							'flags' => FILTER_SANITIZE_STRIPPED,
-  							'options' => array('default' => Null),
-  						),
-
-  			"npo-services-other" => 
-  					array(
-  							'filter' => FILTER_SANITIZE_STRING,
-  							'flags' => FILTER_SANITIZE_STRIPPED,
-  							'options' => array('default' => Null),
-  						),
-
-  			"npo-associated" => 
-  					array(
-  							'filter' => FILTER_SANITIZE_STRING,
-  							'flags' => FILTER_SANITIZE_STRIPPED,
-  							'options' => array('default' => Null),
-  						),
-
-  			"npo-needs" => 
-  					array(
-  							'filter' => FILTER_SANITIZE_STRING,
-  							'flags' => FILTER_SANITIZE_STRIPPED,
-  							'options' => array('default' => Null),
-  						),
-
-  			"npo-wishlist" => 
-  					array(
-  							'filter' => FILTER_SANITIZE_STRING,
-  							'flags' => FILTER_SANITIZE_STRIPPED,
-  							'options' => array('default' => Null),
-  						),
-
-  			"npo-payment-eft" => 
-  					array(
-  							'filter' => FILTER_SANITIZE_NUMBER_INT,
-  							'flags' => FILTER_SANITIZE_STRIPPED,  							
-  							'options' => array('default' => 0),
-  						),
-
-  			"npo-payment-deposit" => 
-  					array(
-  							'filter' => FILTER_SANITIZE_NUMBER_INT,
-  							'flags' => FILTER_SANITIZE_STRIPPED,  							
-  							'options' => array('default' => 0),
-  						),
-			);
-
-		// dynamically add
-
-		for($i = 1; $i <= 5 ; $i++)
-		{
-  			$sanitize_rules["npo-service-offered-{$i}"] =
-  					array(
-  							'filter' => FILTER_SANITIZE_STRING,
-  							'flags' => FILTER_SANITIZE_STRIPPED,
-  							'options' => array('default' => Null),
-  						);
-
-  			$sanitize_rules["npo-service-offered-other-${i}"] = 
-  					array(
-  							'filter' => FILTER_SANITIZE_STRING,
-  							'flags' => FILTER_SANITIZE_STRIPPED,
-  							'options' => array('default' => Null),
-  						);
+		if(!$this->RegNumber) {
+            $this->validation_errors['RegNumber'] = 'Please enter!';
 		}
 
-		// sanitize data
-
-		$data = filter_var_array($data, $sanitize_rules);
-
-		if(empty($data['npo-name'])) {
-			$errors['npo-name'] = 'Please enter!';
+		if(!$this->Address) {
+            $this->validation_errors['Address'] = 'Please enter!';
 		}
 
-		if(empty($data['npo-reg-number'])) {
-			$errors['npo-reg-number'] = 'Please enter!';
+		if(!$this->AddressPostal) {
+            $this->validation_errors['AddressPostal'] = 'Please enter!';
 		}
 
-		if(empty($data['npo-address'])) {
-			$errors['npo-address'] = 'Please enter!';
-		}
-
-		if(empty($data['npo-postal'])) {
-			$errors['npo-postal'] = 'Please enter!';
-		}
-
-		if(empty($data['npo-contact'])) {
-			$errors['npo-contact'] = 'Please enter contact person!';
+		if(!$this->Contact) {
+            $this->validation_errors['Contact'] = 'Please enter contact person!';
 		}
 
 
 		// one or the other
-		if(empty($data['npo-tel']) && empty($data['npo-mobile'])) {
-			$errors['npo-tel'] = 'Please enter telephone number!';
+		if(!$this->Tel && !$this->Mobile) {
+            $this->validation_errors['Tel'] = 'Please enter telephone number!';
 		}
 
-		if(empty($data['npo-mobile']) && empty($data['npo-tel'])) {
-			$errors['npo-mobile'] = 'Please enter cellphone number!';
+		if(!$this->Mobile && !$this->Tel) {
+            $this->validation_errors['Mobile'] = 'Please enter cellphone number!';
 		}
 
-
-		if(empty($data['npo-email'])) {
-			$errors['npo-email'] = 'Please enter email address!';
+        // Email
+		if(!$this->Email) {
+            $this->validation_errors['Email'] = 'Please enter email address!';
 		}
+        elseif (!filter_var($this->Email, FILTER_VALIDATE_EMAIL)) {
+            $this->validation_errors['Email'] = 'There is an error in the email address!';
+        }
 
-		// if(empty($data['npo-website'])) {
-		// 	$errors['npo-website'] = 'Please enter!';
+            // if(empty($this->website)) {
+		// 	$errors['website'] = 'Please enter!';
 		// }
 
-		// if(empty($data['npo-url'])) {
-		// 	$errors['npo-url'] = 'Please enter!';
+		// if(empty($this->url'])) {
+		// 	$errors['url'] = 'Please enter!';
 		// }
 
-		// if(empty($data['npo-facebook'])) {
-		// 	$errors['npo-facebook'] = 'Please enter!';
+		// if(empty($this->facebook'])) {
+		// 	$errors['facebook'] = 'Please enter!';
 		// }
 
-		if(empty($data['npo-description'])) {
-			$errors['npo-description'] = 'Please enter!';
+		if(!$this->Description) {
+            $this->validation_errors['Description'] = 'Please enter!';
 		}
 
-		if(empty($data['npo-services-other'])) {
-			$errors['npo-services-other'] = 'Please enter!';
+		if(!$this->ServicesOffered) {
+            $this->validation_errors['ServicesOffered'] = 'Please enter!';
 		}
 
-		// if(empty($data['npo-associated'])) {
-		// 	$errors['npo-associated'] = 'Please enter!';
+		// if(empty($this->AssociatedOrganisations'])) {
+		// 	$errors['AssociatedOrganisations'] = 'Please enter!';
 		// }
 
-		if(empty($data['npo-needs'])) {
-			$errors['npo-needs'] = 'Please enter!';
+		if(!$this->listNeeds) {
+            $this->validation_errors['listNeeds'] = 'Please enter!';
 		}
 
-		if(empty($data['npo-wishlist'])) {
-			$errors['npo-wishlist'] = 'Please enter!';
+		if(!$this->listWish) {
+            $this->validation_errors['listWish'] = 'Please enter!';
 		}
 
-		if(!isset($data['npo-payment-eft']) && !isset($data['npo-payment-deposit'])) {
-			$errors['npo-payment-eft'] = 'Please make a payment!';
-			$errors['npo-payment-deposit'] = 'Please make a payment!';
+		// check payments for new entries.
+		if(!$this->id) {
+			if(!$this->paymentEft && !$this->paymentDeposit) {
+                $this->validation_errors['paymentEft'] = 'Please make a payment!';
+                $this->validation_errors['paymentDeposit'] = 'Please make a payment!';
+			}
 		}
-		
-	    return array('errors'=>$errors, 'data' => $data);
+
+        // return
+	    return empty($this->validation_errors);
 	}
 
 
@@ -398,7 +419,6 @@ class model_thehub_npos {
 	 * Save data
 	 *
 	 */
-
 	public function save()
 	{
 		global $wpdb;
@@ -462,6 +482,7 @@ class model_thehub_npos {
 
 			$wpdb->insert($table = self::get_table_name(), $data, $format);
 			$this->id = $wpdb->insert_id;
+            return $this->id;
 		} else {
 			// update
 			$wpdb->update(
@@ -474,136 +495,89 @@ class model_thehub_npos {
 	}
 
 	/**
-	 * Is active
-	 * 
-	 * Apply active rules here
-	 *
-	 * @return bool
-	 */
-	public function is_active() {
-		return (bool)(isset($this->bActive) && $this->bActive);
-	}
-
-
-	/**
-	 *
-	 */
-	public function setActive($active = True) {
-		$this->bActive = $active;
-		$this->save();
-	}
-
-	/**
 	 * Get by name
 	 *
 	 * @return object
 	 */
-	static public function get_by_name($name_like = Null, $active = True)
+	static public function get_by_name($name_like = Null, $filter_service = Null, $active = True)
 	{
-		$sql = "SELECT * FROM ".self::get_table_name();
+		$sql = "SELECT npo.* FROM ".self::get_table_name()." As npo ";
+
+		if($filter_service) {
+			$sql .= " INNER JOIN ".model_thehub_npo_services::get_table_name()." AS ns ON(npo.id=ns.fkNpo) "
+				." INNER JOIN ".model_thehub_npo_service_types::get_table_name()." AS service ON(ns.fkService=service.id) ";
+		}
 
 		$pre = ' WHERE ';
 		if($name_like) {
-			$sql .= $pre." lower(Name) like '".strtolower($name_like)."%' ";
+			$sql .= $pre." lower(Name) like '%".strtolower($name_like)."%' ";
 			$pre = ' AND ';
 		}
 
-		if($active) {
-			$sql .= $pre." bActive=True ";
+		if($filter_service) {
+			$sql .= $pre." service.id={$filter_service} ";
 			$pre = ' AND ';
 		}
 
-		$sql .= " ORDER BY lower(Name) ";
+		if(!is_null($active)) {
+			$sql .= $pre." npo.bActive=".($active?"True ":"False ");
+			$pre = ' AND ';
+		}
 
+        $sql .= " ORDER BY lower(Name) ";
 
 		global $wpdb;
 
 		$res = array();
-
 		foreach($wpdb->get_results($sql, OBJECT) as $row) {
-			$res[] = self::_postProcess($row);
+			$res[] = new self($row);
 		}
 		return $res;
 	}
 
-
-	/**
-	 * Post process the data
-	 *
-	 * This is for the launch on 2015-02-09
-	 */
-	static function _postProcess($object) 
-	{	
-		if (empty($object)) {
-			return $object;
-		}
-
-		if($object->id == 111111) {
-			$object->Name = "Masikhule";		// ]=> string(4) "test"
-			$object->RegNumber = "050-955";		// ]=> string(11) "test REG NP"
-			$object->RegNumberOther = "";		// ]=> string(5) "OTHER"
-			
-			$object->Address = "";		
-			$object->AddressPostal = "P. O. BOX 5508
-	HELDERBERG
-	SOMERSET WEST
-	7135";	
-			
-			$object->Contact = "Sandy Immelman";		// ]=> string(7) "Contact"
-			$object->Tel = "";		// ]=> string(5) "08282"
-			$object->Mobile = "+27 82 494 0983";		// ]=> string(8) "08080808"
-			$object->Email = "maskihule1@gmail.com";		// ]=> string(11) "bob@bob.com"
-			$object->wwwDomain = "http://www.masikhule.org/";		// ]=> string(11) "www.bob.com"
-			$object->wwwHomepage = "http://www.masikhule.org/";		// ]=> string(12) "bob.com/home"
-			$object->wwwFacebook = "https://www.facebook.com/pages/Masikhule/289475921083560";		// ]=> string(12) "facebook/bob"
-			
-			$object->Description = "Masikhule is a local NPO established in 2005 that trains and educates women and children in the townships surrounding the Helderberg.
-
-	We provide training to 300 women per annum in Early Child Development and the importance of early stimulation. To ensure the integration of the theory and practice of ECD we provide mentorship within 32 ECD Centres, thus reaching nearly 2 000 children from birth to 6 years of age annually.";		// ]=> string(12) "Short descrt"
-			
-			$object->ServicesOffered = "";		// ]=> string(3) "moo"
-			$object->AssociatedOrganisations = "";		// ]=> string(9) "sadsadsad"
-			$object->list_Needs = "<ul>
-	<li>Funding for training.</li>
-	<li>Infrastructure upgrades to ECD centres.</li>
-	<li>Feeding schemes.</li>
-	<li>Reading corners.</li>
-	<li>Resources for toy and book library.		</li>
-			</ul>";		// ]=> string(4) "need"
-			$object->listWish = "
-			<ul>
-	<li>First aid training for ECD staff.</li>
-	<li>Security for ECD centres.</li>
-	<li>First aid kits and fire extinguishers.</li>
-	<li>Computers and printers.	</li>
-	<li>Outdoor shade and playground equipment.	</li>
-			</ul>";		// ]=> string(4) "wish"
-			
-			$object->paymentEft = "";		// ]=> string(1) "0"
-			$object->paymentDeposit = "";		// ]=> string(1) "0"
-			$object->bActive = True;		// ]=> string(1) "1"
-			$object->Notes = "";		// ]=> string(0) ""		
-
-			$object->logo =  plugins_url('../downloads/logo/masikhule_258x99.jpg', __FILE__);
-			return $object;
-		}
-
-		$object->logo = self::logo_url($object->LogoPath); 
-		$object->npo_services = model_thehub_npo_services::get_by_npo($object->id);
-		return new self($object);
-	}
-
-	/**
-	 *
-	 */
+    /**
+     * @param $LogoPath
+     * @return mixed|null
+     */
 	static function logo_url($LogoPath)
 	{
 		$logo = Null;
 		if($LogoPath) {
-			$upload_dir = wp_upload_dir();
-			$logo = str_replace($upload_dir['basedir'], $upload_dir['baseurl'], $LogoPath);		
+			$upload_dir=wp_upload_dir();
+			$logo=str_replace($upload_dir['basedir'], $upload_dir['baseurl'], $LogoPath);
 		}
 		return $logo;
 	}
+
+    /**
+     * @TODO: For the images we want to be able to return
+     * a resized image. Eg - small, medium, original, large ...
+     */
+
+    /**
+     * @return mixed|null
+     */
+	function get_logo_url()
+	{
+		return self::logo_url($this->LogoPath);
+	}
+
+    /**
+     * @return null
+     */
+    function get_npo_services($refresh=False)
+    {
+        if($refresh) {
+            $this->_npo_services = Null;
+        }
+        if(empty($this->_npo_services) && !is_array($this->_npo_services)) {
+            if($this->id) {
+                $this->_npo_services=model_thehub_npo_services::get_by_npo($this->id)?:array(); //set to array if failed
+            } else {
+                $this->_npo_services=array();
+            }
+        }
+        return $this->_npo_services;
+    }
 }
 // [eof]

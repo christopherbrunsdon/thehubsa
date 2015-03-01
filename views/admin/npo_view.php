@@ -4,9 +4,15 @@
 	&nbsp;&nbsp;
 
 
-	<a href='<?php echo admin_url("admin.php?page=".THEHUBSA_ADMIN_NPOS_SLUG."&id=".$npo->id.'&action='.($npo->is_active()?'deactivate':'activate')); ?>'
+	<a href='<?php echo admin_url("admin.php?page=".THEHUBSA_ADMIN_NPOS_SLUG."&id={$npo->id}&action=".($npo->is_active()?'deactivate':'activate')); ?>'
 		onclick="return confirm('You are about to <?php echo ($npo->is_active()? 'Deactivate' : 'Activate'); ?> the NPO <?php echo $npo->Name; ?>');"
 		class="add-new-h2" ><?php echo ($npo->is_active()? 'Deactivate' : 'Activate'); ?></a>
+
+	<a href="<?php echo admin_url("admin.php?page=".THEHUBSA_ADMIN_NPOS_SLUG."&id={$npo->id}&action=preview"); ?>"
+		class="add-new-h2">Preview</a>
+
+	<a href="<?php echo admin_url("admin.php?page=".THEHUBSA_ADMIN_NPOS_SLUG."&id={$npo->id}&action=edit"); ?>"
+		class="add-new-h2">Edit</a>
 </h2>
 
 <br />
@@ -26,8 +32,8 @@
 	<tr class="">
 		<th align="right">Logo:</th>
 		<td>
-			<?php if($npo->logo): ?> 
-				<img style="max-width: 100px; max-height: 100px;" src="<?php echo $npo->logo; ?>" />  
+			<?php if($npo->get_logo_url()): ?>
+				<img style="max-width: 100px; max-height: 100px;" src="<?= $npo->get_logo_url(); ?>" />
 			<?php else:  ?>
 				* No Logo *
 			<?php endif; ?>
@@ -92,13 +98,11 @@
 	<tr class="">
 		<th align="right">Services Offered:</th>
 		<td>
-			<?php if(isset($npo->services_offered)): ?>
 				<ul>
-					<?php foreach($npo->services_offered as $service): ?>
-						<li><?php echo $service->Service; ?></li>
+					<?php foreach($npo->get_npo_services() as $service): ?>
+						<li><?= $service; ?></li>
 					<?php endforeach; ?>
 				</ul>
-			<?php endif; ?>
 		</td>
 	</tr>		
 

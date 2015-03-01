@@ -1,6 +1,6 @@
 <?php
 
-defined('ABSPATH') or die("No script kiddies please!");
+//defined('ABSPATH') or die("No script kiddies please!");
 
 
 class model_thehub_membership_types {

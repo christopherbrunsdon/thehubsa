@@ -1,21 +1,28 @@
 <?php
 
-defined('ABSPATH') or die("No script kiddies please!");
+//defined('ABSPATH') or die("No script kiddies please!");
 
+require_once("model_abstract.php");
 
-class model_thehub_npo_services {
+class model_thehub_npo_services  extends model_abstract  {
 
 	CONST NUMBER_PER_NPO = 5; // set the number per NPO here
 
 	public
-		$_id_npo = Null,
-		$_id_service = Null,
-		$_service_other = Null,
-		$_rank_order = Null,
-		$_notes = Null;
+        $fkNpo = Null,
+		$fkService = Null,
+		$ServiceOther = Null,
+		$RankOrder = Null,
+		$Notes = Null;
 
+    public
+        $DisplayName=Null; // from inner join
 
-	static function instance() {
+    /**
+     * @return model_thehub_npo_services
+     */
+	static function instance()
+    {
 		static $inst = null;
         if (is_null($inst)) {
             $inst = new model_thehub_npo_services();
@@ -23,10 +30,25 @@ class model_thehub_npo_services {
         return $inst;
 	}
 
-	/**
-	 *
-	 */
+    /**
+     * @param null $data
+     */
+    public function __construct($data = Null)
+    {
+        $this->set_data($data);
+    }
 
+    /**
+     * @return null
+     */
+	function __toString()
+	{
+        return $this->DisplayName;
+	}
+
+    /**
+     * @return string
+     */
 	static function get_table_name() 
 	{
 		global $wpdb;
@@ -37,7 +59,6 @@ class model_thehub_npo_services {
 	 * Create table sql
 	 *
 	 */
-
 	static function get_create_table()
 	{
 		global $wpdb;
@@ -47,9 +68,8 @@ class model_thehub_npo_services {
 		$fk_npo = model_thehub_npos::get_table_name();
 		$fk_services = model_thehub_npo_service_types::get_table_name();
 
-
 		$sql = "CREATE TABLE IF NOT EXISTS {$table_name} (
-			fkNpo     INT NOT NULL,
+			fkNpo INT NOT NULL,
 			fkService INT DEFAULT NULL,	
 			ServiceOther varchar(128) NOT NULL DEFAULT '',
 			RankOrder mediumint(9) ,					
@@ -72,30 +92,73 @@ class model_thehub_npo_services {
 		return $sql;
 	}
 
-	
-	public function set_data($data)
-	{
-		if(!is_array($data)) {
-			return $this->set_data(array());
-		}
+    /**
+     *
+     */
+    public function sanitize()
+    {
+        $sanitize_rules = array(
+            'fkNpo' => array(
+                'filter' => FILTER_SANITIZE_NUMBER_INT,
+                'flags' => FILTER_SANITIZE_STRIPPED,
+                'options' => array('default' => Null),
+            ),
+            'fkService' => array(
+                'filter' => FILTER_SANITIZE_NUMBER_INT,
+                'flags' => FILTER_SANITIZE_STRIPPED,
+                'options' => array('default' => Null),
+            ),
+            'ServiceOther' => array(
+                'filter' => FILTER_SANITIZE_STRING,
+                'flags' => FILTER_SANITIZE_STRIPPED,
+                'options' => array('default' => Null),
+            ),
+        );
+        $this->set_data(filter_var_array(get_object_vars($this), $sanitize_rules));
+    }
 
-		$this->_id_npo			= array_key_exists('fkNpo', $data) ? $data['fkNpo'] : Null;
-		$this->_id_service		= array_key_exists('fkService', $data) && is_numeric($data['fkService']) ? $data['fkService'] : Null;
-		$this->_service_other	= array_key_exists('ServiceOther', $data) ? $data['ServiceOther'] : Null;
-		$this->_rank_order		= array_key_exists('RankOrder', $data) ? $data['RankOrder'] : Null;
-	}
+    /**
+     * @return bool
+     */
+    public function validate()
+    {
+        $this->validation_errors = array();
+        $this->sanitize();
 
+        if(!$this->fkNpo) {
+            $this->validation_errors['fkNpo']="Need to set an npo";
+        }
 
+        if($this->fkService > 0 || $this->ServiceOther){
+            //pass
+        } else {
+            $this->validation_errors["general"]="Please set an option";
+        }
+        return empty($this->validation_errors);
+    }
+
+    /**
+     * @param $fkNpo
+     */
+    static function delete_by_npo($fkNpo)
+    {
+        global $wpdb;
+        $wpdb->delete(self::get_table_name(), array('fkNpo'=>$fkNpo)); //, array('%d'));
+    }
+
+    /**
+     * Save
+     */
 	public function save()
 	{
 		global $wpdb;
 
 		$fields = array(
-					'fkNpo' 		=> $this->_id_npo,
+					'fkNpo' 		=> $this->fkNpo,
 					// 'fkService' 	=> $this->_id_service,
-					'ServiceOther' 	=> $this->_service_other,
-					'RankOrder' 	=> $this->_rank_order,
-					'Notes' 		=> $this->_notes,
+					'ServiceOther' 	=> $this->ServiceOther,
+					'RankOrder' 	=> $this->RankOrder,
+					'Notes' 		=> $this->Notes,
 					'WhenCreated' 	=> date("Y-m-d H:i"), // now()     
 					);
 
@@ -108,69 +171,12 @@ class model_thehub_npo_services {
 					'%s', // 'WhenCreated' 
 					);
 
-		if($this->_id_service) {
-			$fields['fkService']= $this->_id_service;
-			$field_meta[] = '%d';
-		}
-			
+		if($this->fkService > 0) {
+            $fields['fkService']=$this->fkService;
+            $field_meta[]='%d';
+        }
+
 		$wpdb->insert(self::get_table_name(), $fields, $field_meta);
-	}
-
-
-	/**
-	 * List of active types
-	 * do inner join here
-	 */
-
-	static public function get_types()
-	{
-		global $wpdb;
-		return $wpdb->get_results(
-			"SELECT 
-				fkNpo, fkService 
-			FROM 
-				".self::get_table_name()." 
-			WHERE 
-				bActive = True 
-			ORDER BY 
-				DisplayOrder, id", 
-			OBJECT);
-	}
-
-	/**
-	 * Get by id
-	 *
-	 * @return object
-	 */
-
-	static public function get_by_id($id, $active = True)
-	{
-		if($id == False)
-			return Null;
-
-		global $wpdb;
-		return $wpdb->get_row("SELECT * FROM ".self::get_table_name()
-				." WHERE  id = ".$id 
-				. ($active?" AND bActive=True ":""), 
-				OBJECT);
-	}
-
-	/**
-	 * Get by id
-	 *
-	 * @return object
-	 */
-
-	static public function get_by_type($type, $active = True)
-	{
-		if($type == False)
-			return Null;
-
-		global $wpdb;
-		return $wpdb->get_row("SELECT * FROM ".self::get_table_name()
-				." WHERE  lower(MembershipType) = '".strtolower($type)."' " 
-				. ($active?" AND bActive=True ":""), 
-				OBJECT);
 	}
 
 	/**
@@ -178,24 +184,27 @@ class model_thehub_npo_services {
 	 *
 	 * @return object
 	 */
-
 	static public function get_by_npo($fkNpo, $active = True)
 	{
-		if($fkNpo == False)
-			return Null;
+		if(!$fkNpo) {
+            return False;
+        }
 
 		global $wpdb;
-		$sql="SELECT COALESCE(Service, ServiceOther) as Service FROM "
+		$sql="SELECT ns.*, COALESCE(Service, ServiceOther) as DisplayName FROM "
 				.self::get_table_name()." as ns "
 				." LEFT JOIN "
 				.model_thehub_npo_service_types::get_table_name()." as nst "
 				." ON (ns.fkService = nst.id )"
 				." WHERE  fkNpo = ".$fkNpo 
 				." ORDER BY RankOrder ";
-		// error_log($sql);
-		return $wpdb->get_results($sql, OBJECT);
-	}
 
+        $rows=array();
+        foreach($wpdb->get_results($sql, OBJECT) as $object) {
+            $rows[]=new self($object);
+        }
+        return $rows;
+	}
 }
 
 // [eof]

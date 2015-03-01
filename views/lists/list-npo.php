@@ -11,29 +11,27 @@
 	// List A-Z
 ?>
 
-<?php if(empty($npo)): ?>
 
-	<nav>
-	  <ul class="pagination  pagination-sm">
-	    <li>
+<nav>
+  <ul class="pagination  pagination-sm">
+    <li>
+		<?php if($filter): ?>
+			<li>
+				<a href="?filter=">Reset</a>
+			</li>
+		<?php endif; ?>
 
-			<?php if($filter): ?>
-				<li>
-					<a href="?filter=">Reset</a>
-				</li>
-			<?php endif; ?>
+		<?php foreach (range('A','Z') as $alpha): ?>
+			<li <?php (strtolower($filter) == strtolower($alpha)) && print 'class="active"' ?> >
+				<a href="?filter=<?= $alpha ?>"><?= $alpha ?>
+					<?php (strtolower($filter) == strtolower($alpha)) && print '<span class="sr-only">(current)</span>'; ?>
+				</a>
+			</li>
+		<?php endforeach; ?>
 
-			<?php foreach (range('A','Z') as $alpha): ?>
-				<li <?php (strtolower($filter) == strtolower($alpha)) && print 'class="active"' ?> >
-					<a href="?filter=<?= $alpha ?>"><?= $alpha ?>
-						<?php (strtolower($filter) == strtolower($alpha)) && print '<span class="sr-only">(current)</span>'; ?>
-					</a>
-				</li>
-			<?php endforeach; ?>
-
-		</li>
-	  </ul>
-	</nav>
+	</li>
+  </ul>
+</nav>
 
 <?php $count_results = count($npos); ?>
 
@@ -52,48 +50,18 @@
 <?php endif; ?>
 
 
-	<?php if(empty($npos)): ?>
-		
-		No results.
 
-	<?php else: ?>
-		<div style="width: 350px;" xxxclass="container-fluid">
-
-			<!-- <div class="row"> -->
-				<!-- <div class="col-md-6"> -->
-				<!-- <div class="col-xs-6 col-sm-4"> -->
-				 <?php $rows_per_col = ceil($count_results / 3); ?>
-				
-<?php if(0): ?>				
-				<?php $pre=''; $i=1; foreach($npos as $npo): ?>
-			
-					<?php // if($i == 1 || $i % $rows_per_col == 0): ?>
-						<?php // echo $pre; $pre='</ul></div>'; ?>
-						<!-- <div class="col-xs-6 col-sm-4"><ul>			 -->
-					<?php // endif; ?>
-
-					<li>
-						<a href="?npo_id=<?= $npo->id ?>"><?= $npo->Name; ?></a>
-					</li>
-
-				<?php $i++; endforeach; ?>
-				<?php // $pre; ?>
-<?php endif; ?>
-
-
-
-
-<form class="form">
+<div style="width: 350px;" xxxclass="container-fluid">
+	<form class="form" action="" method="get">
 	<div class="form-group">
 		<h2>Find</h2>
 		Looking for a cause to support
 	</div>
 
-
 	<div class="input-group custom-search-form">
-		<input type="text" class="form-control" placeholder="Search... ">
+		<input id="search-npo" name="search-npo" type="text" class="form-control" placeholder="Search... " value="<?php echo filter_input(INPUT_GET, "search-npo"); ?>">
 		<span class="input-group-btn">
-			<button class="btn btn-default" type="button">
+			<button class="btn btn-default" type="submit">
 	              <span class="glyphicon glyphicon-search"></span>
 			</button>
 		</span>
@@ -101,51 +69,39 @@
 
 	<br />
 
-  <div class="form-group">
+	<div class="form-group">
 
 
-	<select class="form-control" placeholder="Select">
-		<option>Select...</option>
-		<option>Adult abuse victim support</option>
-		<option>Adult education</option>
-		<option>Adult rape victim support</option>
-		<option>Animal abuse intervention</option>
-		<option>Child abuse victim support</option>
-		<option>Child rape victim support</option>
-		<option>Crisis pregnancy support</option>
-		<option>ECD education</option>
-		<option>Environmental projects</option>
-		<option>Feeding scheme</option>
-		<option>Food gardens</option>
-		<option>HIV and AIDS intervention</option>
-		<option>Literacy scheme</option>
-		<option>Lost and found animals</option>
-		<option>Lost and found children/adults</option>
-		<option>Skills training </option>
-		<option>Substance abuse</option>
-		<option>Support for homeless</option>
-		<option>Support for new mothers</option>
-		<option>Support for the disabled</option>
-		<option>Support for the elderly</option>
-		<option>Support for the terminal</option>
-		<option>Tertiary education</option>
-		<option>Wildlife</option>
+	<select id="service-npo" name="service-npo" class="form-control" placeholder="Select">
+		<option value="">Select...</option>
+		<?php foreach(model_thehub_npo_service_types::get_services() as $service): ?>
+			<option value="<?php echo $service->id; ?>" <?php echo $service->id==filter_input(INPUT_GET,'service-npo') ?'selected':''; ?> ><?php echo $service->Service; ?></option>
+		<?php endforeach; ?>
 	</select>
 	</div>
 
-<!-- </div>
-			<div>
-
-		</div>
- -->	
-</div>
+	</div>
 </form>
+
+
+<?php if(!empty($npos)): ?>
+	
+	<div>
+		NPO's found
+	</div>
+
+	<ul>
+		<?php foreach($npos as $npo): ?>
+		
+			<li><a href="?npo-id=<?php echo $npo->id; ?>"><?php echo $npo->Name; ?></a></li>
+
+		<?php endforeach; ?>
+	</ul>
 
 <?php endif; ?>
 
 
-<?php else: ?>
-
+<?php /*
 <div style="background: #FFFFFF; padding: 1em;" >
 
 	<div class="page-header">	
@@ -256,3 +212,4 @@
 
 
 <?php endif; ?>
+*/
