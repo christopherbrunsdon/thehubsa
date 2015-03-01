@@ -160,7 +160,7 @@
 		<textarea rows=4 name="listWish" type="text" class="form-control" id="" placeholder="Wish list"><?= $this->npo->listWish; ?></textarea>
 	</div>
 
-	<?php if(!isset($this->npo->id)): //!isset($this->npo->show_banking) || $this->npo->show_banking): ?>
+	<?php if(!$this->npo->id): //!isset($this->npo->show_banking) || $this->npo->show_banking): ?>
 		<p>
 			The HUB SA Helderberg reserves the right to accept/decline any affiliation.
 		</p>
@@ -203,11 +203,11 @@
 	<?php endif; ?>
 
 
-	<?php if(isset($this->npo->id)): ?>
+	<?php if($this->npo->id): ?>
 		<input type="hidden" value="<?= $this->npo->id; ?>" name="id" id="id" />
 		<button id="btn-submit" type="submit" class="btn btn-default" name="submit">Update</button>	
 	<?php else: ?>
-		<button id="btn-submit" disabled type="submit" class="btn btn-default" name="submit">Submit</button>
+		<button id="btn-submit" <?php !$this->npo->paymentEft && !$this->npo->paymentDeposit && print "disabled "?> type="submit" class="btn btn-default" name="submit">Submit</button>
 	<?php endif; ?>
 
 	&nbsp;&nbsp;|&nbsp;&nbsp;<a href="">Reset Form</a>
