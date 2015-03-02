@@ -15,6 +15,7 @@ if(!class_exists('WP_List_Table'))
 
 require_once('admin_memberships.php');
 require_once('admin_npos.php');
+//require_once('admin_services_types.php');
 
 /**
  * Slugs
@@ -24,6 +25,7 @@ require_once('admin_npos.php');
 define('THEHUBSA_ADMIN_SLUG', "thehubsa-admin");
 define('THEHUBSA_ADMIN_NPOS_SLUG', "thehubsa-admin-npos");
 define('THEHUBSA_ADMIN_SIGNUPS_SLUG', "thehubsa-admin-signups");
+define('THEHUBSA_ADMIN_NPO_SERVICE_TYPES_SLUG', "thehubsa-admin-npo-services");
 
 /**
  * Toolbar node
@@ -71,7 +73,17 @@ function admin_thehubsa_menu()
 		$menu_title = 'Signups', 
 		$capability, 
 		$menu_slug = THEHUBSA_ADMIN_SIGNUPS_SLUG, 
-		$function = "thehubsa_admin_crud_memberships");	
+		$function = "thehubsa_admin_crud_memberships");
+
+    // submenus
+    add_submenu_page(
+        $parent_slug,
+        $page_title = 'Npo Services',
+        $menu_title = 'Npo Services',
+        $capability,
+        $menu_slug = THEHUBSA_ADMIN_NPO_SERVICE_TYPES_SLUG,
+        $function = "thehubsa_admin_npo_service_types");
+
 }
 
 /**
@@ -190,5 +202,42 @@ function thehubsa_admin_crud_memberships()
 	$admin_memberships->display();
 }
 
+/**
+ *
+ */
+function thehubsa_admin_npo_service_types()
+{
+    echo "<h1>NPO Services</h1>";
 
+    if($id = filter_input(INPUT_GET, 'active_change')) {
+        $nst = model_thehub_npo_service_types::get_by_id($id);
+        if($nst) {
+            $nst->set_active(!$nst->is_active());
+        }
+    }
+
+    global $wpdb;
+    $sql="SELECT * FROM ".model_thehub_npo_service_types::get_table_name()
+        ." ORDER BY id ";
+
+//    echo $sql;
+
+    echo "<table>";
+    $header=False;
+    foreach($wpdb->get_results($sql, ARRAY_A) as $row) {
+        if(!$header) {
+            echo "<trv><td>Actions</td><td>"
+                .implode(array_keys($row), "</td><td>")
+                ."</td></tr>";
+            $header=True;
+        }
+        echo "<tr>"
+            ."<td><a href='".admin_url("admin.php?page=".THEHUBSA_ADMIN_NPO_SERVICE_TYPES_SLUG."&active_change=".$row['id'])."'>Active</a></td>"
+            ."<td>"
+            .implode($row, "</td><td>")."</td>";
+
+        echo "</tr>";
+    }
+    echo "</table>";
+}
 // [eof]

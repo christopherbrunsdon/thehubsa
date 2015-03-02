@@ -72,7 +72,7 @@ function thehubsa_install_data()
 				);
 
 	foreach($services as $service) {
-		$found = model_thehub_npo_service_types::get_by_service($service, False);
+		$found = model_thehub_npo_service_types::get_by_service($service, Null);
 
 		// insert if not found
 		if(empty($found)) {

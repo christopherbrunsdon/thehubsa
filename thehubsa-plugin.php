@@ -6,7 +6,7 @@ defined('ABSPATH') or die("No script kiddies please!");
 Plugin Name: TheHubSA.org.za
 Plugin URI: https://github.com/christopherbrunsdon/thehubsa
 Description: Custom Wordpress Plugin for TheHubSA.org.za. Open source code, please contribute at https://github.com/christopherbrunsdon/thehubsa
-Version: 1.02-20150208
+Version: 1.03-20150302
 Author: Christopher Brunsdon
 Author URI: http://www.brunsdon.co.za
 */
