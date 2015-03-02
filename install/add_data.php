@@ -71,17 +71,17 @@ function thehubsa_install_data()
 				'Wildlife',
 				);
 
-	foreach($services as $service) {
-		$found = model_thehub_npo_service_types::get_by_service($service, Null);
-
-		// insert if not found
-		if(empty($found)) {
-			$wpdb->insert( $table_name, 
-				array('Service'=>$service));
-		} else {
-			// update if exists
-		}
-	}
+//	foreach($services as $service) {
+//		$found = model_thehub_npo_service_types::get_by_service($service, Null);
+//
+//		// insert if not found
+//		if(empty($found)) {
+//			$wpdb->insert( $table_name,
+//				array('Service'=>$service));
+//		} else {
+//			// update if exists
+//		}
+//	}
 
 }
 

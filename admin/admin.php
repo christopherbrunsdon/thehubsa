@@ -75,14 +75,14 @@ function admin_thehubsa_menu()
 		$menu_slug = THEHUBSA_ADMIN_SIGNUPS_SLUG, 
 		$function = "thehubsa_admin_crud_memberships");
 
-    // submenus
-    add_submenu_page(
-        $parent_slug,
-        $page_title = 'Npo Services',
-        $menu_title = 'Npo Services',
-        $capability,
-        $menu_slug = THEHUBSA_ADMIN_NPO_SERVICE_TYPES_SLUG,
-        $function = "thehubsa_admin_npo_service_types");
+//    // submenus
+//    add_submenu_page(
+//        $parent_slug,
+//        $page_title = 'Npo Services',
+//        $menu_title = 'Npo Services',
+//        $capability,
+//        $menu_slug = THEHUBSA_ADMIN_NPO_SERVICE_TYPES_SLUG,
+//        $function = "thehubsa_admin_npo_service_types");
 
 }
 
