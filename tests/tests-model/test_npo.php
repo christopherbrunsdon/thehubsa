@@ -303,4 +303,22 @@ class Model_Npo_Test extends WP_UnitTestCase
         $search=model_thehub_npos::get_by_name($name_like="TEST",$filter_service=Null, $active=True);
         $this->assertEquals(0, sizeof($search));
     }
+
+    /**
+     * Test updates
+     *
+     */
+    public function test_stripslashes()
+    {
+        $npo=helper_models::valid_npo();
+        $npo->save();
+
+        $npo->Name=addslashes("New 'name'");
+        $npo->save();
+
+        $npo_2=model_thehub_npos::get_by_id($npo->id);
+        $this->assertEquals($npo->id, $npo_2->id); // same npo
+        $this->assertEquals("New 'name'", $npo_2->Name);
+    }
+
 }

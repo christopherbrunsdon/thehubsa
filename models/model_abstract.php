@@ -34,7 +34,7 @@ abstract class model_abstract
 
         foreach(get_object_vars($this) as $k=>$v) {
             if(array_key_exists($k, $data)) {
-                $this->$k=$data[$k];
+                $this->$k=stripslashes($data[$k]);
             }
         }
     }
