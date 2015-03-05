@@ -77,6 +77,10 @@
 				<?php if(trim($npo->Mobile)): ?>
 					<strong>Cell:</strong> <?php echo $npo->Mobile; ?><br />
 				<?php endif; ?>
+
+                <?php if(trim($npo->Email)): ?>
+                    <strong>Email:</strong> <?php echo $npo->Email; ?><br />
+                <?php endif; ?>
 			</p>
 		</div>
 
