@@ -54,7 +54,7 @@ install_test_suite() {
 	sed $ioption "s/yourusernamehere/$DB_USER/" wp-tests-config.php
 	sed $ioption "s/yourpasswordhere/$DB_PASS/" wp-tests-config.php
 	sed $ioption "s|localhost|${DB_HOST}|" wp-tests-config.php
-	sed $ioption "s/wptests_/wctests_/" wp-tests-config.php
+	sed $ioption "s/wptests_/thehubsatests_/" wp-tests-config.php
 	sed $ioption "s/example.org/thehubsa.org.za/" wp-tests-config.php
 	sed $ioption "s/admin@example.org/tests@thehubsa.com/" wp-tests-config.php
 	sed $ioption "s/Test Blog/TheHubSA Unit Tests/" wp-tests-config.php

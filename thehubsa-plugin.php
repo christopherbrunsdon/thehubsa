@@ -20,21 +20,20 @@ if (!class_exists('TheHubSAClass')):
  * Main the hub class
  *
  */
-final class TheHubSAClass
+final class TheHubSA_Class
 {
     /**
      * @var string
      */
-    public $version = '1.03-20150307';
+    public $version = '1.04-20150307';
 
     /**
      * @var null
      */
     protected static $_instance = null;
 
-
     /**
-     * @return null|TheHubSAClass
+     * @return null|TheHubSA_Class
      */
     public static function instance()
     {
@@ -59,6 +58,7 @@ final class TheHubSAClass
      */
     public function includes()
     {
+        // +++ models
         require_once('models/membership_types.php');
         require_once('models/memberships.php');
         require_once('models/npo_service_types.php');
@@ -66,24 +66,20 @@ final class TheHubSAClass
         require_once('models/npos.php');
 
         // +++ forms
-
         require_once('forms/form-join.php');
         require_once('forms/form-npo.php');
         require_once('forms/form-business.php');
 
         // +++ controllers (views)
-
         require_once('controllers/npo.php');
 
         // +++ database
-
         require_once('install/add_data.php');
         require_once('install/create_tables.php');
 
         // +++ admin page
-
         require_once('admin/admin.php');
-        require_once('includes/class-wc-install.php');
+        require_once('includes/class-thehubsa-install.php');
     }
 
     /**
@@ -111,7 +107,7 @@ final class TheHubSAClass
     {
         register_activation_hook(__FILE__, array('TheHubSA_Install', 'install'));
         add_action('init', array($this, 'init'), 0);
-        add_action( 'init', array( 'WC_Shortcodes', 'init' ) );
+//        add_action( 'init', array( 'TheHubSA_Shortcodes', 'init' ) );
     }
 
     /**
@@ -126,11 +122,11 @@ final class TheHubSAClass
 endif;
 
 /**
- * @return null|TheHubSA
+ * @return null|TheHubSA_Class
  */
-function TheHubSa()
+function TheHubSA()
 {
-    return TheHubSAClass::instance();
+    return TheHubSA_Class::instance();
 }
 
 // [eof]

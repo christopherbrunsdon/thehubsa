@@ -1,6 +1,6 @@
 <?php
 
-require_once("../models/npos.php");
+//require_once("../models/npos.php");
 
 class helper_models
 {

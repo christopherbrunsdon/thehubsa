@@ -1,29 +1,14 @@
 <?php
 
-require_once("../models/npo_services.php");
-require_once("helpers/helper_models.php");
-
 class Model_Npo_Services_Test extends WP_UnitTestCase
 {
     /**
-     * Setup db doing a delta
      *
      */
-    public static function setUpBeforeClass()
+    public function setUp()
     {
-        global $wpdb;
-        $wpdb->suppress_errors = false;
-        $wpdb->show_errors = true;
-        ini_set('display_errors', 1);
-
-
-        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-        $sql = model_thehub_npo_services::get_create_table();
-//        dbDelta($sql);
-// *** tests are breaking for delta????
-
-        // truncate data
-        $wpdb->query("DELETE FROM  " . model_thehub_npo_services::get_table_name().";");
+        parent::setUp();
+        TheHubSA(); // init class
     }
 
     /**

@@ -35,12 +35,11 @@ class model_thehub_membership_types {
 		$table_name = self::get_table_name();
 
 		$sql = "CREATE TABLE IF NOT EXISTS {$table_name} (
-			id INT NOT NULL AUTO_INCREMENT  ,
-			MembershipType varchar(255) NOT NULL,	
-			DisplayOrder mediumint(9) ,					
-			bActive TINYINT DEFAULT TRUE ,
-			UNIQUE KEY id (id)
-			) {$charset_collate};";
+id INT NOT NULL AUTO_INCREMENT  PRIMARY KEY,
+MembershipType varchar(255) NOT NULL,
+DisplayOrder mediumint(9) ,
+bActive TINYINT DEFAULT TRUE
+) {$charset_collate};";
 
 		return $sql;
 	}

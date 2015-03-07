@@ -51,12 +51,12 @@ class model_thehub_npo_service_types extends model_abstract {
 		$table_name = self::get_table_name();
 
 		$sql = "CREATE TABLE IF NOT EXISTS {$table_name} (
-			id INT NOT NULL AUTO_INCREMENT  PRIMARY KEY,
-			Service varchar(512) NOT NULL DEFAULT '',
-			bActive TINYINT DEFAULT TRUE,
-			WhenCreated TIMESTAMP DEFAULT 0,
-			WhenUpdated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-			) {$charset_collate};";
+id INT NOT NULL AUTO_INCREMENT  PRIMARY KEY,
+Service varchar(512) NOT NULL DEFAULT '',
+bActive TINYINT DEFAULT TRUE,
+WhenCreated TIMESTAMP DEFAULT 0,
+WhenUpdated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) {$charset_collate};";
 
 		return $sql;
 	}

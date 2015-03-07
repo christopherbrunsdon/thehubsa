@@ -42,10 +42,10 @@ class TheHub_Unit_Tests_Bootstrap
         require_once( $this->wp_tests_dir . '/includes/functions.php' );
 
         // load TheHub
-        tests_add_filter( 'muplugins_loaded', array( $this, 'load_thehub' ) );
+        tests_add_filter('muplugins_loaded', array( $this, 'load_thehub' ) );
 
         // install TheHub
-        tests_add_filter( 'setup_theme', array( $this, 'install_thehub' ) );
+        tests_add_filter('setup_theme', array( $this, 'install_thehub' ) );
 
         // load the WP testing environment
         require_once( $this->wp_tests_dir . '/includes/bootstrap.php' );
@@ -72,10 +72,11 @@ class TheHub_Unit_Tests_Bootstrap
         // clean existing install first
         define( 'WP_UNINSTALL_PLUGIN', true );
         include( $this->plugin_dir . '/uninstall.php' );
+        TheHubSA(); // preload
         TheHubSA_Install::install();
 
         // reload capabilities after install, see https://core.trac.wordpress.org/ticket/28374
-        $GLOBALS['wp_roles']->reinit();
+        // $GLOBALS['thehubsa_roles']->reinit();
         echo "Installing TheHubSA..." . PHP_EOL;
     }
 
@@ -85,21 +86,10 @@ class TheHub_Unit_Tests_Bootstrap
      */
     public function includes()
     {
-//        // factories
-//        require_once( $this->tests_dir . '/framework/factories/class-wc-unit-test-factory-for-webhook.php' );
-//        require_once( $this->tests_dir . '/framework/factories/class-wc-unit-test-factory-for-webhook-delivery.php' );
-//        // framework
-//        require_once( $this->tests_dir . '/framework/class-wc-unit-test-factory.php' );
-//        require_once( $this->tests_dir . '/framework/class-wc-mock-session-handler.php' );
-//        // test cases
-//        require_once( $this->tests_dir . '/framework/class-wc-unit-test-case.php' );
-//        require_once( $this->tests_dir . '/framework/class-wc-api-unit-test-case.php' );
-//        // Helpers
-//        require_once( $this->tests_dir . '/framework/helpers/class-wc-helper-product.php' );
-//        require_once( $this->tests_dir . '/framework/helpers/class-wc-helper-coupon.php' );
-//        require_once( $this->tests_dir . '/framework/helpers/class-wc-helper-fee.php' );
-//        require_once( $this->tests_dir . '/framework/helpers/class-wc-helper-shipping.php' );
-//        require_once( $this->tests_dir . '/framework/helpers/class-wc-helper-customer.php' );
+        error_log(__CLASS__.":".__METHOD__);
+
+        // helpers
+        require_once($this->tests_dir.'/framework/helpers/helper_models.php');
     }
 
     /**
