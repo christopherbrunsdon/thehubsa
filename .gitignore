@@ -1,1 +1,21 @@
+# Built packages
 !*.zip
+
+# Editors
+
+# OS X metadata
+.DS_Store
+
+# Windows junk
+Thumbs.db
+
+# Linux 
+
+# Unit tests
+/tmp
+/tests/bin/tmp
+
+# Logs
+/logs
+
+# [eof]
