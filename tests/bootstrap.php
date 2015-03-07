@@ -1,39 +1,107 @@
 <?php
 /**
- * Installs WordPress for running the tests and loads WordPress and the test libraries
+ * TheHubSA unit tests
+ *
  */
 
-error_reporting( E_ALL & ~E_DEPRECATED & ~E_STRICT );
+class TheHub_Unit_Tests_Bootstrap
+{
+    /**
+     * @var null
+     */
+    protected static $instance = null;
 
-//require_once 'PHPUnit/Autoload.php';
+    /**
+     * @var string
+     */
+    public $wp_tests_dir;
 
-$config_file_path = dirname( __FILE__ ) . '/unittests-config.php';
+    /**
+     * @var string
+     */
+    public $tests_dir;
 
-/*
- * Globalize some WordPress variables, because PHPUnit loads this file inside a function
- * See: https://github.com/sebastianbergmann/phpunit/issues/325
- *
- * These are not needed for WordPress 3.3+, only for older versions
-*/
-global $table_prefix, $wp_embed, $wp_locale, $_wp_deprecated_widgets_callbacks, $wp_widget_factory;
+    /**
+     * @var string
+     */
+    public $plugin_dir;
 
-// These are still needed
-global $wpdb, $current_site, $current_blog, $wp_rewrite, $shortcode_tags, $wp;
+    /**
+     * Setup the unit testing environment
+     *
+     */
+    public function __construct()
+    {
+        ini_set( 'display_errors','on' );
+        error_reporting( E_ALL );
+        $this->tests_dir=dirname( __FILE__ );
+        $this->plugin_dir=dirname( $this->tests_dir );
+        $this->wp_tests_dir=getenv( 'WP_TESTS_DIR' ) ? getenv( 'WP_TESTS_DIR' ) : $this->plugin_dir . '/tmp/wordpress-tests-lib';
 
-define( 'WPMU_PLUGIN_DIR', dirname( __FILE__ ) . '/mu-plugins' );
+        // load test function so tests_add_filter() is available
+        require_once( $this->wp_tests_dir . '/includes/functions.php' );
 
-require_once $config_file_path;
+        // load TheHub
+        tests_add_filter('muplugins_loaded', array( $this, 'load_thehub' ) );
 
-$_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
-$_SERVER['HTTP_HOST'] = WP_TESTS_DOMAIN;
-$PHP_SELF = $GLOBALS['PHP_SELF'] = $_SERVER['PHP_SELF'] = '/index.php';
+        // install TheHub
+        tests_add_filter('setup_theme', array( $this, 'install_thehub' ) );
 
-system( WP_PHP_BINARY . ' ' . escapeshellarg( dirname( __FILE__ ) . '/bin/install.php' ) . ' ' . escapeshellarg( $config_file_path ) );
+        // load the WP testing environment
+        require_once( $this->wp_tests_dir . '/includes/bootstrap.php' );
 
-require dirname( __FILE__ ) . '/lib/functions.php';
+        // load WC testing framework
+        $this->includes();
+    }
 
-// Load WordPress
-require_once ABSPATH . '/wp-settings.php';
+    /**
+     * Load TheHubSa
+     *
+     */
+    public function load_thehub()
+    {
+        require_once($this->plugin_dir.'/thehubsa-plugin.php');
+    }
 
-require dirname( __FILE__ ) . '/lib/testcase.php';
-require dirname( __FILE__ ) . '/lib/exceptions.php';
+    /**
+     * Install TheHubSa after the test environment and WC have been loaded
+     *
+     */
+    public function install_thehub()
+    {
+        // clean existing install first
+        define( 'WP_UNINSTALL_PLUGIN', true );
+        include( $this->plugin_dir . '/uninstall.php' );
+        TheHubSA(); // preload
+        TheHubSA_Install::install();
+
+        // reload capabilities after install, see https://core.trac.wordpress.org/ticket/28374
+        // $GLOBALS['thehubsa_roles']->reinit();
+        echo "Installing TheHubSA..." . PHP_EOL;
+    }
+
+    /**
+     * Load TH-specific test cases and factories
+     *
+     */
+    public function includes()
+    {
+        error_log(__CLASS__.":".__METHOD__);
+
+        // helpers
+        require_once($this->tests_dir.'/framework/helpers/helper_models.php');
+    }
+
+    /**
+     * @return null|TheHub_Unit_Tests_Bootstrap
+     */
+    public static function instance()
+    {
+        if (is_null(self::$instance)) {
+            self::$instance=new self();
+        }
+        return self::$instance;
+    }
+}
+
+TheHub_Unit_Tests_Bootstrap::instance();

@@ -1,45 +1,132 @@
 <?php
+/**
+ * Plugin Name: TheHubSA.org.za
+ * Plugin URI: https://github.com/christopherbrunsdon/thehubsa
+ * Description: Custom Wordpress Plugin for TheHubSA.org.za. Open source code, please contribute at https://github.com/christopherbrunsdon/thehubsa
+ * Version: 1.03-20150307
+ * Author: Christopher Brunsdon
+ * Author URI: http://www.brunsdon.co.za
+ * Requires at least: 4.0
+ * Tested up to: 4.1
+ *
+ * Text Domain: thehubsa
+ */
 
 defined('ABSPATH') or die("No script kiddies please!");
 
-/*
-Plugin Name: TheHubSA.org.za
-Plugin URI: https://github.com/christopherbrunsdon/thehubsa
-Description: Custom Wordpress Plugin for TheHubSA.org.za. Open source code, please contribute at https://github.com/christopherbrunsdon/thehubsa
-Version: 1.03-20150302
-Author: Christopher Brunsdon
-Author URI: http://www.brunsdon.co.za
-*/
+if (!class_exists('TheHubSAClass')):
 
-// +++ models
+/**
+ * Main the hub class
+ *
+ */
+final class TheHubSA_Class
+{
+    /**
+     * @var string
+     */
+    public $version = '1.04-20150307';
 
-require_once('models/membership_types.php');
-require_once('models/memberships.php');
-require_once('models/npo_service_types.php');
-require_once('models/npo_services.php');
-require_once('models/npos.php');
+    /**
+     * @var null
+     */
+    protected static $_instance = null;
 
-// +++ forms
+    /**
+     * @return null|TheHubSA_Class
+     */
+    public static function instance()
+    {
+        if (is_null(self::$_instance)) {
+            self::$_instance = new self();
+        }
+        return self::$_instance;
+    }
 
-require_once('forms/form-join.php');
-require_once('forms/form-npo.php');
-require_once('forms/form-business.php');
+    /**
+     *
+     */
+    public function __construct()
+    {
+        $this->define_constants();
+        $this->includes();
+        $this->init_hooks();
+    }
 
-// +++ controllers (views)
+    /**
+     *
+     */
+    public function includes()
+    {
+        // +++ models
+        require_once('models/membership_types.php');
+        require_once('models/memberships.php');
+        require_once('models/npo_service_types.php');
+        require_once('models/npo_services.php');
+        require_once('models/npos.php');
 
-require_once('controllers/npo.php');
+        // +++ forms
+        require_once('forms/form-join.php');
+        require_once('forms/form-npo.php');
+        require_once('forms/form-business.php');
 
-// +++ database
+        // +++ controllers (views)
+        require_once('controllers/npo.php');
 
-require_once('install/add_data.php');
-require_once('install/create_tables.php');
+        // +++ database
+        require_once('install/add_data.php');
+        require_once('install/create_tables.php');
 
-register_activation_hook( __FILE__, 'thehubsa_install' );
-register_activation_hook( __FILE__, 'thehubsa_install_data' );
-add_action( 'plugins_loaded', 'myplugin_update_db_check' );
+        // +++ admin page
+        require_once('admin/admin.php');
+        require_once('includes/class-thehubsa-install.php');
+    }
 
-// +++ admin page
+    /**
+     * Define the constants here
+     */
+    private function define_constants()
+    {
+    }
 
-require_once('admin/admin.php');
+    /**
+     * @param $name
+     * @param $value
+     */
+    private function define($name, $value)
+    {
+        if (!defined($name)) {
+            define($name, $value);
+        }
+    }
+
+    /**
+     *
+     */
+    private function init_hooks()
+    {
+        register_activation_hook(__FILE__, array('TheHubSA_Install', 'install'));
+        add_action('init', array($this, 'init'), 0);
+//        add_action( 'init', array( 'TheHubSA_Shortcodes', 'init' ) );
+    }
+
+    /**
+     *
+     */
+    public function init()
+    {
+        // init code comes here ....
+    }
+
+} // class
+endif;
+
+/**
+ * @return null|TheHubSA_Class
+ */
+function TheHubSA()
+{
+    return TheHubSA_Class::instance();
+}
 
 // [eof]

@@ -84,32 +84,32 @@ class model_thehub_npos extends model_abstract {
 		$table_name = self::get_table_name();
 
 		$sql = "CREATE TABLE IF NOT EXISTS {$table_name} (
-			id INT NOT NULL AUTO_INCREMENT  PRIMARY KEY,
-			Name varchar(255) DEFAULT '',
-			RegNumber varchar(255) DEFAULT '',
-			RegNumberOther varchar(255) DEFAULT '',
-			Address varchar(512) NOT NULL  DEFAULT '',
-			AddressPostal varchar(512) NOT NULL  DEFAULT '',
-			Contact varchar(255) NOT NULL  DEFAULT '',
-			Tel varchar(255) NOT NULL  DEFAULT '',
-			Mobile varchar(255) NOT NULL  DEFAULT '',
-			Email varchar(255) NOT NULL  DEFAULT '',
-			wwwDomain varchar(255) NOT NULL  DEFAULT '',
-			wwwHomepage varchar(255) NOT NULL  DEFAULT '',
-			wwwFacebook varchar(255) NOT NULL  DEFAULT '',			
-			Description varchar(512) NOT NULL  DEFAULT '',
-			ServicesOffered varchar(512) NOT NULL  DEFAULT '',
-			AssociatedOrganisations varchar(512) NOT NULL  DEFAULT '',			
-			listNeeds varchar(512) NOT NULL  DEFAULT '',
-			listWish varchar(512) NOT NULL  DEFAULT '',
-			paymentEft TINYINT default 0,
-			paymentDeposit TINYINT default 0,
-			bActive TINYINT DEFAULT FALSE,
-			Notes varchar(1024) DEFAULT '',
-			LogoPath varchar(255) NOT NULL DEFAULT '',
-			WhenCreated TIMESTAMP DEFAULT 0,
-			WhenUpdated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-			) {$charset_collate};";
+id INT NOT NULL AUTO_INCREMENT  PRIMARY KEY,
+Name varchar(255) DEFAULT '',
+RegNumber varchar(255) DEFAULT '',
+RegNumberOther varchar(255) DEFAULT '',
+Address varchar(512) NOT NULL  DEFAULT '',
+AddressPostal varchar(512) NOT NULL  DEFAULT '',
+Contact varchar(255) NOT NULL  DEFAULT '',
+Tel varchar(255) NOT NULL  DEFAULT '',
+Mobile varchar(255) NOT NULL  DEFAULT '',
+Email varchar(255) NOT NULL  DEFAULT '',
+wwwDomain varchar(255) NOT NULL  DEFAULT '',
+wwwHomepage varchar(255) NOT NULL  DEFAULT '',
+wwwFacebook varchar(255) NOT NULL  DEFAULT '',
+Description varchar(512) NOT NULL  DEFAULT '',
+ServicesOffered varchar(512) NOT NULL  DEFAULT '',
+AssociatedOrganisations varchar(512) NOT NULL  DEFAULT '',
+listNeeds varchar(512) NOT NULL  DEFAULT '',
+listWish varchar(512) NOT NULL  DEFAULT '',
+paymentEft TINYINT default 0,
+paymentDeposit TINYINT default 0,
+bActive TINYINT DEFAULT FALSE,
+Notes varchar(1024) DEFAULT '',
+LogoPath varchar(255) NOT NULL DEFAULT '',
+WhenCreated TIMESTAMP DEFAULT 0,
+WhenUpdated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) {$charset_collate};";
 		return $sql;
 	}
 

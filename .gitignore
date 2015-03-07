@@ -1,1 +1,22 @@
-!*.zip
+# Built packages
+*.zip
+
+# Editors
+/.idea
+
+# OS X metadata
+.DS_Store
+
+# Windows junk
+Thumbs.db
+
+# Linux 
+
+# Unit tests
+/tmp
+/tests/bin/tmp
+
+# Logs
+/logs
+
+# [eof]

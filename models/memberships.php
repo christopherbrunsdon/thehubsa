@@ -67,22 +67,17 @@ class model_thehub_memberships {
 		$fk_name_membership_types = model_thehub_membership_types::get_table_name();
 
 		$sql = "CREATE TABLE IF NOT EXISTS {$table_name} (
-			id INT NOT NULL AUTO_INCREMENT  PRIMARY KEY,
-			Name varchar(255) DEFAULT '',
-			Surname varchar(255) DEFAULT '',
-			Email varchar(255) NOT NULL,
-			fkMembershipType INT DEFAULT NULL,
-
-			bActive   TINYINT DEFAULT TRUE,
-			Notes varchar(1024) DEFAULT '',
-			WhenCreated TIMESTAMP DEFAULT 0,
-			WhenUpdated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-		                ON UPDATE CURRENT_TIMESTAMP,
-
-			FOREIGN KEY (fkMembershipType)
-				REFERENCES {$fk_name_membership_types}(id)
-				ON DELETE SET NULL			
-			) {$charset_collate};";
+id INT NOT NULL AUTO_INCREMENT  PRIMARY KEY,
+Name varchar(255) DEFAULT '',
+Surname varchar(255) DEFAULT '',
+Email varchar(255) NOT NULL,
+fkMembershipType INT DEFAULT NULL,
+bActive TINYINT DEFAULT TRUE,
+Notes varchar(1024) DEFAULT '',
+WhenCreated TIMESTAMP DEFAULT 0,
+WhenUpdated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+FOREIGN KEY (fkMembershipType) REFERENCES {$fk_name_membership_types}(id) ON DELETE SET NULL
+) {$charset_collate};";
 		return $sql;
 	}
 

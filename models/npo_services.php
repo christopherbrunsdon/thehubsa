@@ -69,25 +69,17 @@ class model_thehub_npo_services  extends model_abstract  {
 		$fk_services = model_thehub_npo_service_types::get_table_name();
 
 		$sql = "CREATE TABLE IF NOT EXISTS {$table_name} (
-			fkNpo INT NOT NULL,
-			fkService INT DEFAULT NULL,	
-			ServiceOther varchar(128) NOT NULL DEFAULT '',
-			RankOrder mediumint(9) ,					
-
-			bActive   	TINYINT DEFAULT TRUE,
-			Notes 		varchar(1024) DEFAULT '',
-			WhenCreated TIMESTAMP DEFAULT 0,
-			WhenUpdated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-		                ON UPDATE CURRENT_TIMESTAMP,
-
-			FOREIGN KEY (fkNpo)
-				REFERENCES {$fk_npo}(id),
-
-			FOREIGN KEY (fkService)
-				REFERENCES {$fk_services}(id)
-				ON DELETE SET NULL			
-
-			) {$charset_collate};";
+fkNpo INT NOT NULL,
+fkService INT DEFAULT NULL,
+ServiceOther varchar(128) NOT NULL DEFAULT '',
+RankOrder mediumint(9) ,
+bActive TINYINT DEFAULT TRUE,
+Notes varchar(1024) DEFAULT '',
+WhenCreated TIMESTAMP DEFAULT 0,
+WhenUpdated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+FOREIGN KEY (fkNpo) REFERENCES {$fk_npo}(id),
+FOREIGN KEY (fkService) REFERENCES {$fk_services}(id) ON DELETE SET NULL
+) {$charset_collate};";
 
 		return $sql;
 	}
