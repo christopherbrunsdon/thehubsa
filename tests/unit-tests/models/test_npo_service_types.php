@@ -94,8 +94,12 @@ class Model_Npo_Service_Types_Test extends WP_UnitTestCase
      */
     public function test_save()
     {
+        $count_all=model_thehub_npo_service_types::get_table_stats()->count_all;
+        $count_active=model_thehub_npo_service_types::get_table_stats()->count_active;
+        $count_deactive=model_thehub_npo_service_types::get_table_stats()->count_deactive;
+
         // check no data
-        $this->assertEquals(model_thehub_npo_service_types::get_table_stats()->count_all, 0);
+        $this->assertEquals(model_thehub_npo_service_types::get_table_stats()->count_all, $count_all); //0
         $npo_service=helper_models::valid_npo_service_types();
 
         // assert
@@ -106,28 +110,28 @@ class Model_Npo_Service_Types_Test extends WP_UnitTestCase
         $this->assertFalse($npo_service->is_new());
         $this->assertFalse($npo_service->is_active());
 
-        $this->assertEquals(model_thehub_npo_service_types::get_table_stats()->count_all, 1);
+        $this->assertEquals(model_thehub_npo_service_types::get_table_stats()->count_all, $count_all+1); // 1
 
         // toggle active stats
-        $this->assertEquals(model_thehub_npo_service_types::get_table_stats()->count_active, 0);
-        $this->assertEquals(model_thehub_npo_service_types::get_table_stats()->count_deactive, 1);
+        $this->assertEquals(model_thehub_npo_service_types::get_table_stats()->count_active, $count_active+0);
+        $this->assertEquals(model_thehub_npo_service_types::get_table_stats()->count_deactive, $count_deactive+1);
 
         $npo_service->set_active(True);
         $this->assertTrue($npo_service->is_active());
-        $this->assertEquals(model_thehub_npo_service_types::get_table_stats()->count_active, 1);
-        $this->assertEquals(model_thehub_npo_service_types::get_table_stats()->count_deactive, 0);
+        $this->assertEquals(model_thehub_npo_service_types::get_table_stats()->count_active, $count_active+1);
+        $this->assertEquals(model_thehub_npo_service_types::get_table_stats()->count_deactive, $count_deactive+0);
 
         $npo_service->set_active(False);
         $this->assertFalse($npo_service->is_active());
-        $this->assertEquals(model_thehub_npo_service_types::get_table_stats()->count_active, 0);
-        $this->assertEquals(model_thehub_npo_service_types::get_table_stats()->count_deactive, 1);
+        $this->assertEquals(model_thehub_npo_service_types::get_table_stats()->count_active, $count_active+0);
+        $this->assertEquals(model_thehub_npo_service_types::get_table_stats()->count_deactive, $count_deactive+1);
 
         // test updates
         $npo_service->save();
-        $this->assertEquals(model_thehub_npo_service_types::get_table_stats()->count_all, 1);
+        $this->assertEquals(model_thehub_npo_service_types::get_table_stats()->count_all, $count_all+1);
 
         $npo_service->save();
-        $this->assertEquals(model_thehub_npo_service_types::get_table_stats()->count_all, 1);
+        $this->assertEquals(model_thehub_npo_service_types::get_table_stats()->count_all, $count_all+1);
     }
 
     /**
@@ -136,7 +140,11 @@ class Model_Npo_Service_Types_Test extends WP_UnitTestCase
      */
     function test_load()
     {
-        $this->assertEquals(model_thehub_npo_service_types::get_table_stats()->count_all, 0);
+        $count_all=model_thehub_npo_service_types::get_table_stats()->count_all;
+        $count_active=model_thehub_npo_service_types::get_table_stats()->count_active;
+        $count_deactive=model_thehub_npo_service_types::get_table_stats()->count_deactive;
+
+        $this->assertEquals(model_thehub_npo_service_types::get_table_stats()->count_all, $count_all+0); //0
 
         // no test data so return new
         $npo_service=model_thehub_npo_service_types::get_by_service("Test service");
@@ -149,7 +157,7 @@ class Model_Npo_Service_Types_Test extends WP_UnitTestCase
         $npo_service->save();
         unset($npo_service);
 
-        $this->assertEquals(model_thehub_npo_service_types::get_table_stats()->count_all, 1);
+        $this->assertEquals(model_thehub_npo_service_types::get_table_stats()->count_all, $count_all+1);
 
         // get by service again
         $npo_services=model_thehub_npo_service_types::get_by_service("Test service");
@@ -192,6 +200,10 @@ class Model_Npo_Service_Types_Test extends WP_UnitTestCase
      */
     public function test_search()
     {
+        $count_all=model_thehub_npo_service_types::get_table_stats()->count_all;
+        $count_active=model_thehub_npo_service_types::get_table_stats()->count_active;
+        $count_deactive=model_thehub_npo_service_types::get_table_stats()->count_deactive;
+
         // create tests
         $npo_service=helper_models::valid_npo_service_types();
         $npo_service->save();
@@ -212,9 +224,9 @@ class Model_Npo_Service_Types_Test extends WP_UnitTestCase
         $npo_service_fet->save();
 
 
-        $this->assertEquals(model_thehub_npo_service_types::get_table_stats()->count_all, 4);
-        $this->assertEquals(model_thehub_npo_service_types::get_table_stats()->count_active, 3);
-        $this->assertEquals(model_thehub_npo_service_types::get_table_stats()->count_deactive, 1);
+        $this->assertEquals(model_thehub_npo_service_types::get_table_stats()->count_all, $count_all+4); // 4
+        $this->assertEquals(model_thehub_npo_service_types::get_table_stats()->count_active, $count_active+3);
+        $this->assertEquals(model_thehub_npo_service_types::get_table_stats()->count_deactive,  $count_deactive+1);
 
         // search
 
@@ -222,7 +234,7 @@ class Model_Npo_Service_Types_Test extends WP_UnitTestCase
         $this->assertEquals(1, sizeof($search));
 
         $search=model_thehub_npo_service_types::get_by_service($name_like="animals");
-        $this->assertEquals(2, sizeof($search));
+        $this->assertEquals(1+2, sizeof($search));
 
         $search=model_thehub_npo_service_types::get_by_service($name_like="test");
         $this->assertEquals(0, sizeof($search));

@@ -65,7 +65,7 @@ class TheHubSA_Install
         $wpdb->hide_errors();
 
         require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-        foreach(explode(';', self::get_schema()) as $schema) {
+        foreach(self::get_schema() as $schema) {
             dbDelta($schema);
         }
     }
@@ -75,14 +75,13 @@ class TheHubSA_Install
      */
     public function get_schema()
     {
-        $schema=""
-            .model_thehub_membership_types::get_create_table()
-            .model_thehub_memberships::get_create_table()
-            .model_thehub_npos::get_create_table()
-            .model_thehub_npo_service_types::get_create_table()
-            .model_thehub_npo_services::get_create_table();
-
-//        print $schema;
+        $schema=array(
+            model_thehub_membership_types::get_create_table(),
+            model_thehub_memberships::get_create_table(),
+            model_thehub_npos::get_create_table(),
+            model_thehub_npo_service_types::get_create_table(),
+            model_thehub_npo_services::get_create_table(),
+        );
         return $schema;
     }
 
