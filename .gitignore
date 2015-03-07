@@ -1,7 +1,8 @@
 # Built packages
-!*.zip
+*.zip
 
 # Editors
+/.idea
 
 # OS X metadata
 .DS_Store
