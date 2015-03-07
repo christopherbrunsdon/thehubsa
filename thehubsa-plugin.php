@@ -79,7 +79,12 @@ final class TheHubSA_Class
 
         // +++ admin page
         require_once('admin/admin.php');
+
+        // +++ installation
         require_once('includes/class-thehubsa-install.php');
+
+        // +++ frontend
+        include_once( 'includes/class-thehubsa-shortcodes.php' );
     }
 
     /**
@@ -107,7 +112,7 @@ final class TheHubSA_Class
     {
         register_activation_hook(__FILE__, array('TheHubSA_Install', 'install'));
         add_action('init', array($this, 'init'), 0);
-//        add_action( 'init', array( 'TheHubSA_Shortcodes', 'init' ) );
+        add_action( 'init', array( 'TheHubSA_Shortcodes', 'init' ) );
     }
 
     /**
@@ -128,5 +133,8 @@ function TheHubSA()
 {
     return TheHubSA_Class::instance();
 }
+
+// Global for backwards compatibility.
+$GLOBALS['thehubsa'] = TheHubSA();
 
 // [eof]

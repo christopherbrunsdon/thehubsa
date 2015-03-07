@@ -157,9 +157,8 @@ abstract class form
 
 	public function shortcode()
 	{
-		$res=$this->process($_POST, $_FILES);
 
-	    ob_start();
+		$res=$this->process($_POST, $_FILES);
 
 	    if($res===Null) {
 	        $this->render();
@@ -168,7 +167,5 @@ abstract class form
 	    } else {
 	        $this->render_thank_you();
 	    }
-	    
-	    return ob_get_clean();
 	}
 }

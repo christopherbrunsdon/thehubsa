@@ -17,6 +17,7 @@ if [[ $rc != 0 ]]; then
 fi
 
 # note: change to create a tag and push to git
+# @TODO: integrate into travisci
 
 echo "Removing old plugin"
 rm thehubsa-plugin.zip
