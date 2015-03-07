@@ -1,11 +1,12 @@
 <?php
 
-//defined('ABSPATH') or die("No script kiddies please!");
+defined('ABSPATH') or die("No script kiddies please!");
 
 // Sources:
 // http://codex.wordpress.org/Administration_Menus
 // http://www.smashingmagazine.com/2011/11/03/native-admin-tables-wordpress/
 
+error_log(__FILE__);
 
 //Our class extends the WP_List_Table class, so we need to make sure that it's there
 if(!class_exists('WP_List_Table'))

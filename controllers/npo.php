@@ -1,7 +1,7 @@
 <?php
 
-//defined('ABSPATH') or die("No script kiddies please!");
-define('SHORTCODE_THEHUBSA_LIST_NPO', 'thehubsa_list_npo');
+defined('ABSPATH') or die("No script kiddies please!");
+//define('SHORTCODE_THEHUBSA_LIST_NPO', 'thehubsa_list_npo');
 
 class controller_npo 
 {
@@ -43,4 +43,4 @@ class controller_npo
 
 }
 
-add_shortcode( SHORTCODE_THEHUBSA_LIST_NPO, array(new controller_npo() ,'render'));
+//add_shortcode( SHORTCODE_THEHUBSA_LIST_NPO, array(new controller_npo() ,'render'));

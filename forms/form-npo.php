@@ -1,7 +1,6 @@
 <?php
 
-//defined('ABSPATH') or die("No script kiddies please!");
-define('SHORTCODE_THEHUBSA_FORM_SIGNUP_NPO', 'thehubsa_form_signup_npo');
+defined('ABSPATH') or die("No script kiddies please!");
 
 require_once("form.php");
 require_once("error-helper.php");
@@ -150,9 +149,4 @@ class form_npo extends form
 	}
 }
 
-// register shortcode
-
-
-add_shortcode( SHORTCODE_THEHUBSA_FORM_SIGNUP_NPO, array(new form_npo() ,'shortcode'));
- 
 // [eof]
