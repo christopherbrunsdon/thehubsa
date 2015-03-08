@@ -1,6 +1,6 @@
 <?php
 
-//defined('ABSPATH') or die("No script kiddies please!");
+defined('ABSPATH') or die("No script kiddies please!");
 define('SHORTCODE_THEHUBSA_FORM_JOIN', 'thehubsa_form_join');
 /**
  * Sources:
@@ -130,7 +130,7 @@ function form_join_shortcode()
     } else {
         form_join_thank_you_html();
     }
-    
+
     return ob_get_clean();
 }
 
