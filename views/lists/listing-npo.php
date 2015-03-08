@@ -97,11 +97,11 @@
 				<br />
 		
 				<strong>Needs List:</strong><br />
-				<?php echo ($npo->listNeeds); ?>
+				<?php echo nl2br($npo->listNeeds); ?>
 				<br />
 
 				<strong>Wish List:</strong><br />
-				<?php echo ($npo->listWish); ?>
+				<?php echo nl2br($npo->listWish); ?>
 			<br />	
 		</div>
 	</div>
