@@ -317,6 +317,14 @@ WhenUpdated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
                     'flags' => FILTER_SANITIZE_STRIPPED,
                     'options' => array('default' => 0),
                 ),
+
+            "bActive" =>
+                array(
+                    'filter' => FILTER_SANITIZE_NUMBER_INT,
+                    'flags' => FILTER_SANITIZE_STRIPPED,
+                    'options' => array('default' => 0),
+                ),
+
         );
 
         $this->set_data(filter_var_array(get_object_vars($this), $sanitize_rules));

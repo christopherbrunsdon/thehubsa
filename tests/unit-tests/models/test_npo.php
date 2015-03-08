@@ -143,6 +143,16 @@ class Model_Npo_Test extends WP_UnitTestCase
 
         $npo->set_active();
         $this->assertTrue($npo->is_active());
+
+        // save
+        $npo->save();
+        $this->assertTrue($npo->is_active());
+        // update
+        $npo->save();
+        $this->assertTrue($npo->is_active());
+
+        $npo_2=model_thehub_npos::get_by_id($npo->id);
+        $this->assertTrue($npo_2->is_active());
     }
 
     /**

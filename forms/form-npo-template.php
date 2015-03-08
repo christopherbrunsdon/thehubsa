@@ -205,7 +205,8 @@
 
 	<?php if($this->npo->id): ?>
 		<input type="hidden" value="<?= $this->npo->id; ?>" name="id" id="id" />
-		<button id="btn-submit" type="submit" class="btn btn-default" name="submit">Update</button>	
+        <input type="hidden" value="<?= $this->npo->is_active(); ?>" name="bActive" id="bActive" />
+        <button id="btn-submit" type="submit" class="btn btn-default" name="submit">Update</button>
 	<?php else: ?>
 		<button id="btn-submit" <?php !$this->npo->paymentEft && !$this->npo->paymentDeposit && print "disabled "?> type="submit" class="btn btn-default" name="submit">Submit</button>
 	<?php endif; ?>
