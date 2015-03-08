@@ -14,6 +14,7 @@ class TheHubSA_Shortcodes
         $shortcodes=array(
             'thehubsa_list_npo' => __CLASS__.'::list_npo',
             'thehubsa_form_signup_npo' => __CLASS__.'::form_signup_npo',
+            'thehubsa_form_signup_business'=>__CLASS__.'::form_signup_business',
         );
 
         foreach ($shortcodes as $shortcode=>$function) {
@@ -47,7 +48,14 @@ class TheHubSA_Shortcodes
      */
     public static function form_signup_npo()
     {
-        error_log(__CLASS__.'::'.__METHOD__);
         return self::shortcode_wrapper(array(new form_npo(), 'shortcode'));
+    }
+
+    /**
+     * @return mixed
+     */
+    public static  function form_signup_business()
+    {
+        return self::shortcode_wrapper(array(new form_business() ,'shortcode'));
     }
 }
