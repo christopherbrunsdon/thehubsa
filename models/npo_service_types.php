@@ -218,9 +218,30 @@ WhenUpdated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
             $res[] = new self($row);
         }
         return $res;
-
     }
 
+    /**
+     * Return a list of services that have npos
+     *
+     * @return array
+     */
+    static public function get_all_with_npos()
+    {
+        global $wpdb;
+
+        $sql="SELECT nst.id, nst.Service, count(*) as Count "
+            ." FROM "
+            .model_thehub_npos::get_table_name()." as npo "
+            ." INNER JOIN "
+            .model_thehub_npo_services::get_table_name()." as ns ON (ns.fkNpo=npo.id) "
+            ." INNER JOIN "
+            .self::get_table_name()." as nst ON (ns.fkService=nst.id )"
+            ." WHERE "
+            ." npo.bActive=true AND ns.bActive=true AND nst.bActive=true "
+            ." GROUP BY nst.Service ";
+
+        return $wpdb->get_results($sql, OBJECT);
+    }
 }
 
 // [eof]
