@@ -245,5 +245,47 @@ class Model_Npo_Service_Types_Test extends WP_UnitTestCase
         $this->assertEquals(1, sizeof($search));
     }
 
+    /**
+     *
+     */
+    public function test_get_services_by_npos()
+    {
+        $services=model_thehub_npo_service_types::get_all_with_npos();
+        $this->assertTrue(empty($services));
+
+        // populate
+        $npo=helper_models::valid_npo();
+        $npo->set_active();
+        $npo->save();
+
+        // setup services
+        $service_1=helper_models::valid_npo_service_types();
+        $service_1->set_active();
+        $service_1->save();
+
+        $service_2=helper_models::valid_npo_service_types();
+        $service_2->set_active();
+        $service_2->save();
+
+        //
+        $npo_services_1=new model_thehub_npo_services();
+        $npo_services_1->fkNpo=$npo->id;
+        $npo_services_1->fkService=$service_1->id;
+        $this->assertTrue($npo_services_1->validate());
+        $npo_services_1->set_active();
+        $npo_services_1->save();
+
+        $npo_services_2=new model_thehub_npo_services();
+        $npo_services_2->fkNpo=$npo->id;
+        $npo_services_2->fkService=$service_2->id;
+        $this->assertTrue($npo_services_2->validate());
+        $npo_services_2->set_active();
+        $npo_services_2->save();
+
+        $this->assertEquals(2, sizeof($npo->get_npo_services(True)));
+        //
+        $services=model_thehub_npo_service_types::get_all_with_npos();
+        $this->assertFalse(empty($services));
+    }
 }
 // [eof]

@@ -57,7 +57,7 @@
 	<select id="service-npo" name="service-npo" class="form-control" placeholder="Select"
         onchange="this.form.submit();" >
 		<option value="">Select...</option>
-		<?php foreach(model_thehub_npo_service_types::get_services() as $service): ?>
+		<?php foreach(model_thehub_npo_service_types::get_all_with_npos() as $service): ?>
 			<option value="<?php echo $service->id; ?>" <?php echo $service->id==filter_input(INPUT_GET,'service-npo') ?'selected':''; ?> ><?php echo $service->Service; ?></option>
 		<?php endforeach; ?>
 	</select>

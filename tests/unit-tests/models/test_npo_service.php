@@ -187,7 +187,6 @@ class Model_Npo_Services_Test extends WP_UnitTestCase
         $npo_services_4->save();
         $this->assertEquals(1, sizeof($npo2->get_npo_services(True)));
     }
-
 }
 
 // [eof]
