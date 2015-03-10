@@ -85,25 +85,42 @@
 		</div>
 
 		<div class="col-md-6">
-				<strong>Services offered :</strong>
-				<?php // nl2br($npo->ServicesOffered); ?>
-
+            <strong>Services offered :</strong>
+            <div>
 				<ul>
 					<?php foreach($npo->get_npo_services() as $service): ?>
 						<li><?= $service; ?></li>
 					<?php endforeach; ?>
 				</ul>
+            </div>
 
-				<br />
-		
+<!--            <br />-->
+
+            <div>
 				<strong>Needs List:</strong><br />
 				<?php echo nl2br($npo->listNeeds); ?>
-				<br />
+            </div>
 
+            <br />
+
+            <div>
 				<strong>Wish List:</strong><br />
 				<?php echo nl2br($npo->listWish); ?>
-			<br />	
-		</div>
+            </div>
+
+			<br />
+
+            <?php if($npo->ServicesOffered): ?>
+                <div>
+                    <strong>What we can offer the community:</strong><br />
+                    <?= nl2br($npo->ServicesOffered); ?>
+                </div>
+
+                <br />
+            <?php endif; ?>
+
+
+        </div>
 	</div>
 
 </div>
