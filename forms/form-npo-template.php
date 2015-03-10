@@ -132,11 +132,40 @@
 
 
 	<div class="form-group  <?php isset($this->error->Description) && print 'has-error' ?>">
-		<label class="control-label" for="">Give a short description (400 characters or less) of your organisation : <?= $this->error->Description ?></label>
-		<textarea rows=4 name="Description" type="text" class="form-control" id="" placeholder="Give a short description (400 characters or less) of your organisation"><?= $this->npo->Description; ?></textarea>
-	</div>
+		<label class="control-label" for="">Give a short description (<?= model_thehub_npos::DESCRIPTION_MAX_LENGTH; ?> characters or less) of your organisation : <?= $this->error->Description ?></label>
+		<textarea rows=4 name="Description" type="text" class="form-control" id="npo-description" placeholder="Give a short description (400 characters or less) of your organisation"><?= $this->npo->Description; ?></textarea>
 
+        <?php $count_message=model_thehub_npos::DESCRIPTION_MAX_LENGTH-strlen($this->npo->Description); ?>
+        <div id="count_message_parent" class="pull-right alert alert-<?= ($count_message > 50?'success':$count_message > 0?'warning':'danger') ?>" role="alert"">
+            Characters remaining <span id="count_message" class="badge"><?= $count_message; ?></span>
+        </div>
+    </div>
 
+    <script type="text/javascript">
+        var text_max = <?= model_thehub_npos::DESCRIPTION_MAX_LENGTH; ?>;
+//        $('#count_message').html(text_max);
+
+        $('#npo-description').keyup(function() {
+            var text_length = $('#npo-description').val().length;
+            var text_remaining = text_max - text_length;
+
+            $('#count_message').html(text_remaining);
+
+            if(text_remaining > 50) {
+                $('#count_message_parent')
+                    .removeClass("alert-warning alert-danger")
+                    .addClass("alert-success");
+            } else if (text_remaining > 0) {
+                $('#count_message_parent')
+                    .removeClass("alert-success alert-danger")
+                    .addClass("alert-warning");
+            } else {
+                $('#count_message_parent')
+                    .removeClass("alert-warning alert-success")
+                    .addClass("alert-danger");
+            }
+        });
+    </script>
 
 	<h2>SKILLS/RESOURCE BANK</h2>
 

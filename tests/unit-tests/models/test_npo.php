@@ -318,4 +318,30 @@ class Model_Npo_Test extends WP_UnitTestCase
         $this->assertEquals("New 'name'", $npo_2->Name);
     }
 
+    /**
+     *
+     */
+    public function test_description_length()
+    {
+        $npo=helper_models::valid_npo();
+
+        // empty
+        $npo->Description=Null;
+        $npo->validate();
+        $this->assertArrayHasKey("Description", $npo->validation_errors);
+
+        // right
+        $npo->Description='1234';
+        $npo->validate();
+        $this->assertArrayNotHasKey("Description", $npo->validation_errors);
+
+
+        // too long
+        while(strlen($npo->Description) < model_thehub_npos::DESCRIPTION_MAX_LENGTH) {
+            $npo->Description .= ' abcde ';
+        }
+        $npo->validate();
+        $this->assertArrayHasKey("Description", $npo->validation_errors);
+
+    }
 }
