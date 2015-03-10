@@ -36,6 +36,8 @@ class model_thehub_npos extends model_abstract {
     public
         $_npo_services=Null;
 
+    const DESCRIPTION_MAX_LENGTH=400;
+
     /**
      * @return model_thehubsa_npos
      */
@@ -393,6 +395,9 @@ WhenUpdated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 		if(!$this->Description) {
             $this->validation_errors['Description'] = 'Please enter!';
 		}
+        elseif (strlen($this->Description) > self::DESCRIPTION_MAX_LENGTH) {
+            $this->validation_errors['Description']='Description must be '.self::DESCRIPTION_MAX_LENGTH.' characters or less. You have used '.strlen($this->Description).' characters.';
+        }
 
 		if(!$this->ServicesOffered) {
             $this->validation_errors['ServicesOffered'] = 'Please enter!';
