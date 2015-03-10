@@ -1,15 +1,19 @@
 #!/bin/bash
 
+# checkout that we are in master
+
+# check there are no commits
+
+# pull from origin
+
+# run tests
+
 echo "Running unit tests"
 
-cd tests
+phpunit 
 
-phpunit all.php
 # $? is a shell variable which stores the return code from what we just ran
 rc=$?
-
-# back to root dir
-cd ..
 
 if [[ $rc != 0 ]]; then
 	echo "phpunit failed - create plugin denied."
