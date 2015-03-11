@@ -50,6 +50,8 @@ final class TheHubSA_Class
     {
         $this->define_constants();
         $this->includes();
+        // @todo: only load when in admin...
+        $this->include_admin();
         $this->init_hooks();
     }
 
@@ -64,6 +66,7 @@ final class TheHubSA_Class
         require_once('models/npo_service_types.php');
         require_once('models/npo_services.php');
         require_once('models/npos.php');
+        require_once('models/businesses.php');
 
         // +++ forms
         require_once('forms/form-join.php');
@@ -73,6 +76,16 @@ final class TheHubSA_Class
         // +++ controllers (views)
         require_once('controllers/npo.php');
 
+        // +++ frontend
+        include_once( 'includes/class-thehubsa-shortcodes.php' );
+    }
+
+    /**
+     * Includes for when in admin
+     *
+     */
+    public function include_admin()
+    {
         // +++ database
         require_once('install/add_data.php');
         require_once('install/create_tables.php');
@@ -82,9 +95,15 @@ final class TheHubSA_Class
 
         // +++ installation
         require_once('includes/class-thehubsa-install.php');
+    }
 
-        // +++ frontend
-        include_once( 'includes/class-thehubsa-shortcodes.php' );
+    /**
+     * Includes for ajax
+     *
+     */
+    public function include_ajax()
+    {
+
     }
 
     /**

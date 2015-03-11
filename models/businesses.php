@@ -4,88 +4,85 @@ defined('ABSPATH') or die("No script kiddies please!");
 
 require_once("model_abstract.php");
 
-class model_thehub_npos extends model_abstract {
-
-	public
-		$id=Null,
-		$Name=Null,
-		$RegNumber=Null,
-		$RegNumberOther=Null,
-		$Address=Null,
-		$AddressPostal=Null,
-		$Contact=Null,
-		$Tel=Null,
-		$Mobile=Null,
-		$Email=Null,
-		$wwwDomain=Null,
-		$wwwHomepage=Null,
-		$wwwFacebook=Null,
-		$Description=Null,
-		$ServicesOffered=Null,
-		$AssociatedOrganisations=Null,
-		$listNeeds=Null,
-		$listWish=Null,
-		$paymentEft=Null,
-		$paymentDeposit=Null,
-		$Notes=Null,
-		$LogoPath=Null,
-		$bActive=Null,
+class model_thehub_businesses extends model_abstract
+{
+    public
+        $id=Null,
+        $Name=Null,
+        $RegNumber=Null,
+        $RegNumberOther=Null,
+        $Address=Null,
+        $AddressPostal=Null,
+        $Contact=Null,
+        $Tel=Null,
+        $Mobile=Null,
+        $Email=Null,
+        $wwwDomain=Null,
+        $wwwHomepage=Null,
+        $wwwFacebook=Null,
+        $Description=Null,
+        $ServicesOffered=Null,
+        $AssociatedOrganisations=Null,
+        $listNeeds=Null,
+        $listWish=Null,
+        $paymentEft=Null,
+        $paymentDeposit=Null,
+        $Notes=Null,
+        $LogoPath=Null,
+        $bActive=Null,
         $WhenCreated=Null,
         $WhenUpdated=Null;
-
-    public
-        $_npo_services=Null;
 
     const DESCRIPTION_MAX_LENGTH=400;
 
     /**
-     * @return model_thehubsa_npos
+     * @return model_thehub_businesses
      */
-	static function instance()
-	{
-		static $inst = null;
+    static function instance()
+    {
+        static $inst = null;
         if (is_null($inst)) {
-            $inst = new model_thehubsa_npos();
+            $inst = new model_thehub_businesses();
         }
         return $inst;
-	}
+    }
 
-	/**
-	 *
-	 */
-	public function __construct($data = Null)
-	{
-		$this->set_data($data);
-	}
+    /**
+     *
+     */
+    public function __construct($data = Null)
+    {
+        $this->set_data($data);
+    }
 
-	/**
-	 *
-	 */
-	public function __toString() 
-	{
-		return $this->Name." (Reg: {$this->RegNumber})";
-	}
+    /**
+     *
+     */
+    public function __toString()
+    {
+        return $this->Name;
+    }
 
-	/**
-	 *
-	 */
-	static function get_table_name() 
-	{
-		global $wpdb;
-		return $wpdb->prefix."thehub_npos";
-	}
+    /**
+     *
+     */
+    static function get_table_name()
+    {
+        global $wpdb;
+        return $wpdb->prefix."thehub_businesses";
+    }
 
-	/**
-	 * Create table sql
-	 *
-	 */
-	static function get_create_table()
-	{
-		global $wpdb;
-		$charset_collate = $wpdb->get_charset_collate();
-		$table_name = self::get_table_name();
+    /**
+     * Create table sql
+     *
+     */
+    static function get_create_table()
+    {
+        global $wpdb;
+        $charset_collate = $wpdb->get_charset_collate();
+        $table_name = self::get_table_name();
 
-		$sql = "CREATE TABLE IF NOT EXISTS {$table_name} (
+        $sql = "CREATE TABLE IF NOT EXISTS {$table_name} (
 id INT NOT NULL AUTO_INCREMENT  PRIMARY KEY,
 Name varchar(255) DEFAULT '',
 RegNumber varchar(255) DEFAULT '',
@@ -112,8 +109,8 @@ LogoPath varchar(255) NOT NULL DEFAULT '',
 WhenCreated TIMESTAMP DEFAULT 0,
 WhenUpdated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) {$charset_collate};";
-		return $sql;
-	}
+        return $sql;
+    }
 
     /**
      * @return mixed
@@ -130,51 +127,51 @@ WhenUpdated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
         return $wpdb->get_row($query);
     }
 
-	/**
-	 * Get by id
-	 *
-	 * @return object
-	 */
-	static public function get_by_id($id)
-	{
-		if($id == False) {
+    /**
+     * Get by id
+     *
+     * @return object
+     */
+    static public function get_by_id($id)
+    {
+        if($id == False) {
             return Null;
         }
 
-		global $wpdb;
-		$result=$wpdb->get_row("SELECT * FROM ".self::get_table_name()
-				." WHERE  id = {$id}",
-				OBJECT);
+        global $wpdb;
+        $result=$wpdb->get_row("SELECT * FROM ".self::get_table_name()
+            ." WHERE  id = {$id}",
+            OBJECT);
 
         return $result ? new self($result) : False;
-	}
+    }
 
-	/**
-	 * Get by email
-	 *
-	 * @return object
-	 */
-	static public function get_by_email($email, $active=Null)
-	{
-		if($email == False) {
+    /**
+     * Get by email
+     *
+     * @return object
+     */
+    static public function get_by_email($email, $active=Null)
+    {
+        if($email == False) {
             return Null;
         }
 
-		global $wpdb;
-		$result=$wpdb->get_row("SELECT * FROM ".self::get_table_name()
-				." WHERE  lower(email) = '".strtolower($email)."' "
-                . (!is_null($active)?" AND bActive=".($active?"True":"False")." ":""),
-				OBJECT);
+        global $wpdb;
+        $result=$wpdb->get_row("SELECT * FROM ".self::get_table_name()
+            ." WHERE  lower(email) = '".strtolower($email)."' "
+            . (!is_null($active)?" AND bActive=".($active?"True":"False")." ":""),
+            OBJECT);
 
         return $result ? new self($result) : False;
-	}
+    }
 
-	/**
-	 * Sanitize
+    /**
+     * Sanitize
      *
      * Prep the data coming in
-	 */
-	public function sanitize()
+     */
+    public function sanitize()
     {
         // sanitize
 
@@ -344,223 +341,214 @@ WhenUpdated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 
         if(!$this->Name) {
             $this->validation_errors['Name'] = 'Please enter!';
-		}
+        }
 
-		if(!$this->RegNumber) {
+        if(!$this->RegNumber) {
             $this->validation_errors['RegNumber'] = 'Please enter!';
-		}
+        }
 
-		if(!$this->Address) {
+        if(!$this->Address) {
             $this->validation_errors['Address'] = 'Please enter!';
-		}
+        }
 
-		if(!$this->AddressPostal) {
+        if(!$this->AddressPostal) {
             $this->validation_errors['AddressPostal'] = 'Please enter!';
-		}
+        }
 
-		if(!$this->Contact) {
+        if(!$this->Contact) {
             $this->validation_errors['Contact'] = 'Please enter contact person!';
-		}
+        }
 
 
-		// one or the other
-		if(!$this->Tel && !$this->Mobile) {
+        // one or the other
+        if(!$this->Tel && !$this->Mobile) {
             $this->validation_errors['Tel'] = 'Please enter telephone number!';
-		}
+        }
 
-		if(!$this->Mobile && !$this->Tel) {
+        if(!$this->Mobile && !$this->Tel) {
             $this->validation_errors['Mobile'] = 'Please enter cellphone number!';
-		}
+        }
 
         // Email
-		if(!$this->Email) {
+        if(!$this->Email) {
             $this->validation_errors['Email'] = 'Please enter email address!';
-		}
+        }
         elseif (!filter_var($this->Email, FILTER_VALIDATE_EMAIL)) {
             $this->validation_errors['Email'] = 'There is an error in the email address!';
         }
 
-            // if(empty($this->website)) {
-		// 	$errors['website'] = 'Please enter!';
-		// }
+        // if(empty($this->website)) {
+        // 	$errors['website'] = 'Please enter!';
+        // }
 
-		// if(empty($this->url'])) {
-		// 	$errors['url'] = 'Please enter!';
-		// }
+        // if(empty($this->url'])) {
+        // 	$errors['url'] = 'Please enter!';
+        // }
 
-		// if(empty($this->facebook'])) {
-		// 	$errors['facebook'] = 'Please enter!';
-		// }
+        // if(empty($this->facebook'])) {
+        // 	$errors['facebook'] = 'Please enter!';
+        // }
 
-		if(!$this->Description) {
+        if(!$this->Description) {
             $this->validation_errors['Description'] = 'Please enter!';
-		}
+        }
         elseif (strlen($this->Description) > self::DESCRIPTION_MAX_LENGTH) {
             $this->validation_errors['Description']='Description must be '.self::DESCRIPTION_MAX_LENGTH.' characters or less. You have used '.strlen($this->Description).' characters.';
         }
 
-		if(!$this->ServicesOffered) {
+        if(!$this->ServicesOffered) {
             $this->validation_errors['ServicesOffered'] = 'Please enter!';
-		}
+        }
 
-		// if(empty($this->AssociatedOrganisations'])) {
-		// 	$errors['AssociatedOrganisations'] = 'Please enter!';
-		// }
+        // if(empty($this->AssociatedOrganisations'])) {
+        // 	$errors['AssociatedOrganisations'] = 'Please enter!';
+        // }
 
-		if(!$this->listNeeds) {
+        if(!$this->listNeeds) {
             $this->validation_errors['listNeeds'] = 'Please enter!';
-		}
+        }
 
-		if(!$this->listWish) {
+        if(!$this->listWish) {
             $this->validation_errors['listWish'] = 'Please enter!';
-		}
+        }
 
-		// check payments for new entries.
-		if(!$this->id) {
-			if(!$this->paymentEft && !$this->paymentDeposit) {
+        // check payments for new entries.
+        if(!$this->id) {
+            if(!$this->paymentEft && !$this->paymentDeposit) {
                 $this->validation_errors['paymentEft'] = 'Please make a payment!';
                 $this->validation_errors['paymentDeposit'] = 'Please make a payment!';
-			}
-		}
+            }
+        }
 
         // return
-	    return empty($this->validation_errors);
-	}
+        return empty($this->validation_errors);
+    }
 
 
-	/**
-	 * Save data
-	 *
-	 */
-	public function save()
-	{
-		global $wpdb;
+    /**
+     * Save data
+     *
+     */
+    public function save()
+    {
+        return True; //
+        global $wpdb;
 
-		// data
-		$data =  array(
-					'Name' 				=> $this->Name,
-					'RegNumber' 		=> $this->RegNumber,
-					'RegNumberOther' 	=> $this->RegNumberOther,
-					'Address' 			=> $this->Address,
-					'AddressPostal' 	=> $this->AddressPostal,
-					'Contact' 			=> $this->Contact,
-					'Tel' 				=> $this->Tel,
-					'Mobile' 			=> $this->Mobile,
-					'Email' 			=> $this->Email,
-					'wwwDomain' 		=> $this->wwwDomain,
-					'wwwHomepage' 		=> $this->wwwHomepage,
-					'wwwFacebook' 		=> $this->wwwFacebook,
-					'Description' 		=> $this->Description,
-					'ServicesOffered' 	=> $this->ServicesOffered,
-					'AssociatedOrganisations' => $this->AssociatedOrganisations,
-					'listNeeds' 		=> $this->listNeeds,
-					'listWish' 			=> $this->listWish,
-					'paymentEft' 		=> (bool)$this->paymentEft,
-					'paymentDeposit' 	=> (bool)$this->paymentDeposit,
-					'Notes' 			=> $this->Notes,
-					'LogoPath'			=> $this->LogoPath,
-					'bActive' 			=> $this->is_active(), // we can never force this  
-					);
+        // data
+        $data =  array(
+            'Name' 				=> $this->Name,
+            'RegNumber' 		=> $this->RegNumber,
+            'RegNumberOther' 	=> $this->RegNumberOther,
+            'Address' 			=> $this->Address,
+            'AddressPostal' 	=> $this->AddressPostal,
+            'Contact' 			=> $this->Contact,
+            'Tel' 				=> $this->Tel,
+            'Mobile' 			=> $this->Mobile,
+            'Email' 			=> $this->Email,
+            'wwwDomain' 		=> $this->wwwDomain,
+            'wwwHomepage' 		=> $this->wwwHomepage,
+            'wwwFacebook' 		=> $this->wwwFacebook,
+            'Description' 		=> $this->Description,
+            'ServicesOffered' 	=> $this->ServicesOffered,
+            'AssociatedOrganisations' => $this->AssociatedOrganisations,
+            'listNeeds' 		=> $this->listNeeds,
+            'listWish' 			=> $this->listWish,
+            'paymentEft' 		=> (bool)$this->paymentEft,
+            'paymentDeposit' 	=> (bool)$this->paymentDeposit,
+            'Notes' 			=> $this->Notes,
+            'LogoPath'			=> $this->LogoPath,
+            'bActive' 			=> $this->is_active(), // we can never force this
+        );
 
-		// data format
-		$format = array(
-					'%s', // Name
-					'%s', // RegNumber
-					'%s', // RegNumberOther
-					'%s', // Address
-					'%s', // AddressPostal
-					'%s', // Contact
-					'%s', // Tel
-					'%s', // Mobile
-					'%s', // Email
-					'%s', // wwwDomain
-					'%s', // wwwHomepage
-					'%s', // wwwFacebook
-					'%s', // Description
-					'%s', // ServicesOffered
-					'%s', // AssociatedOrganisations
-					'%s', // listNeeds
-					'%s', // listWish
-					'%d', // paymentEft
-					'%d', // paymentDeposit
-					'%s', // Notes
-					'%s', // Logo
-					'%d', // Active
-					);
+        // data format
+        $format = array(
+            '%s', // Name
+            '%s', // RegNumber
+            '%s', // RegNumberOther
+            '%s', // Address
+            '%s', // AddressPostal
+            '%s', // Contact
+            '%s', // Tel
+            '%s', // Mobile
+            '%s', // Email
+            '%s', // wwwDomain
+            '%s', // wwwHomepage
+            '%s', // wwwFacebook
+            '%s', // Description
+            '%s', // ServicesOffered
+            '%s', // AssociatedOrganisations
+            '%s', // listNeeds
+            '%s', // listWish
+            '%d', // paymentEft
+            '%d', // paymentDeposit
+            '%s', // Notes
+            '%s', // Logo
+            '%d', // Active
+        );
 
-		// insert
-		if(!$this->id) {
-			$data['WhenCreated'] = date("Y-m-d H:i");    
-			$format[''] = '%s';
+        // insert
+        if(!$this->id) {
+            $data['WhenCreated'] = date("Y-m-d H:i");
+            $format[''] = '%s';
 
-			$wpdb->insert($table = self::get_table_name(), $data, $format);
-			$this->id = $wpdb->insert_id;
+            $wpdb->insert($table = self::get_table_name(), $data, $format);
+            $this->id = $wpdb->insert_id;
             return $this->id;
-		} else {
-			// update
-			$wpdb->update(
-				$table = self::get_table_name(), 
-				$data, 
-				$where = array('id' => $this->id),
-				$format,
-				$where_format = array('%d'));
-		}
-	}
+        } else {
+            // update
+            $wpdb->update(
+                $table = self::get_table_name(),
+                $data,
+                $where = array('id' => $this->id),
+                $format,
+                $where_format = array('%d'));
+        }
+    }
 
-	/**
-	 * Get by name
-	 *
-	 * @return object
-	 */
-	static public function get_by_name($name_like = Null, $filter_service = Null, $active = True)
-	{
-		$sql = "SELECT npo.* FROM ".self::get_table_name()." As npo ";
+    /**
+     * Get by name
+     *
+     * @return object
+     */
+    static public function get_by_name($name_like = Null, $active = True)
+    {
+        $sql = "SELECT npo.* FROM ".self::get_table_name()." As npo ";
 
-		if($filter_service) {
-			$sql .= " INNER JOIN ".model_thehub_npo_services::get_table_name()." AS ns ON(npo.id=ns.fkNpo) "
-				." INNER JOIN ".model_thehub_npo_service_types::get_table_name()." AS service ON(ns.fkService=service.id) ";
-		}
+        $pre = ' WHERE ';
+        if($name_like) {
+            $sql .= $pre." lower(Name) like '%".strtolower($name_like)."%' ";
+            $pre = ' AND ';
+        }
 
-		$pre = ' WHERE ';
-		if($name_like) {
-			$sql .= $pre." lower(Name) like '%".strtolower($name_like)."%' ";
-			$pre = ' AND ';
-		}
-
-		if($filter_service) {
-			$sql .= $pre." service.id={$filter_service} ";
-			$pre = ' AND ';
-		}
-
-		if(!is_null($active)) {
-			$sql .= $pre." npo.bActive=".($active?"True ":"False ");
-			$pre = ' AND ';
-		}
+        if(!is_null($active)) {
+            $sql .= $pre." npo.bActive=".($active?"True ":"False ");
+            $pre = ' AND ';
+        }
 
         $sql .= " ORDER BY lower(Name) ";
 
-		global $wpdb;
+        global $wpdb;
 
-		$res = array();
-		foreach($wpdb->get_results($sql, OBJECT) as $row) {
-			$res[] = new self($row);
-		}
-		return $res;
-	}
+        $res = array();
+        foreach($wpdb->get_results($sql, OBJECT) as $row) {
+            $res[] = new self($row);
+        }
+        return $res;
+    }
 
     /**
      * @param $LogoPath
      * @return mixed|null
      */
-	static function logo_url($LogoPath)
-	{
-		$logo = Null;
-		if($LogoPath) {
-			$upload_dir=wp_upload_dir();
-			$logo=str_replace($upload_dir['basedir'], $upload_dir['baseurl'], $LogoPath);
-		}
-		return $logo;
-	}
+    static function logo_url($LogoPath)
+    {
+        $logo = Null;
+        if($LogoPath) {
+            $upload_dir=wp_upload_dir();
+            $logo=str_replace($upload_dir['basedir'], $upload_dir['baseurl'], $LogoPath);
+        }
+        return $logo;
+    }
 
     /**
      * @TODO: For the images we want to be able to return
@@ -570,27 +558,9 @@ WhenUpdated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     /**
      * @return mixed|null
      */
-	function get_logo_url()
-	{
-		return self::logo_url($this->LogoPath);
-	}
-
-    /**
-     * @return null
-     */
-    function get_npo_services($refresh=False)
+    function get_logo_url()
     {
-        if($refresh) {
-            $this->_npo_services = Null;
-        }
-        if(empty($this->_npo_services) && !is_array($this->_npo_services)) {
-            if($this->id) {
-                $this->_npo_services=model_thehub_npo_services::get_by_npo($this->id)?:array(); //set to array if failed
-            } else {
-                $this->_npo_services=array();
-            }
-        }
-        return $this->_npo_services;
+        return self::logo_url($this->LogoPath);
     }
 }
 // [eof]

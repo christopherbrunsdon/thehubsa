@@ -121,4 +121,77 @@ class helper_models
         $npo_services->bActive=1;
         return $npo_services;
     }
+
+
+    /**
+     * @return model_thehub_businesses
+     */
+    static public function empty_business($business = Null)
+    {
+        if ($business instanceof model_thehub_businesses == False) {
+            $business = new model_thehub_businesses();
+        }
+
+        // load with null data
+        $business->id = Null;
+        $business->Name = Null;
+        $business->RegNumber = Null;
+        $business->RegNumberOther = Null;
+        $business->Address = Null;
+        $business->AddressPostal = Null;
+        $business->Contact = Null;
+        $business->Tel = Null;
+        $business->Mobile = Null;
+        $business->Email = Null;
+        $business->wwwDomain = Null;
+        $business->wwwHomepage = Null;
+        $business->wwwFacebook = Null;
+        $business->Description = Null;
+        $business->ServicesOffered = Null;
+        $business->AssociatedOrganisations = Null;
+        $business->listNeeds = Null;
+        $business->listWish = Null;
+        $business->paymentEft = Null;
+        $business->paymentDeposit = Null;
+        $business->Notes = Null;
+        $business->LogoPath = Null;
+        $business->bActive = Null;
+
+        return $business;
+    }
+
+    /**
+     * @return model_thehub_businesses
+     *
+     */
+    static public function valid_business($business = Null)
+    {
+        if ($business instanceof model_thehub_businesses == False) {
+            $business = new model_thehub_businesses();
+        }
+
+        $business->Name = "Test";
+        $business->RegNumber = "1234567890";
+//        $business->RegNumberOther=Null;
+        $business->Address = "1 Test road, testville";
+        $business->AddressPostal = "1 testbox";
+        $business->Contact = "Mr Test";
+        $business->Tel = "0218501234";
+        $business->Mobile = "0821231234";
+        $business->Email = "test@test.com";
+        $business->wwwDomain = "http://test.com";
+        $business->wwwHomepage = "http://test.com/test";
+        $business->wwwFacebook = "/test";
+        $business->Description = "This is a unit test";
+        $business->ServicesOffered = "We offer testing";
+//        $business->AssociatedOrganisations=Null;
+        $business->listNeeds = "We need more tests";
+        $business->listWish = "We wish for more tests";
+        $business->paymentEft = True;
+//        $business->paymentDeposit=Null;
+        $business->Notes = "Test test test";
+        $business->LogoPath = Null;
+
+        return $business;
+    }
 }

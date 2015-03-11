@@ -18,7 +18,7 @@ class form_business extends form
 	function render($data = Null, $errors = Null) 
 	{
         $services = model_thehub_npo_service_types::get_services();
-		include("form-business-template.php");
+		include("../views/forms/form-business-template.php");
 	}
 
 	/**
